@@ -1,2 +1,8 @@
-output/*
+*.bbl
+*.blg
+*.pdf
+*.aux
+*.bcf
+*.log
+*.run.xml
 
