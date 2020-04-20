@@ -1,0 +1,82 @@
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+
+\makeatletter
+\usepackage{url}
+
+\makeatother
+
+\usepackage{babel}
+
+
+\title{Research Plan Week 1--2 (Template)}
+\author{}
+\date{}
+
+\newcommand{\namelistlabel}[1]{\mbox{#1}\hfil}
+\newenvironment{namelist}[1]{%1
+\begin{list}{}
+    {
+        \let\makelabel\namelistlabel
+        \settowidth{\labelwidth}{#1}
+        \setlength{\leftmargin}{1.1\labelwidth}
+    }
+  }{%1
+\end{list}}
+
+\begin{document}
+\maketitle
+
+\begin{namelist}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+\item[{\bf Title:}]
+	A Very Good Thesis
+\item[{\bf Author:}]
+	Gosia Migut
+\item[{\bf Responsible Professor:}]
+	Mathijs de Weerdt
+\item[{\bf (Optionally) Other Supervisor:}]
+	Eva
+\item[{\bf (Required for final version) Examiner:}]
+	Another Professor (\emph{interested, but not involved})
+\item[{\bf Peer group members:}]
+	John Appleseed (MSc), Harry Btree (BSc), Mike C3PO (PhD)
+(\emph{i.e., at least 3 other BSc/MSc/PhD students})
+\end{namelist}
+
+
+\section*{Background of the research}
+In this section you should give some background to your research area. 
+What is the problem you are tackling, and why is it worthwhile solving? 
+What relevant literature are you going to read in week 1 to answer the following questions?
+\begin{enumerate}
+\item Who has already done some work in this area, what have they achieved, and how did they do this?
+\item What is still missing? This may be much more complex / far into the future than your contribution.
+\end{enumerate}
+Give references in a reference section.
+
+\section*{Research Question}
+In this section you'll eventually need to state explicitly the hypothesis you aim to test or the deliverable that you are aiming for, and argue why this is a reasonable hypothesis to test.
+What do you need to do in week 1 and 2 to make this more concrete?
+
+\section*{Method}
+In this section you should outline how you intend to go about accomplishing the aims you have set in the previous section. 
+For now, list some possible tools/software/data that may be relevant for you and that you will need to choose from in the first two weeks.
+
+\section*{Planning of the first two weeks}
+Arrange meetings with relevant people in the first two weeks (e.g.\ responsible professor, supervisor, peer students, other people in the research group, potential users of your research).
+Summarize your main tasks for the first two weeks, resulting in the submission of a more detailed research proposal.
+
+% use a system for generating the bibliographic information automatically from your database, e.g., use BibTex and/or Mendeley, EndNote, Papers, or \ldots
+%\bibliographystyle{plain}
+%\bibliography{template}
+
+%for convenience we use here the in-document bibliography
+\begin{thebibliography}{9}
+\bibitem{wessen} Ken Wessen, Preparing a thesis using \LaTeX~, private
+communication, 1994.
+\end{thebibliography}
+
+\end{document}
