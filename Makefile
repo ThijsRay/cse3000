@@ -9,4 +9,4 @@ references: main.tex references.bib
 
 .PHONY:	clean
 clean:
-	rm -f main.aux main.bbl main.bcf main.blg main.log main.run.xml
+	rm -f main.aux main.bbl main.bcf main.blg main.log main.run.xml main.pdf
