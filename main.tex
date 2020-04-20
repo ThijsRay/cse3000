@@ -2,6 +2,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage{geometry}
+\usepackage{csquotes}
+\usepackage[style=apa,sortcites=true,sorting=nyt]{biblatex}
+\addbibresource{references.bib}
 \geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
 
 \makeatletter
@@ -34,16 +37,19 @@
 \item[{\bf Title:}]
 	A Very Good Thesis
 \item[{\bf Author:}]
-	Gosia Migut
+    Thijs Raymakers (4647610)
 \item[{\bf Responsible Professor:}]
-	Mathijs de Weerdt
-\item[{\bf (Optionally) Other Supervisor:}]
-	Eva
-\item[{\bf (Required for final version) Examiner:}]
-	Another Professor (\emph{interested, but not involved})
+    David Tax, Marco Loog
+%\item[{\bf (Optionally) Other Supervisor:}]
+%	Eva
+%\item[{\bf (Required for final version) Examiner:}]
+%	Another Professor (\emph{interested, but not involved})
 \item[{\bf Peer group members:}]
-	John Appleseed (MSc), Harry Btree (BSc), Mike C3PO (PhD)
-(\emph{i.e., at least 3 other BSc/MSc/PhD students})
+    Pia Keukeleire, 
+    Thomas van Tussenbroek,
+    David Happel,
+    Dina Chen,
+    Katja Schmahl
 \end{namelist}
 
 
@@ -69,14 +75,6 @@ For now, list some possible tools/software/data that may be relevant for you and
 Arrange meetings with relevant people in the first two weeks (e.g.\ responsible professor, supervisor, peer students, other people in the research group, potential users of your research).
 Summarize your main tasks for the first two weeks, resulting in the submission of a more detailed research proposal.
 
-% use a system for generating the bibliographic information automatically from your database, e.g., use BibTex and/or Mendeley, EndNote, Papers, or \ldots
-%\bibliographystyle{plain}
-%\bibliography{template}
-
-%for convenience we use here the in-document bibliography
-\begin{thebibliography}{9}
-\bibitem{wessen} Ken Wessen, Preparing a thesis using \LaTeX~, private
-communication, 1994.
-\end{thebibliography}
+\printbibliography
 
 \end{document}
