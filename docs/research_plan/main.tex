@@ -35,7 +35,7 @@
 
 \begin{namelist}{xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
 \item[{\bf Title:}]
-    Gender bias in online communities
+    Gender bias between languages
 \item[{\bf Author:}]
     Thijs Raymakers (4647610)
 \item[{\bf Responsible Professor:}]
@@ -54,16 +54,23 @@
 
 
 \section*{Background of the research}
-In this section you should give some background to your research area. 
-What is the problem you are tackling, and why is it worthwhile solving? 
-What relevant literature are you going to read in week 1 to answer the following questions?
-\begin{enumerate}
-\item Who has already done some work in this area, what have they achieved, and how did they do this?
-\item What is still missing? This may be much more complex / far into the future than your contribution.
-\end{enumerate}
-Give references in a reference section.
+Word embeddings are being used to capture the meaning and the semantics of words as a
+mathematical vector. They are being used in various applications where structural
+analysis of text or language is required. However, these word embeddings encode
+human biases \cite{caliskan_2017_semantics_language_corpora, 2019arXiv190509866N, 2017arXiv171108412G, 2018arXiv180309288K, 2019arXiv190303862G}. One of the biases that is often
+measured is the gender bias in an embedding. This is classically demonstrated with the
+use of analogies such as \textit{man is to king as woman is to queen} or \textit{man is to doctor as woman is to nurse}~\cite{2019arXiv190509866N}.
+However, as described in~\cite{2019arXiv190509866N}, one should be careful when using
+analogies to measure bias in word embeddings. They describe that the code to calculate
+the analogies might be too constrained, since the situation \textit{A is to B as C is to D}
+where \textit{B == D} could be impossible to obtain~\cite{2019arXiv190509866N}. Besides
+that, it would not always be clear what a factual answer of \textit{D} would be.
+
+This raises an interesting question on how to measure bias in word embeddings without
+having the problems that were addressed in~\cite{2019arXiv190509866N}.
 
 \section*{Research Question}
+
 In this section you'll eventually need to state explicitly the hypothesis you aim to test or the deliverable that you are aiming for, and argue why this is a reasonable hypothesis to test.
 What do you need to do in week 1 and 2 to make this more concrete?
 
