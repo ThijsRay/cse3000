@@ -88,9 +88,32 @@ difference between English and Chinese to be relatively large, since they are no
 same branch of language families.
 
 \section*{Method}
-In this section you should outline how you intend to go about accomplishing the aims you have set in the previous section. 
-For now, list some possible tools/software/data that may be relevant for you and that you will need to choose from in the first two weeks.
+I will use the word vectors provided by~\cite{grave2018learning}. They provide
+pre-trained word vectors for 157 languages, trained using fastText.
+Since~\cite{2019arXiv190509866N} addresses some important issues with the classical method
+of measuring gender bias, I have to adjust my approach accordingly.
+In order to calculate the analogies, I will use the \texttt{3CosMul}
+method~\cite{Levy14linguisticregularities}. Based on~\cite{2019arXiv190509866N},
+I will most likely use both the constrained and unconstrained version of \texttt{3CosMul}.
+While the unconstrained version is significantly less accurate, it performs better is the
+well-known \textit{man:doctor :: woman:X} test~\cite{2019arXiv190509866N}.
+But the lack of accuracy of the unconstrained version of \texttt{3CosMul} might be
+punished when performing other tests, which is why I should also look at the constrained
+version of \texttt{3CosMul}.
 
+In order to address the subjective factors described by~\cite{2019arXiv190509866N}, I
+will calculate the gender difference of a word embedding $W$ by measuring the ratio
+$$
+\frac{ |\forall x (A : x :: B :: y) \mid \{x \in W \mid x = y\}| } { |W| }
+$$
+where $A$ refers to the translation of \textit{man} or \textit{woman} and B refers to the translation of \textit{woman} or \textit{man} respectively.
+A ratio of 1 would indicate that $A = B$ and a ratio of 0 would indicate that $A \neq B$.
+Values in between would show the similarity between \textit{man} and \textit{woman} in relation to other words in the word embedding.
+
+It is important to note that this does not measure gender bias, but rather the difference between the words in relation to the other words in the word embedding.
+While the analogy \textit{man : doctor :: woman : nurse} might occur, the analogy \textit{man:king :: woman:queen} could also occur.
+The former might indicate gender bias, the latter does not.
+Choosing the words that might indicate gender bias is a subjective task in itself and would probably result in a non-exhaustive set of words that could indicate this.
 
 \section*{Planning of the first two weeks}
 Arrange meetings with relevant people in the first two weeks (e.g.\ responsible professor, supervisor, peer students, other people in the research group, potential users of your research).
