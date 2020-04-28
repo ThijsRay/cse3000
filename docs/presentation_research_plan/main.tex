@@ -54,6 +54,35 @@ the words man and woman?
 \section{Method}
 \begin{frame}
 \frametitle{Method}
+\begin{itemize}
+    \item Use fastText word embedding\footfullcite{grave2018learning}
+    \pause
+    \item Still based on analogies
+    \pause
+    \item To address the restrictiveness
+    \begin{itemize}
+        \item Unconstrained\footfullcite{2019arXiv190509866N} variant of \texttt{3CosMul} algorithm \footfullcite{Levy14linguisticregularities}
+        \item Less accurate, but not constrained
+    \end{itemize}
+    \pause
+    \item To address subjectiveness
+    \begin{itemize}
+        \item Keep two variables fixed, two variables free
+            \newline
+        (\textit{man} is to X as \textit{woman} is to Y)
+    \end{itemize}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Method}
+\begin{block}{Ratio}
+$\forall x$ in embedding $W$, count the number of times where ``\textit{man} is to $x$ as \textit{woman} is to $y$" and ``\textit{woman} is to $x$ as \textit{man} is to $y$" such that $x=y$
+\end{block}
+Can be used to calculate ratio of analogy "equalness". This ratio can be used to
+compare different word embeddings.
+
 \end{frame}
 
 \section{Planning}
