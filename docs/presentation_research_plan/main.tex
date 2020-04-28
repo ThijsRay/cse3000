@@ -6,9 +6,12 @@
 
 \documentclass{beamer}
 \usepackage[english]{babel}
-\usepackage[backend=biber,style=apa,sorting=none]{biblatex}
+\usepackage[backend=biber,style=authoryear,sorting=none]{biblatex}
 \addbibresource{references.bib}
 \usetheme{Madrid}
+
+% Cite with brackets
+\newcommand{\bcite}[1]{(\cite{#1})}
 
 \author{Thijs Raymakers}
 \title{Presentation research plan}
@@ -20,13 +23,15 @@
 \begin{frame}
 \frametitle{Context}
 \begin{itemize}
-    \item Gender bias is present in word embeddings~\footcite{bolukbasi_2016_quantifying_stereotypes}
+    \item Gender bias is present in word embeddings~\bcite{bolukbasi_2016_quantifying_stereotypes}
+    \pause
     \item Typically measured the help of analogies
     \begin{itemize}
         \item \textit{man} is to \textit{king} as \textit{woman} is to \textit{queen}
-        \item \textit{man} is to \textit{doctor} as \textit{woman} is to \textit{nurse}~\footcite{bolukbasi_2016_quantifying_stereotypes}
+        \item \textit{man} is to \textit{doctor} as \textit{woman} is to \textit{nurse}~\bcite{bolukbasi_2016_quantifying_stereotypes}
     \end{itemize}
-    \item However, analogies might not be the right tool to measure bias~\footcite{2019arXiv190509866N}
+    \pause
+    \item However, analogies might not be the right tool to measure bias \bcite{2019arXiv190509866N}
     \begin{itemize}
         \item Implementations of analogies are too restrictive
         \item Variables in the analogy are subjective choices
