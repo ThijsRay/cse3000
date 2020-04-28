@@ -5,6 +5,9 @@
 %- a planning (perhaps a table with plans per week)
 
 \documentclass{beamer}
+\usepackage[english]{babel}
+\usepackage[backend=biber,style=apa,sorting=none]{biblatex}
+\addbibresource{references.bib}
 \usetheme{Madrid}
 
 \author{Thijs Raymakers}
@@ -17,7 +20,17 @@
 \begin{frame}
 \frametitle{Context}
 \begin{itemize}
-\item Gender bias is present in word embeddings
+    \item Gender bias is present in word embeddings~\footcite{bolukbasi_2016_quantifying_stereotypes}
+    \item Typically measured the help of analogies
+    \begin{itemize}
+        \item \textit{man} is to \textit{king} as \textit{woman} is to \textit{queen}
+        \item \textit{man} is to \textit{doctor} as \textit{woman} is to \textit{nurse}~\footcite{bolukbasi_2016_quantifying_stereotypes}
+    \end{itemize}
+    \item However, analogies might not be the right tool to measure bias~\footcite{2019arXiv190509866N}
+    \begin{itemize}
+        \item Implementations of analogies are too restrictive
+        \item Variables in the analogy are subjective choices
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -39,6 +52,12 @@ the words man and woman?
 \section{Planning}
 \begin{frame}
 \frametitle{Planning}
+\end{frame}
+
+\section{References}
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\printbibliography[heading=none]
 \end{frame}
 
 \end{document}
