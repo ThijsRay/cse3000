@@ -6,3 +6,7 @@
 *.log
 *.run.xml
 *.vec
+*.nav
+*.out
+*.snm
+*.toc
