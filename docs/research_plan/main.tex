@@ -58,17 +58,17 @@
 Word embeddings are being used to capture the meaning and the semantics of words as a
 mathematical vector. They are being used in various applications where structural
 analysis of text or language is required. However, these word embeddings encode
-human biases~\cite{caliskan_2017_semantics_language_corpora, 2019arXiv190509866N, 2017arXiv171108412G, 2018arXiv180309288K, 2019arXiv190303862G}. One of the biases that is often
+human biases~\cite{caliskan_2017_semantics_language_corpora, nissim_fair_is_better_2020, 2017arXiv171108412G, 2018arXiv180309288K, 2019arXiv190303862G}. One of the biases that is often
 measured is the gender bias in an embedding. This is classically demonstrated with the
-use of analogies such as \textit{man is to king as woman is to queen} or \textit{man is to doctor as woman is to nurse}~\cite{2019arXiv190509866N}.
-However, as described in~\cite{2019arXiv190509866N}, one should be careful when using
+use of analogies such as \textit{man is to king as woman is to queen} or \textit{man is to doctor as woman is to nurse}~\cite{nissim_fair_is_better_2020}.
+However, as described in~\cite{nissim_fair_is_better_2020}, one should be careful when using
 analogies to measure bias in word embeddings. They describe that the code to calculate
 the analogies might be too constrained, since the situation \textit{A is to B as C is to D}
-where \textit{D = B} could be impossible to obtain~\cite{2019arXiv190509866N}. Besides
+where \textit{D = B} could be impossible to obtain~\cite{nissim_fair_is_better_2020}. Besides
 that, it would not always be clear what a factual answer of \textit{D} would be.
 
 This raises an interesting question on how to measure bias in word embeddings without
-having the problems that were addressed in~\cite{2019arXiv190509866N}.
+having the problems that were addressed in~\cite{nissim_fair_is_better_2020}.
 In this research, I will explore a way to measure the differences between the
 words \textit{man} and \textit{woman} in a word embedding. This could provide an
 insight into which languages have more or fewer differences between \textit{man} and 
@@ -94,18 +94,18 @@ same branch of language families.
 \section*{Method}
 I will use the word vectors provided by~\cite{grave2018learning}. They provide
 pre-trained word vectors for 157 languages, trained using fastText.
-Since~\cite{2019arXiv190509866N} addresses some important issues with the classical method
+Since~\cite{nissim_fair_is_better_2020} addresses some important issues with the classical method
 of measuring gender bias, I have to adjust my approach accordingly.
 In order to calculate the analogies, I will use the \texttt{3CosMul}
-method~\cite{Levy14linguisticregularities}. Based on~\cite{2019arXiv190509866N},
+method~\cite{Levy14linguisticregularities}. Based on~\cite{nissim_fair_is_better_2020},
 I will most likely use both the constrained and unconstrained version of \texttt{3CosMul}.
 While the unconstrained version is significantly less accurate, it performs better is the
-well-known \textit{man:doctor :: woman:X} test~\cite{2019arXiv190509866N}.
+well-known \textit{man:doctor :: woman:X} test~\cite{nissim_fair_is_better_2020}.
 But the lack of accuracy of the unconstrained version of \texttt{3CosMul} might be
 punished when performing other tests, which is why I should also look at the constrained
 version of \texttt{3CosMul}.
 
-In order to address the subjective factors described by~\cite{2019arXiv190509866N}, I
+In order to address the subjective factors described by~\cite{nissim_fair_is_better_2020}, I
 will calculate the gender difference of a word embedding $W$ by measuring the ratio
 $$
 \frac{ |\forall x (A : x :: B :: y) \mid \{x \in W \mid x = y\}| } { |W| }
