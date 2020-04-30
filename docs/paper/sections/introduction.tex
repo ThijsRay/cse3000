@@ -1,4 +1,22 @@
-% Introduce the topic and explain why it is important (motivation!).  Relate to the most relevant existing work from the literature (use BibTeX), explain their contributions, and (critically) indicate what is still unanswered.  Explain what the research questions for this work are.  This usually is a subset of the unanswered questions.  Summarize the main contributions/conclusions of this research.  NB: Make sure the title of the pap er is a good match to the main research question / contribution / conclusion.  Briefly indicate how the rest of the paper fits together to answer the research question
-
 \section{Introduction}
-hey!!!
+Word embedding have become an important tool in the field of natural language
+processing. They can be used to represent the semantics and the meaning of
+words as a vector of numbers, which is useful for all sorts of applications.
+However, word embeddings should be used with care because they can contain human
+biases~\parencite{caliskan_2017_semantics_language_corpora}.
+
+As described by \textcite{nissim_fair_is_better_2020}, bias in
+the form of gender stereotypes is generally measured with the help of analogies (e.g.
+\textit{man} is to \textit{king} as \textit{woman} is to \textit{queen}).
+Analogies are shown to be an inaccurate diagnostic for measuring gender bias, because
+they might miss forms of implicit gender bias \parencite{gonen-goldberg-2019-lipstick-pig}
+or because the algorithms to calculate the analogy are too restrictive
+\parencite{nissim_fair_is_better_2020}.
+
+Generally, gender bias is measured in English word embeddings. This research aims to
+look at the semantic gender differences between word embeddings trained on different
+languages. The main method of measuring the gender difference will be based on
+analogies, but with certain adjustments to account for the issues raised by
+\textcite{nissim_fair_is_better_2020}. While this research will not and does not aim
+to measure the gender \textit{bias} of a certain language, it will look at the
+semantic differences in a word embedding between the words \textit{man} and \textit{woman}.
