@@ -1,15 +1,14 @@
 from __future__ import print_function
-from numpy import dot, ndarray, float32, abs
-from numpy.linalg import norm
+
+import csv
+import sys
+from multiprocessing import Pool
 from typing import List, AnyStr
+
 import fasttext
 import fasttext.util
-import csv
-import threading
-import queue
-import sys
-import os
-from time import sleep
+from numpy import dot, ndarray, float32, abs
+from numpy.linalg import norm
 
 
 def eprint(*args, **kwargs):
@@ -50,47 +49,54 @@ def get_languages(language_codes: List[AnyStr]):
         fasttext.util.download_model(language, if_exists='ignore')
 
 
+global current_model, current_man_vec, current_woman_vec
+
+
+def worker(word: AnyStr) -> (AnyStr, float32):
+    """Worker function for the pool cannot be inner function because it cannot be pickled that way"""
+    word_vector = current_model.get_word_vector(word)
+    diff_man = cosine_similarity(word_vector, current_man_vec)
+    diff_woman = cosine_similarity(word_vector, current_woman_vec)
+    diff = diff_man - diff_woman
+    return word, diff
+
+
 def perform_calculation(language_codes: List[AnyStr]):
     translations = load_translations(language_codes)
     for translation in translations:
+        global current_model, current_man_vec, current_woman_vec
         # Load the model from the file
-        model = fasttext.load_model(f'cc.{translation.language}.300.bin')
+        current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
 
         # Load the vectors of the translations
-        man = model.get_word_vector(translation.man)
-        woman = model.get_word_vector(translation.woman)
+        current_man_vec = current_model.get_word_vector(translation.man)
+        current_woman_vec = current_model.get_word_vector(translation.woman)
 
-        # Create a queue and populate it with all the words in the model
-        job_queue = queue.Queue()
-        [job_queue.put(i) for i in model.get_words()]
+        amount_of_words = len(current_model.get_words())
+        amount_of_words_done = 0
 
-        # Create a queue for all the results
-        result_queue = queue.Queue()
-
-        percentage = 0.0
-        amount_of_words = len(model.words)
-
-        def queue_worker():
+        with Pool() as pool:
+            it = pool.imap(func=worker, iterable=current_model.get_words(), chunksize=100)
             while True:
-                word = job_queue.get()
-                word_vector = model.get_word_vector(word)
-                diff_man = cosine_similarity(word_vector, man)
-                diff_woman = cosine_similarity(word_vector, woman)
-                diff = abs(diff_man - diff_woman)
-                result_queue.put((word, diff))
-                job_queue.task_done()
+                try:
+                    word, diff = next(it)
+                    if "," in word:
+                        continue
+                    print(f"{word},{int(diff * 1e10)}")
 
-        for i in range(0, os.cpu_count()-1):
-            threading.Thread(target=queue_worker, daemon=True).start()
+                    # Update percentage
+                    amount_of_words_done += 1
+                    if amount_of_words_done % 10000 == 0:
+                        eprint(" " * 40, end='\r')
+                        percentage = round((amount_of_words_done / amount_of_words) * 100, 2)
+                        f_string = f"{percentage}%\t of {translation.language}\t" \
+                                   f"Q={amount_of_words_done}\t" \
+                                   f"T={amount_of_words}"
+                        eprint(f_string, end='\r')
+                except StopIteration:
+                    break
 
-        while percentage < 100:
-            queue_size = job_queue.qsize()
-            percentage = round((1 - queue_size / amount_of_words) * 100, 2)
-            eprint(f"{percentage}% of {translation.language}\tQ={queue_size}\tT={amount_of_words}", end='\r')
-            sleep(0.3)
-
-        job_queue.join()
-        print(result_queue)
+        eprint(f"\nFinished {translation.language}")
 
 
 def cosine_similarity(a: ndarray, b: ndarray) -> float32:
