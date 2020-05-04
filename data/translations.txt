@@ -1,0 +1,4 @@
+en,man,woman
+es,hombre,mujer
+nl,man,vrouw
+sv,man,kvinna
