@@ -13,6 +13,9 @@ class Translation:
         self.man = man
         self.woman = woman
 
+    def __str__(self):
+        return f"{self.language}\t{self.man}\t{self.woman}"
+
 
 def load_translations(language_codes: List[AnyStr]) -> Translation:
     """Load the translations of the words 'man' and 'woman' for various languages."""
