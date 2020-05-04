@@ -7,7 +7,7 @@ from typing import List, AnyStr
 
 import fasttext
 import fasttext.util
-from numpy import dot, ndarray, float32, abs
+from numpy import dot, ndarray, float32
 from numpy.linalg import norm
 
 
@@ -27,7 +27,7 @@ class Translation:
         return f"{self.language}\t{self.man}\t{self.woman}"
 
 
-def load_translations(language_codes: List[AnyStr]) -> Translation:
+def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
     """Load the translations of the words 'man' and 'woman' for various languages."""
     translation_list: List[Translation] = list()
     with open("data/translations.txt") as translations:
