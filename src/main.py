@@ -122,7 +122,7 @@ def cosine_similarity(a: ndarray, b: ndarray) -> float32:
 
 
 def main():
-    languages: List[AnyStr] = ['en']
+    languages: List[AnyStr] = ["en", "de", "el", "es", "fi", "fr", "nl", "pl", "pt", "ru", "sv"]
     get_languages(languages)
     perform_calculation(languages)
 
