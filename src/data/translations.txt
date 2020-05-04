@@ -1,5 +1,12 @@
 language,man,woman
+de,Mann,Frau
+el,άντρας,γυναίκα
 en,man,woman
 es,hombre,mujer
+fi,mies,nainen
+fr,homme,femme
 nl,man,vrouw
+pl,kobieta,mężczyzna
+pt,homme,femme
+ru,мужчина,женщина
 sv,man,kvinna
