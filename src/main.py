@@ -1,6 +1,8 @@
 import fasttext
 import fasttext.util
-import numpy
+from numpy import dot
+from numpy.linalg import norm
+import csv
 from typing import List, AnyStr
 
 
@@ -34,16 +36,23 @@ def get_languages(language_codes: List[AnyStr]):
         fasttext.util.download_model(language, if_exists='ignore')
 
 
+def perform_calculation(language_codes: List[AnyStr]):
+    translations = load_translations(language_codes)
+    for language in language_codes:
+        model = fasttext.load_model(f'cc.{language}.300.bin')
+
+
 def cosine_similarity(a, b):
     """Calculate the cosine similarity between two vectors. The definition is based on
      https://en.wikipedia.org/wiki/Cosine_similarity and the snippet of code is based on
      https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists/43043160#43043160"""
-    return numpy.dot(a, b) / (numpy.linalg.norm(a) * numpy.linalg.norm(b))
+    return dot(a, b) / (norm(a) * norm(b))
 
 
 def main():
-    get_languages(['en'])
-    pass
+    languages: List[AnyStr] = ['en']
+    get_languages(languages)
+    perform_calculation(languages)
 
 
 if __name__ == '__main__':
