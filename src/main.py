@@ -3,22 +3,18 @@ from __future__ import print_function
 import csv
 import sys
 from multiprocessing import Pool
+from pathlib import Path
 from typing import List, AnyStr
 
-import string
 import fasttext
 import fasttext.util
 from numpy import dot, ndarray, float32
 from numpy.linalg import norm
 
 
-def eprint(*args, **kwargs):
-    """Define print that prints to stderr"""
-    print(*args, file=sys.stderr, **kwargs)
-
-
 class Translation:
     """A wrapper for the different languages and the translations of the various words"""
+
     def __init__(self, language: AnyStr, man: AnyStr, woman: AnyStr):
         self.language = language
         self.man = man
@@ -58,8 +54,8 @@ def worker(word: AnyStr) -> (AnyStr, float32):
     """Worker function for the pool cannot be inner function because it cannot be pickled that way"""
     # Check if there is any punctuation in the word. If there is, skip it. This used `string.punctuation` minus `-`,
     # since this symbol can occur in actual words
-    if any((c in "!\"#$%&'()*+,./:;<=>?@[\\]^_`{|}~.") for c in word):
-        return None, None
+    # if any((c in "!\"#$%&'()*+,./:;<=>?@[\\]^_`{|}~.") for c in word):
+    #    return None, None
     word_vector = current_model.get_word_vector(word)
     diff_man = cosine_similarity(word_vector, current_man_vec)
     diff_woman = cosine_similarity(word_vector, current_woman_vec)
@@ -72,7 +68,10 @@ def perform_calculation(language_codes: List[AnyStr]):
     for translation in translations:
         global current_model, current_man_vec, current_woman_vec
         # Load the model from the file
+        print(f"Loading language {translation.language} into memory...")
         current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
+        print(f"Loaded language {translation.language}!")
+        print(f"Processing language {translation.language}")
 
         # Load the vectors of the translations
         current_man_vec = current_model.get_word_vector(translation.man)
@@ -83,32 +82,36 @@ def perform_calculation(language_codes: List[AnyStr]):
 
         with Pool() as pool:
             it = pool.imap(func=worker, iterable=current_model.get_words(), chunksize=100)
-            with open(f"output/{translation.language}.txt", "a") as f:
+            Path("output").mkdir(parents=True, exist_ok=True)
+            with open(f"output/{translation.language}.txt", "w") as f:
                 while True:
                     try:
                         word, diff = next(it)
                         if word is None:
                             continue
-                        print(f"{word},{int(diff * 1e10)}", file=f)
+                        print(f"{word},{diff}", file=f)
 
                         # Update and print percentage
                         amount_of_words_done += 1
                         print_status(translation.language, amount_of_words_done, amount_of_words)
                     except StopIteration:
                         break
-        print(f"\nFinished {translation.language}")
+
+        del current_model, current_man_vec, current_woman_vec
+        print(f"\nFinished language {translation.language}!")
 
 
 def print_status(language: AnyStr, done: int, total: int):
     """Print the status of this language. Only do it every so ofter, to avoid spending too much resources on the
     printing."""
     if done % 10000 == 0:
-        eprint(" " * 40, end='\r')
+        print(" " * 40, end='\r')
         percentage = round((done / total) * 100, 2)
         f_string = f"{percentage}%\t of {language}\t" \
                    f"Q={done}\t" \
                    f"T={total}"
-        eprint(f_string, end='\r')
+        print(f_string, end='\r')
+        sys.stdout.flush()
 
 
 def cosine_similarity(a: ndarray, b: ndarray) -> float32:
@@ -119,7 +122,7 @@ def cosine_similarity(a: ndarray, b: ndarray) -> float32:
 
 
 def main():
-    languages: List[AnyStr] = ['en', 'nl', 'sv', 'es']
+    languages: List[AnyStr] = ['en']
     get_languages(languages)
     perform_calculation(languages)
 
