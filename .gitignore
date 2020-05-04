@@ -10,5 +10,6 @@
 *.out
 *.snm
 *.toc
+*.bin
 **/.idea/**
 **/venv/**
