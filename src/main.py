@@ -4,7 +4,7 @@ import csv
 import sys
 import subprocess
 import os
-from translation import Translation, load_translations
+from translation import load_translations
 from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
@@ -53,12 +53,12 @@ def worker(word: AnyStr) -> (AnyStr, float32):
 
 def perform_calculation(language_codes: List[AnyStr]):
     translations = load_translations(language_codes)
-    current_translation = 0
+    translation_count = 0
     for translation in translations:
-        current_translation = current_translation + 1
+        translation_count = translation_count + 1
         global current_model, current_man_vec, current_woman_vec
 
-        print(f"Starting to process language {translation.language} - {current_translation}/{len(translations)}")
+        print(f"Starting to process language {translation.language} - {translation_count}/{len(translations)}")
         override_and_print(f"Loading language {translation.language} into memory...")
 
         # Enter data directory
