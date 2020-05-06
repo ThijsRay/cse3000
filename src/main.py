@@ -75,10 +75,16 @@ def perform_calculation(language_codes: List[AnyStr]):
     for translation in translations:
         global current_model, current_man_vec, current_woman_vec
         # Load the model from the file
-        print(f"Loading language {translation.language} into memory...")
+        print(f"Loading language {translation.language} into memory...", end='\r')
+
+        # Enter data directory
+        root = os.getcwd()
+        os.chdir(root + "/data")
         current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
-        print(f"Loaded language {translation.language}!")
-        print(f"Processing language {translation.language}")
+        os.chdir(root)
+
+        print(f"Loaded language {translation.language}!", end='\r')
+        print(f"Processing language {translation.language}", end='\r')
 
         # Load the vectors of the translations
         current_man_vec = current_model.get_word_vector(translation.man)
