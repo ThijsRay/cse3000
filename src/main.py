@@ -27,6 +27,12 @@ class Translation:
         return f"{self.language}\t{self.man}\t{self.woman}"
 
 
+def override_and_print(string: AnyStr):
+    width = os.get_terminal_size().columns
+    print(" " * width, end='\r')
+    print(f"{string}", end='\r')
+
+
 def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
     """Load the translations of the words 'man' and 'woman' for various languages."""
     translation_list: List[Translation] = list()
@@ -75,7 +81,7 @@ def perform_calculation(language_codes: List[AnyStr]):
     for translation in translations:
         global current_model, current_man_vec, current_woman_vec
         # Load the model from the file
-        print(f"Loading language {translation.language} into memory...", end='\r')
+        override_and_print(f"Loading language {translation.language} into memory...")
 
         # Enter data directory
         root = os.getcwd()
@@ -83,8 +89,8 @@ def perform_calculation(language_codes: List[AnyStr]):
         current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
         os.chdir(root)
 
-        print(f"Loaded language {translation.language}!", end='\r')
-        print(f"Processing language {translation.language}", end='\r')
+        override_and_print(f"Loaded language {translation.language}")
+        override_and_print(f"Processing language {translation.language}")
 
         # Load the vectors of the translations
         current_man_vec = current_model.get_word_vector(translation.man)
@@ -114,10 +120,10 @@ def perform_calculation(language_codes: List[AnyStr]):
         # Mark the model for deletion
         del current_model, current_man_vec, current_woman_vec
 
-        print(f"Sorting result of language {translation.language}", end='\r')
+        override_and_print(f"Sorting result of language {translation.language}")
         words = sort_output(words)
 
-        print(f"Writing result of language {translation.language} to disk", end='\r')
+        override_and_print(f"Writing result of language {translation.language} to disk")
         # Write the result
         directory = "output"
         write_result(directory, translation.language, words)
@@ -145,12 +151,11 @@ def print_status(language: AnyStr, done: int, total: int):
     """Print the status of this language. Only do it every so ofter, to avoid spending too much resources on the
     printing."""
     if done % 10000 == 0:
-        print(" " * 40, end='\r')
         percentage = round((done / total) * 100, 2)
         f_string = f"{percentage}%\t of {language}\t" \
                    f"Q={done}\t" \
                    f"T={total}"
-        print(f_string, end='\r')
+        override_and_print(f_string)
         sys.stdout.flush()
 
 
