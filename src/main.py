@@ -1,9 +1,8 @@
 from __future__ import print_function
 
-import csv
 import sys
-import subprocess
 import os
+import model
 from translation import load_translations
 from operator import itemgetter
 from multiprocessing import Pool
@@ -20,18 +19,6 @@ def override_and_print(string: AnyStr):
     width = os.get_terminal_size().columns
     print(" " * width, end='\r')
     print(f"{string}", end='\r')
-
-
-def get_languages(language_codes: List[AnyStr]):
-    """Download all the required language fastText word embeddings. It takes a list of language codes as defined on
-    https://fasttext.cc/docs/en/crawl-vectors.html and downloads them in order.
-    """
-    root = os.getcwd()
-    os.chdir(root + "/data")
-    for language in language_codes:
-        fasttext.util.download_model(language, if_exists='ignore')
-        subprocess.run(["rm", "-f", f"cc.{language}.300.bin.gz"])
-    os.chdir(root)
 
 
 # Use global variables here (oops) to allow the worker function to access these variables.
@@ -147,7 +134,7 @@ def cosine_similarity(a: ndarray, b: ndarray) -> float32:
 
 def main():
     languages: List[AnyStr] = ["en", "de", "el", "es", "fi", "fr", "nl", "pl", "pt", "ru", "sv"]
-    get_languages(languages)
+    model.download_languages(languages)
     perform_calculation(languages)
 
 
