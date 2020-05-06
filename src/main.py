@@ -78,14 +78,18 @@ def worker(word: AnyStr) -> (AnyStr, float32):
 
 def perform_calculation(language_codes: List[AnyStr]):
     translations = load_translations(language_codes)
+    current_translation = 0
     for translation in translations:
+        current_translation = current_translation + 1
         global current_model, current_man_vec, current_woman_vec
-        # Load the model from the file
+
+        print(f"Starting to process language {translation.language} - {current_translation}/{len(translations)}")
         override_and_print(f"Loading language {translation.language} into memory...")
 
         # Enter data directory
         root = os.getcwd()
         os.chdir(root + "/data")
+        # Load the model from the file
         current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
         os.chdir(root)
 
