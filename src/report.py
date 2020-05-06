@@ -4,7 +4,7 @@ from subprocess import run
 from shlex import quote
 
 
-def create_histogram(output_directory: AnyStr, languages: List[Translation]):
+def create_individual_histogram(output_directory: AnyStr, languages: List[Translation]):
     for language in languages:
         print(f"Plotting {language.language}")
         input_file = f"{quote(output_directory)}/{quote(language.language_code)}.txt"
@@ -18,4 +18,4 @@ def create_histogram(output_directory: AnyStr, languages: List[Translation]):
 
 
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
-    create_histogram(output_directory, load_translations(languages))
+    create_individual_histogram(output_directory, load_translations(languages))
