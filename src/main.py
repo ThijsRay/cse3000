@@ -2,9 +2,12 @@ from __future__ import print_function
 
 import csv
 import sys
+import subprocess
+import os
+from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
-from typing import List, AnyStr
+from typing import List, AnyStr, Tuple
 
 import fasttext
 import fasttext.util
@@ -42,8 +45,12 @@ def get_languages(language_codes: List[AnyStr]):
     """Download all the required language fastText word embeddings. It takes a list of language codes as defined on
     https://fasttext.cc/docs/en/crawl-vectors.html and downloads them in order.
     """
+    root = os.getcwd()
+    os.chdir(root + "/data")
     for language in language_codes:
         fasttext.util.download_model(language, if_exists='ignore')
+        subprocess.run(["rm", "-f", f"cc.{language}.300.bin.gz"])
+    os.chdir(root)
 
 
 # Use global variables here (oops) to allow the worker function to access these variables.
