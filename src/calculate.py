@@ -39,13 +39,13 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         translation_count = translation_count + 1
         global current_model, current_man_vec, current_woman_vec
 
-        print(f"Starting to process language {translation.language} - {translation_count}/{len(translations)}")
+        print(f"Starting to process language {translation.language_code} - {translation_count}/{len(translations)}")
 
-        override_and_print(f"Loading language {translation.language} into memory...")
-        current_model = model.load_model(data_directory, translation.language)
-        override_and_print(f"Loaded language {translation.language}")
+        override_and_print(f"Loading language {translation.language_code} into memory...")
+        current_model = model.load_model(data_directory, translation.language_code)
+        override_and_print(f"Loaded language {translation.language_code}")
 
-        override_and_print(f"Processing language {translation.language}")
+        override_and_print(f"Processing language {translation.language_code}")
 
         # Load the vectors of the translations
         current_man_vec = current_model.get_word_vector(translation.man)
@@ -64,7 +64,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
 
                     # Update and print percentage
                     amount_of_words_done += 1
-                    print_status(translation.language, amount_of_words_done, amount_of_words)
+                    print_status(translation.language_code, amount_of_words_done, amount_of_words)
 
                     if word is None:
                         continue
@@ -75,13 +75,14 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         # Mark the model for deletion
         del current_model, current_man_vec, current_woman_vec
 
-        override_and_print(f"Sorting result of language {translation.language}")
+        override_and_print(f"Sorting result of language {translation.language_code}")
         words = sort_output(words)
 
-        override_and_print(f"Writing result of language {translation.language} to disk")
-        write_result(output_directory, translation.language, words)
+        override_and_print(f"Writing result of language {translation.language_code} to disk")
+        write_result(output_directory, translation.language_code, words)
 
-        print(f"Finished language {translation.language}! Result in {output_directory}/{translation.language}.txt")
+        print(f"Finished language {translation.language_code}! "
+              f"Result in {output_directory}/{translation.language_code}.txt")
 
 
 def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr, float]]):

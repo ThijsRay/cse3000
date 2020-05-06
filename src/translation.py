@@ -5,13 +5,14 @@ from csv import DictReader
 class Translation:
     """A wrapper for the different languages and the translations of the various words"""
 
-    def __init__(self, language: AnyStr, man: AnyStr, woman: AnyStr):
+    def __init__(self, language: AnyStr, language_code: AnyStr, man: AnyStr, woman: AnyStr):
         self.language = language
+        self.language_code = language_code
         self.man = man
         self.woman = woman
 
     def __str__(self):
-        return f"{self.language}\t{self.man}\t{self.woman}"
+        return f"{self.language_code}\t{self.man}\t{self.woman}"
 
 
 def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
@@ -20,9 +21,9 @@ def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
     with open("data/translations.txt") as translations:
         translations = DictReader(translations)
         for translation in translations:
-            if translation['language'] in language_codes:
+            if translation['language_code'] in language_codes:
                 translation_list.append(Translation(
-                    translation['language'],
+                    translation['language_code'],
                     translation['man'],
                     translation['woman']))
     return translation_list
