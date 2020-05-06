@@ -93,26 +93,52 @@ def perform_calculation(language_codes: List[AnyStr]):
         amount_of_words = len(current_model.get_words())
         amount_of_words_done = 0
 
+        words = list()
+
         with Pool() as pool:
             it = pool.imap(func=worker, iterable=current_model.get_words(), chunksize=100)
-            Path("output").mkdir(parents=True, exist_ok=True)
-            with open(f"output/{translation.language}.txt", "w") as f:
-                while True:
-                    try:
-                        word, diff = next(it)
-                        if word is None:
-                            continue
-                        # convert the value to int for easier sorting with external tools
-                        print(f"{word}\t{int(diff * 10e10)}", file=f)
+            while True:
+                try:
+                    word, diff = next(it)
 
-                        # Update and print percentage
-                        amount_of_words_done += 1
-                        print_status(translation.language, amount_of_words_done, amount_of_words)
-                    except StopIteration:
-                        break
+                    # Update and print percentage
+                    amount_of_words_done += 1
+                    print_status(translation.language, amount_of_words_done, amount_of_words)
 
+                    if word is None:
+                        continue
+                    words.append((word, diff))
+                except StopIteration:
+                    break
+
+        # Mark the model for deletion
         del current_model, current_man_vec, current_woman_vec
-        print(f"\nFinished language {translation.language}!")
+
+        print(f"Sorting result of language {translation.language}", end='\r')
+        words = sort_output(words)
+
+        print(f"Writing result of language {translation.language} to disk", end='\r')
+        # Write the result
+        directory = "output"
+        write_result(directory, translation.language, words)
+
+        print(f"Finished language {translation.language}! Result in {directory}/{translation.language}.txt")
+
+
+def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr, float]]):
+    """Write the result to a file in the given directory"""
+    path = f"{directory}/{language}.txt"
+    Path(directory).mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        for word, diff in result:
+            # convert the value to int for easier usage with external tools
+            print(f"{word}\t{int(diff * 10e10)}", file=f)
+
+
+def sort_output(words: (AnyStr, float)) -> List[Tuple[AnyStr, float]]:
+    """Sort the result list on the calculated cosine distance"""
+    words.sort(key=itemgetter(1))
+    return words
 
 
 def print_status(language: AnyStr, done: int, total: int):
