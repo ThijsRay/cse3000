@@ -89,7 +89,8 @@ def perform_calculation(language_codes: List[AnyStr]):
                         word, diff = next(it)
                         if word is None:
                             continue
-                        print(f"{word},{int(diff * 10e10)}", file=f)
+                        # convert the value to int for easier sorting with external tools
+                        print(f"{word}\t{int(diff * 10e10)}", file=f)
 
                         # Update and print percentage
                         amount_of_words_done += 1
