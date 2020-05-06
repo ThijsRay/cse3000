@@ -15,11 +15,11 @@ def calculate():
 
 
 def report():
-    generate_reports(DATA_DIRECTORY, OUTPUT_DIRECTORY)
+    generate_reports(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
 
 
 def main():
-    report()
+    calculate()
 
 
 if __name__ == '__main__':

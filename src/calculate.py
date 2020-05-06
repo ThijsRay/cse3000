@@ -90,8 +90,7 @@ def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr,
     Path(directory).mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         for word, diff in result:
-            # convert the value to int for easier usage with external tools
-            print(f"{word}\t{int(diff * 10e10)}", file=f)
+            print(f"{word}\t{diff:.15f}", file=f)
 
 
 def sort_output(words: (AnyStr, float)) -> List[Tuple[AnyStr, float]]:
