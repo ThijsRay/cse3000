@@ -3,6 +3,7 @@ from __future__ import print_function
 import sys
 import os
 import model
+from util import cosine_similarity
 from translation import load_translations
 from operator import itemgetter
 from multiprocessing import Pool
@@ -119,13 +120,6 @@ def print_status(language: AnyStr, done: int, total: int):
                    f"T={total}"
         override_and_print(f_string)
         sys.stdout.flush()
-
-
-def cosine_similarity(a: ndarray, b: ndarray) -> float32:
-    """Calculate the cosine similarity between two vectors. The definition is based on
-     https://en.wikipedia.org/wiki/Cosine_similarity and the snippet of code is based on
-     https://stackoverflow.com/questions/18424228/cosine-similarity-between-2-number-lists/43043160#43043160"""
-    return dot(a, b) / (norm(a) * norm(b))
 
 
 def main():
