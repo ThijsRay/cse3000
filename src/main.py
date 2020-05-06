@@ -4,6 +4,7 @@ import csv
 import sys
 import subprocess
 import os
+from translation import Translation
 from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
@@ -13,18 +14,6 @@ import fasttext
 import fasttext.util
 from numpy import dot, ndarray, float32
 from numpy.linalg import norm
-
-
-class Translation:
-    """A wrapper for the different languages and the translations of the various words"""
-
-    def __init__(self, language: AnyStr, man: AnyStr, woman: AnyStr):
-        self.language = language
-        self.man = man
-        self.woman = woman
-
-    def __str__(self):
-        return f"{self.language}\t{self.man}\t{self.woman}"
 
 
 def override_and_print(string: AnyStr):
