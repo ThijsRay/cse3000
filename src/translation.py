@@ -1,4 +1,5 @@
 from typing import AnyStr, List
+from csv import DictReader
 
 
 class Translation:
@@ -17,7 +18,7 @@ def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
     """Load the translations of the words 'man' and 'woman' for various languages."""
     translation_list: List[Translation] = list()
     with open("data/translations.txt") as translations:
-        translations = csv.DictReader(translations)
+        translations = DictReader(translations)
         for translation in translations:
             if translation['language'] in language_codes:
                 translation_list.append(Translation(

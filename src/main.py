@@ -14,15 +14,18 @@ import fasttext.util
 from numpy import dot, ndarray, float32
 from numpy.linalg import norm
 
+OUTPUT_DIRECTORY = "output"
+DATA_DIRECTORY = "data"
+
+
+# Use global variables here (oops) to allow the worker function to access these variables.
+global current_model, current_man_vec, current_woman_vec
+
 
 def override_and_print(string: AnyStr):
     width = os.get_terminal_size().columns
     print(" " * width, end='\r')
     print(f"{string}", end='\r')
-
-
-# Use global variables here (oops) to allow the worker function to access these variables.
-global current_model, current_man_vec, current_woman_vec
 
 
 def worker(word: AnyStr) -> (AnyStr, float32):
@@ -46,16 +49,11 @@ def perform_calculation(language_codes: List[AnyStr]):
         global current_model, current_man_vec, current_woman_vec
 
         print(f"Starting to process language {translation.language} - {translation_count}/{len(translations)}")
+
         override_and_print(f"Loading language {translation.language} into memory...")
-
-        # Enter data directory
-        root = os.getcwd()
-        os.chdir(root + "/data")
-        # Load the model from the file
-        current_model = fasttext.load_model(f'cc.{translation.language}.300.bin')
-        os.chdir(root)
-
+        current_model = model.load_model(DATA_DIRECTORY, translation.language)
         override_and_print(f"Loaded language {translation.language}")
+
         override_and_print(f"Processing language {translation.language}")
 
         # Load the vectors of the translations
@@ -90,11 +88,9 @@ def perform_calculation(language_codes: List[AnyStr]):
         words = sort_output(words)
 
         override_and_print(f"Writing result of language {translation.language} to disk")
-        # Write the result
-        directory = "output"
-        write_result(directory, translation.language, words)
+        write_result(OUTPUT_DIRECTORY, translation.language, words)
 
-        print(f"Finished language {translation.language}! Result in {directory}/{translation.language}.txt")
+        print(f"Finished language {translation.language}! Result in {OUTPUT_DIRECTORY}/{translation.language}.txt")
 
 
 def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr, float]]):
@@ -134,7 +130,7 @@ def cosine_similarity(a: ndarray, b: ndarray) -> float32:
 
 def main():
     languages: List[AnyStr] = ["en", "de", "el", "es", "fi", "fr", "nl", "pl", "pt", "ru", "sv"]
-    model.download_languages(languages)
+    model.download_languages(DATA_DIRECTORY, languages)
     perform_calculation(languages)
 
 
