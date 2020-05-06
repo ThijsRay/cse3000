@@ -19,7 +19,7 @@ def report():
 
 
 def main():
-    calculate()
+    report()
 
 
 if __name__ == '__main__':
