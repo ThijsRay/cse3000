@@ -4,7 +4,7 @@ import csv
 import sys
 import subprocess
 import os
-from translation import Translation
+from translation import Translation, load_translations
 from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
@@ -20,20 +20,6 @@ def override_and_print(string: AnyStr):
     width = os.get_terminal_size().columns
     print(" " * width, end='\r')
     print(f"{string}", end='\r')
-
-
-def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
-    """Load the translations of the words 'man' and 'woman' for various languages."""
-    translation_list: List[Translation] = list()
-    with open("data/translations.txt") as translations:
-        translations = csv.DictReader(translations)
-        for translation in translations:
-            if translation['language'] in language_codes:
-                translation_list.append(Translation(
-                    translation['language'],
-                    translation['man'],
-                    translation['woman']))
-    return translation_list
 
 
 def get_languages(language_codes: List[AnyStr]):

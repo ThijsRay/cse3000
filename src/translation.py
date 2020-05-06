@@ -1,4 +1,4 @@
-from typing import AnyStr
+from typing import AnyStr, List
 
 
 class Translation:
@@ -11,3 +11,19 @@ class Translation:
 
     def __str__(self):
         return f"{self.language}\t{self.man}\t{self.woman}"
+
+
+def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
+    """Load the translations of the words 'man' and 'woman' for various languages."""
+    translation_list: List[Translation] = list()
+    with open("data/translations.txt") as translations:
+        translations = csv.DictReader(translations)
+        for translation in translations:
+            if translation['language'] in language_codes:
+                translation_list.append(Translation(
+                    translation['language'],
+                    translation['man'],
+                    translation['woman']))
+    return translation_list
+
+
