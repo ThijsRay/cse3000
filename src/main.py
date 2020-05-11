@@ -10,18 +10,10 @@ LANGUAGES: List[AnyStr] = ["zh", "es", "en", "hi", "pt", "ru", "jp", "tr", "ko",
                            "fi", "ar", "sv", "yo", "hu", "te", "my", "th", "km", "jv", "eu"]
 
 
-def calculate():
+def main():
     download_languages(DATA_DIRECTORY, LANGUAGES)
     perform_calculation(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
-
-
-def report():
     generate_reports(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
-
-
-def main():
-    calculate()
-    report()
 
 
 if __name__ == '__main__':
