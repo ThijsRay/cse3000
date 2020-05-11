@@ -6,7 +6,8 @@ from typing import List, AnyStr
 
 OUTPUT_DIRECTORY = "output"
 DATA_DIRECTORY = "data"
-LANGUAGES: List[AnyStr] = ["en", "de", "el", "es", "fi", "fr", "nl", "pl", "pt", "ru", "sv"]
+LANGUAGES: List[AnyStr] = ["zh", "es", "en", "hi", "pt", "ru", "jp", "tr", "ko", "fr", "de", "it", "pl", "nl", "el",
+                           "fi", "ar", "sv", "yo", "hu", "te", "my", "th", "km", "jv", "eu"]
 
 
 def calculate():
@@ -19,6 +20,7 @@ def report():
 
 
 def main():
+    calculate()
     report()
 
 

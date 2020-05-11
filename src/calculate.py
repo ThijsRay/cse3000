@@ -23,8 +23,6 @@ def worker(word: AnyStr) -> (AnyStr, float32):
     """Worker function for the pool cannot be inner function because it cannot be pickled that way"""
     # Check if there is any punctuation in the word. If there is, skip it. This used `string.punctuation` minus `-`,
     # since this symbol can occur in actual words
-    if any((c in "0123456789.") for c in word):
-        return None, None
     word_vector = current_model.get_word_vector(word)
     diff_man = cosine_similarity(word_vector, current_man_vec)
     diff_woman = cosine_similarity(word_vector, current_woman_vec)

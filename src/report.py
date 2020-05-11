@@ -20,7 +20,9 @@ def create_individual_histogram(output_directory: AnyStr, languages: List[Transl
             f"xlab=\"Difference in cosine distance between "
             f"words '{quote(language.man)}' and '{quote(language.woman)}'\", "
             # Define the amount of breaks (bins-1) in the histogram
-            f"breaks=200); "
+            f"breaks=200,"
+            # Normalize the histogram for fair comparison
+            f"prob=TRUE); "
             # Close the PNG
             f"dev.off();"
             # Define the output of the qq to be a png.
