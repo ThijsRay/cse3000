@@ -23,6 +23,7 @@ def load_translations(language_codes: List[AnyStr]) -> List[Translation]:
         for translation in translations:
             if translation['language_code'] in language_codes:
                 translation_list.append(Translation(
+                    translation['language'],
                     translation['language_code'],
                     translation['man'],
                     translation['woman']))
