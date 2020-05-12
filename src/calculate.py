@@ -45,6 +45,11 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
     translation_count = 0
     for translation in translations:
         translation_count = translation_count + 1
+
+        output_file = Path(f"{output_directory}/{translation.language_code}.txt")
+        if output_file.exists():
+            continue
+
         global current_model, current_man_vec, current_woman_vec
 
         print(f"Starting to process {translation.language} - {translation_count}/{len(translations)}")
