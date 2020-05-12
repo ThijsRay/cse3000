@@ -51,14 +51,70 @@
     \end{itemize}
 \end{frame}
 
-\section{Results}
+\section{Preliminary Results}
 \begin{frame}
-    \frametitle{Results}
+    \frametitle{Preliminary Results}
+    \begin{columns}[T]
+        \begin{column}{6cm}
+            \includegraphics[width=7cm]{images/en_hist.png}
+            \includegraphics[width=7cm]{images/nl_hist.png}
+        \end{column}
+        \begin{column}{6cm}
+            \begin{itemize}
+                \item Both Indo-European, Germanic languages
+                \pause
+                \item Mean is close to 0
+                \pause
+                \item Variance of of English is larger
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Preliminary Results}
+    \begin{columns}[T]
+        \begin{column}{6cm}
+            \includegraphics[width=7cm]{images/fi_hist.png}
+            \includegraphics[width=7cm]{images/hu_hist.png}
+        \end{column}
+        \begin{column}{6cm}
+            \begin{itemize}
+                \item Both part of Uralic language family
+                \item Mean is above zero, might indicate bias against women
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Preliminary Results}
+    \begin{columns}[T]
+        \begin{column}{6cm}
+            \includegraphics[width=7cm]{images/ja_hist.png}
+            \includegraphics[width=7cm]{images/eu_hist.png}
+        \end{column}
+        \begin{column}{6cm}
+            \begin{itemize}
+                \item Both fairly isolated languages
+                \item Mean is below zero, might indicate bias against men
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \section{Current issues / planning}
 \begin{frame}
     \frametitle{Current issues / planning}
+    \begin{itemize}
+        \item Finding and understanding a way to statistically measure if difference 
+            is significant
+            \begin{itemize}
+                \item Languages do not have the same distribution
+                \item Almost 45M datapoints in total, 1.7M per language
+                \item Currently looking at ANOVA, Kolmogorov-Smirnov test, Mann-Whitney U test and permutation test 
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 %\section{References}
