@@ -29,8 +29,8 @@ def run_r(command: AnyStr):
 def outlier_percentage(output_path: AnyStr, language: Translation):
     return f"library(\"StatMeasures\");" \
            f"cat(outliers(data[[2]])$numOutliers / length(data[[2]])," \
-           f"file=\"{output_path}_outlier_percentage.txt\")" \
-           f"detach(\"StatMeasures\")"
+           f"file=\"{output_path}_outlier_percentage.txt\");" \
+           f"detach(\"StatMeasures\");"
 
 
 def write_summary(output_path: AnyStr, language: Translation):
