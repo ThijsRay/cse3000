@@ -5,7 +5,7 @@ English,en,indo-european,germanic,man,woman
 Hindi,hi,indo-european,indo-aryan,आदमी,महिला
 Portuguese,pt,indo-european,romance,homme,femme
 Russian,ru,indo-european,balto-slavic,мужчина,женщина
-Japanese,jp,japonic,japanese,おとこ,する
+Japanese,ja,japonic,japanese,おとこ,する
 Turkish,tr,turkic,oghuz,adam,kadın
 Korean,ko,koreanic,koreanic,남자,여자
 French,fr,indo-european,romance,homme,femme
