@@ -56,15 +56,9 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"dev.off();"
 
 
-def install_required_libraries():
-    run_r(" if (!require(somepackage)){ install.packages(\"StatMeasures\") library(somepackage) } ")
-
-
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
     global OUTPUT_DIRECTORY
     OUTPUT_DIRECTORY = output_directory
-
-    install_required_libraries()
 
     # Limit the amount of processes in the pool to avoid memory starvation
     with Pool(processes=int(cpu_count()/2)) as pool:
