@@ -9,5 +9,5 @@ references: main.tex references.bib
 
 .PHONY:	clean
 clean:
-	rm -f main.aux main.log main.nav main.out main.pdf main.snm main.toc
+	rm -f main.aux main.log main.nav main.out main.pdf main.snm main.toc main.bbl main.bcf main.blg main.run.xml
 
