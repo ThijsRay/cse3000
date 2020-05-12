@@ -70,7 +70,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         words = list()
 
         with Pool() as pool:
-            it = pool.imap(func=worker, iterable=current_model.get_words(), chunksize=50000)
+            it = pool.imap(func=worker, iterable=current_model.get_words(on_unicode_error='replace'), chunksize=50000)
             while True:
                 try:
                     word, diff = next(it)
