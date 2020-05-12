@@ -59,7 +59,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         current_man_vec = current_model.get_word_vector(translation.man)
         current_woman_vec = current_model.get_word_vector(translation.woman)
 
-        amount_of_words = len(current_model.get_words())
+        amount_of_words = len(current_model.get_words(on_unicode_error='replace'))
         amount_of_words_done = 0
 
         words = list()
