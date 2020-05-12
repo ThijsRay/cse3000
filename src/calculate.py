@@ -1,8 +1,11 @@
 import sys
 import os
+from csv import DictReader,  QUOTE_NONE
+from subprocess import run
+
 import model
 from util import cosine_similarity
-from translation import load_translations
+from translation import load_translations, Translation
 from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
@@ -28,6 +31,13 @@ def worker(word: AnyStr) -> (AnyStr, float32):
     diff_woman = cosine_similarity(word_vector, current_woman_vec)
     diff = diff_man - diff_woman
     return word, diff
+
+
+def write_merged_file(output_directory: AnyStr, translations: List[Translation]):
+    files = ""
+    for t in translations:
+        files += f"{output_directory}/{t.language_code}.txt "
+    run(f"cat {files} > {output_directory}/all.txt", shell=True, check=True)
 
 
 def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr]):
@@ -80,6 +90,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         write_result(output_directory, translation.language_code, words)
 
         print(f"Finished {translation.language}! Result in {output_directory}/{translation.language_code}.txt")
+    write_merged_file(output_directory, translations)
 
 
 def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr, float]]):
@@ -88,7 +99,7 @@ def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr,
     Path(directory).mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         for word, diff in result:
-            print(f"{word}\t{diff:.15f}", file=f)
+            print(f"{word}\t{diff:.15f}\t{language}", file=f)
 
 
 def sort_output(words: (AnyStr, float)) -> List[Tuple[AnyStr, float]]:
