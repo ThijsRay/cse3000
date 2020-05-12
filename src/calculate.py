@@ -95,7 +95,10 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         write_result(output_directory, translation.language_code, words)
 
         print(f"Finished {translation.language}! Result in {output_directory}/{translation.language_code}.txt")
-    write_merged_file(output_directory, translations)
+
+    output_file = Path(f"{output_directory}/all.txt")
+    if not output_file.exists():
+        write_merged_file(output_directory, translations)
 
 
 def write_result(directory: AnyStr, language: AnyStr, result: List[Tuple[AnyStr, float]]):
