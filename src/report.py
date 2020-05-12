@@ -15,6 +15,7 @@ def worker(language: Translation):
     output_path = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}"
     command += create_histogram(output_path, language)
     command += create_qq_plot(output_path, language)
+    command += outlier_percentage(output_path, language)
     command += write_summary(output_path, language)
     run_r(command)
 
@@ -23,6 +24,13 @@ def run_r(command: AnyStr):
     run(f"R -q -e '{command}'",
         # Check for errors and run it in a shell
         shell=True, check=True)
+
+
+def outlier_percentage(output_path: AnyStr, language: Translation):
+    return f"library(\"StatMeasures\");" \
+           f"cat(outliers(data[[2]])$numOutliers / length(data[[2]])," \
+           f"file=\"{output_path}_outlier_percentage.txt\")" \
+           f"detach(\"StatMeasures\")"
 
 
 def write_summary(output_path: AnyStr, language: Translation):
@@ -48,9 +56,16 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"dev.off();"
 
 
+def install_required_libraries():
+    run_r('if ("StatMeasures" % in% rownames(installed.packages()) == FALSE) {install.packages("StatMeasures")}')
+
+
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
     global OUTPUT_DIRECTORY
     OUTPUT_DIRECTORY = output_directory
+
+    install_required_libraries()
+
     # Limit the amount of processes in the pool to avoid memory starvation
     with Pool(processes=int(cpu_count()/2)) as pool:
         it = pool.imap(func=worker, iterable=load_translations(languages), chunksize=1)
