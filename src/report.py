@@ -61,7 +61,7 @@ def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages
     OUTPUT_DIRECTORY = output_directory
 
     # Limit the amount of processes in the pool to avoid memory starvation
-    with Pool(processes=int(cpu_count()/2)) as pool:
+    with Pool() as pool:
         it = pool.imap(func=worker, iterable=load_translations(languages), chunksize=1)
         while True:
             try:
