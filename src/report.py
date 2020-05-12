@@ -57,7 +57,7 @@ def create_histogram(output_path: AnyStr, language: Translation):
 
 
 def install_required_libraries():
-    run_r('if ("StatMeasures" % in% rownames(installed.packages()) == FALSE) {install.packages("StatMeasures")}')
+    run_r(" if (!require(somepackage)){ install.packages(\"StatMeasures\") library(somepackage) } ")
 
 
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
