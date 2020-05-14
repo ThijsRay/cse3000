@@ -10,7 +10,7 @@ OUTPUT_DIRECTORY: AnyStr = None
 def worker(language: Translation):
     print(f"Plotting {language.language}")
     input_file = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}.txt"
-    command = f"data <- read.delim(\"{input_file}\", quote = \"\");"
+    command = f"library(\"data.table\"); data <- fread(\"{input_file}\", quote = \"\");"
 
     output_path = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}"
     command += create_histogram(output_path, language)
