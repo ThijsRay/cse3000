@@ -26,6 +26,15 @@ def run_r(command: AnyStr):
         shell=True, check=True)
 
 
+def calculate_skewness(output_path: AnyStr, language: Translation) -> AnyStr:
+    return f"" \
+           f"Mode <- function(x) {{ ux <- unique(x); ux[which.max(tabulate(match(x, ux)))] }};" \
+           f"cat(\"{quote(language.language_code)}\", " \
+           f"(mean(data[[2]]) - Mode(data[[2]])) / sd(data[[2]])," \
+           f"(mean(data[[2]]) - median(data[[2]])) / sd(data[[2]])," \
+           f"file=\"{output_path}_skew.txt\", sep=\"\\t\");"
+
+
 def outlier_percentage(output_path: AnyStr, language: Translation):
     return f"library(\"StatMeasures\");" \
            f"cat(outliers(data[[2]])$numOutliers / length(data[[2]])," \
