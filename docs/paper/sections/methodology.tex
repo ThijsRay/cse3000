@@ -1,16 +1,54 @@
 \section{Methodology}
-Traditional methods often use a modest set of words to determine the 
-gender bias in a language. The downside of this approach is that it is
-difficult to scale to more than one language. Not all words have an
-equivalent translation into other languages and the words that are
-included in this set are also chosen with some form of bias in mind.
+The languages that have been used in this research, have been chosen based on a 
+few critera, 
+\begin{seriate}
+    \item the language has a pre-trained word embedding from \textcite{grave2018learning}
+    \item the language should be machine translatable with the help of tools like DeepL or
+    Google Translate and
+    \item the language is part of a different language family than the languages that
+    were already chosen.
+\end{seriate}
+This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{man} and \textit{woman}
+can be found in table~\ref{appendix:languages}.
 
-This is reason why the only two variables that
+A common way of measuring gender bias in word embeddings uses the 
+WEAT~\parencite{caliskan_2017_semantics_language_corpora} method. This method measure the
+association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{woman}) 
+and a set of \textit{target} words (e.g. \textit{programmer}, \textit{family}, \textit{nurse}, \textit{engineer}). This
+approach can work when looking at a single language, but has some problems when 
+trying to compare differences between
+different languages. 
 
-The languages were chosen based on their a few critera. First, a pre-trained 
-model for the languages should be available on https://fasttext.cc/docs/en/crawl-vectors.html.
-Second, the language should be part of a family as listed on https://en.wikipedia.org/wiki/Language_family.
-Third, the language can be translated with the help of DeepL or Google Translate.
+First, not all words have a one-to-one translation into another
+language, because certain words might have a different meaning, depending on the
+context in which the word is used. It is therefore not possible to translate all the
+attribute and target words into a different language, because it might lead to an
+incorrect and unfair comparison. 
+Second, the inclusion or exclusion of words from
+the target set is a subjective decision~\parencite{nissim_fair_is_better_2020}. Therefore,
+the measurement itself could be biased, depending on what words are or are not in the set of target words.
+Third, it is labour intensive to correctly translate this set of words for various languages, especially because not all words have a one-to-one translation.
 
-This resulted 26 languages from 16 different language families. An overview of these languages, their
-language families and translations
+A solution to these problems could be to limit the amount of words that have to be
+translated. The method that is used in this research will use the two attribute words 
+\textit{man} and \textit{woman}. The assumption is made that these words are universal and translatable in all languages. The research has looked at two ways to create the set of
+target words in a way that is reproducible for all languages. The first way uses the
+all the words in the word embedding as target words. The advantage of this approach is 
+that all words are considered, which eliminates the inclusion or exclusion subjectiveness
+described by \textcite{nissim_fair_is_better_2020}. The disadvantages of this approach
+are that the results are difficult to interpret, because the distributions for each
+language are quite different and because words with an explicit 
+gender (e.g. \textit{waiter}, \textit{waitress}, \textit{king}, \textit{queen}) are also 
+present.
+
+The second way uses only the words that are most commonly used in the language. This
+approach builds upon the assumption that 
+\begin{seriate}
+\item words that are regarded as neutral (e.g. \textit{and}, \textit{the}) should be
+    gender neutral, unless there exists some form of gender bias the the word embedding,
+\item word with an explicit gender are not the most commonly used words and
+\item since word corpora follow Zipf's law~\parencite{li1992random}, only about 100 words are needed to cover about 50\% of the used language and only about 1000 words are needed to cover about 75\% of the used language. If a word embedding is biased, it should be detectable by using the most commonly used words in a language.
+\end{seriate}
+The advantage of this second approach is that it is easier to interpret the results and
+that words with an explicit gender are probably ignored. The disadvantage of this is that
+it might miss forms of gender bias that might be present in the word embedding.
