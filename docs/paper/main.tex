@@ -20,6 +20,9 @@
 \newcommand{\arab}[1]{\setmainfont{NotoNaskhArabic-Regular}#1}
 \newcommand{\noto}[1]{\setmainfont{NotoSerif-Regular}#1}
 
+
+\usepackage{subfiles}
+
 \shorttitle{Gender bias in word embeddings of different languages}
 \title{Comparing gender differences between word embeddings of different languages}
 \author{Thijs Raymakers}
@@ -36,7 +39,7 @@
 \input{sections/setup_and_results}
 \input{sections/discussion}
 \input{sections/conclusions_and_recommendations}
-\input{sections/appendices}
+\subfile{sections/appendices}
 
 \printbibliography
 
