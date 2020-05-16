@@ -1,6 +1,6 @@
-\documentclass[jou, biblatex]{apa7}
+\documentclass[man, biblatex, longtable]{apa7}
+\usepackage{fontspec}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{csquotes}
 \usepackage{mathtools}
@@ -11,7 +11,17 @@
 \addbibresource{references.bib}
 \DeclareLanguageMapping{english}{english-apa}
 
-\title{Comparing analogical gender differences between word embeddings of different languages}
+\newcommand{\cjk}[1]{\setmainfont{NotoSerifCJK-Regular}#1}
+\newcommand{\hindi}[1]{\setmainfont{NotoSerifDevanagari-Regular}#1}
+\newcommand{\khmer}[1]{\setmainfont{NotoSerifKhmer-Regular}#1}
+\newcommand{\myanmar}[1]{\setmainfont{NotoSerifMyanmar-Regular}#1}
+\newcommand{\thai}[1]{\setmainfont{NotoSerifThai-Regular}#1}
+\newcommand{\telugu}[1]{\setmainfont{NotoSerifTelugu-Regular}#1}
+\newcommand{\arab}[1]{\setmainfont{NotoNaskhArabic-Regular}#1}
+\newcommand{\noto}[1]{\setmainfont{NotoSerif-Regular}#1}
+
+\shorttitle{Gender bias in word embeddings of different languages}
+\title{Comparing gender differences between word embeddings of different languages}
 \author{Thijs Raymakers}
 \affiliation{Delft University of Technology}
 \course{CSE3000: Research project}
@@ -26,6 +36,7 @@
 \input{sections/setup_and_results}
 \input{sections/discussion}
 \input{sections/conclusions_and_recommendations}
+\input{sections/appendices}
 
 \printbibliography
 
