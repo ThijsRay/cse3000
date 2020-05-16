@@ -1,11 +1,11 @@
 single_pass: main.tex
-	pdflatex main.tex
+	lualatex main.tex
 
 references: main.tex references.bib
-	pdflatex main.tex
+	lualatex main.tex
 	biber main
-	pdflatex main.tex
-	pdflatex main.tex
+	lualatex main.tex
+	lualatex main.tex
 
 .PHONY:	clean
 clean:
