@@ -60,7 +60,7 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"hist(data[[2]], main=\"{quote(language.language)}\", " \
            f"xlab=\"Difference in cosine distance between " \
            f"words '{quote(language.man)}' and '{quote(language.woman)}'\", " \
-           f"breaks=200," \
+           f"breaks=20," \
            f"prob=TRUE); " \
            f"dev.off();"
 
