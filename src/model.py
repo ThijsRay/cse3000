@@ -5,7 +5,7 @@ from fasttext import load_model as ft_load_model, FastText
 from fasttext.util import download_model
 
 
-def download_languages(directory: AnyStr, language_codes: List[AnyStr]):
+def download_languages_bin(directory: AnyStr, language_codes: List[AnyStr]):
     """Download all the required language fastText word embeddings. It takes a list of language codes as defined on
     https://fasttext.cc/docs/en/crawl-vectors.html and downloads them in order.
     """
