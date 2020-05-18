@@ -5,7 +5,7 @@ English,en,indo-european,germanic,man,woman
 Hindi,hi,indo-european,indo-aryan,आदमी,महिला
 Portuguese,pt,indo-european,romance,homem,mulher
 Russian,ru,indo-european,balto-slavic,мужчина,женщина
-Japanese,ja,japonic,japanese,おとこ,する
+Japanese,ja,japonic,japanese,男性,女性
 Turkish,tr,turkic,oghuz,adam,kadın
 Korean,ko,koreanic,koreanic,남자,여자
 French,fr,indo-european,romance,homme,femme
@@ -21,7 +21,7 @@ Yoruba,yo,niger-congo,volta-niger,ọkunrin,obinrin
 Hungarian,hu,uralic,ugric,férfi,nő
 Telugu,te,dravidian,south-central,మనిషి,మహిళ
 Burmese,my,sino-tibetan,lolo-burmese,လူ,မိန်းမ
-Thai,th,kra-dai,tai,ผู้ชาย,ผู้หญิง
+Thai,th,kra-dai,tai,ชาย,หญิง
 Khmer,km,austroasiatic,khmer,បុរស,ស្ត្រី
-Javanese,jv,austronesian,malayo-polynesian,wong lanang,wong wadon
+Javanese,jv,austronesian,malayo-polynesian,lanang,wadon
 Basque,eu,isolate,basque,gizon,emakume
