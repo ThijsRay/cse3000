@@ -9,7 +9,7 @@ from translation import load_translations, Translation
 from operator import itemgetter
 from multiprocessing import Pool
 from pathlib import Path
-from typing import List, AnyStr, Tuple
+from typing import List, AnyStr, Tuple, Iterable, Dict
 from numpy import float32
 
 # Use global variables here (oops) to allow the worker function to access these variables.
@@ -22,11 +22,11 @@ def override_and_print(string: AnyStr):
     print(f"{string}", end='\r')
 
 
-def worker(word: AnyStr) -> (AnyStr, float32):
+def worker(word, vec: (AnyStr, Iterable[float])) -> (AnyStr, float32):
     """Worker function for the pool cannot be inner function because it cannot be pickled that way"""
     # Check if there is any punctuation in the word. If there is, skip it. This used `string.punctuation` minus `-`,
     # since this symbol can occur in actual words
-    word_vector = current_model.get_word_vector(word)
+    word_vector = vec
     diff_man = cosine_similarity(word_vector, current_man_vec)
     diff_woman = cosine_similarity(word_vector, current_woman_vec)
     diff = diff_man - diff_woman
@@ -55,22 +55,22 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         print(f"Starting to process {translation.language} - {translation_count}/{len(translations)}")
 
         override_and_print(f"Loading {translation.language} into memory...")
-        current_model = model.load_model(data_directory, translation.language_code)
+        current_model = model.load_vectors(data_directory, translation.language_code, 1000)
         override_and_print(f"Loaded {translation.language}")
 
         override_and_print(f"Processing {translation.language}")
 
         # Load the vectors of the translations
-        current_man_vec = current_model.get_word_vector(translation.man)
-        current_woman_vec = current_model.get_word_vector(translation.woman)
+        current_man_vec = current_model[translation.man]
+        current_woman_vec = current_model[translation.woman]
 
-        amount_of_words = len(current_model.get_words(on_unicode_error='replace'))
+        amount_of_words = len(current_model)
         amount_of_words_done = 0
 
         words = list()
 
         with Pool() as pool:
-            it = pool.imap(func=worker, iterable=current_model.get_words(on_unicode_error='replace'), chunksize=50000)
+            it = pool.imap(func=worker, iterable=current_model, chunksize=10)
             while True:
                 try:
                     word, diff = next(it)

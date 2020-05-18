@@ -1,4 +1,4 @@
-from model import download_languages_bin
+from model import download_languages
 from calculate import perform_calculation
 from report import generate_reports
 from typing import List, AnyStr
@@ -11,7 +11,7 @@ LANGUAGES: List[AnyStr] = ["zh", "es", "en", "hi", "pt", "ru", "ja", "tr", "ko",
 
 
 def main():
-    download_languages_bin(DATA_DIRECTORY, LANGUAGES)
+    download_languages(DATA_DIRECTORY, LANGUAGES)
     perform_calculation(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
     generate_reports(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
 

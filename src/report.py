@@ -13,6 +13,7 @@ def worker(language: Translation):
     command = f"library(\"data.table\"); data <- fread(\"{input_file}\", quote = \"\");"
 
     output_path = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}"
+    command += calculate_skewness(output_path, language)
     command += create_histogram(output_path, language)
     command += create_qq_plot(output_path, language)
     command += outlier_percentage(output_path, language)
