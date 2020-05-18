@@ -1,7 +1,7 @@
 import sys
 import os
 from csv import DictReader,  QUOTE_NONE
-from subprocess import run
+from subprocess import run, PIPE
 
 import model
 from util import cosine_similarity
@@ -22,11 +22,14 @@ def override_and_print(string: AnyStr):
     print(f"{string}", end='\r')
 
 
-def worker(word, vec: (AnyStr, Iterable[float])) -> (AnyStr, float32):
+def worker(word_tuple: (AnyStr, Iterable[float])) -> (AnyStr, float32):
     """Worker function for the pool cannot be inner function because it cannot be pickled that way"""
     # Check if there is any punctuation in the word. If there is, skip it. This used `string.punctuation` minus `-`,
     # since this symbol can occur in actual words
-    word_vector = vec
+    word, vec = word_tuple
+    word_vector = list(vec)
+    if len(word_vector) != 300:
+        return None, None
     diff_man = cosine_similarity(word_vector, current_man_vec)
     diff_woman = cosine_similarity(word_vector, current_woman_vec)
     diff = diff_man - diff_woman
@@ -38,6 +41,24 @@ def write_merged_file(output_directory: AnyStr, translations: List[Translation])
     for t in translations:
         files += f"{output_directory}/{t.language_code}.txt "
     run(f"cat {files} > {output_directory}/all.txt", shell=True, check=True)
+
+
+def get_man_and_woman_vectors(man: AnyStr, woman: AnyStr, data_directory: AnyStr,
+                              language_code: AnyStr) -> (Iterable[float], Iterable[float]):
+    man_command = ["grep", "-m 1", f"^{man} ", f"{data_directory}/cc.{language_code}.300.vec"]
+    woman_command = ["grep", "-m 1", f"^{woman} ", f"{data_directory}/cc.{language_code}.300.vec"]
+    man = run(man_command, stdout=PIPE).stdout.decode('utf-8')
+    woman = run(woman_command, stdout=PIPE).stdout.decode('utf-8')
+
+    man = man.rstrip().split(' ')[1:]
+    woman = woman.rstrip().split(' ')[1:]
+    assert len(man) == 300
+    assert len(woman) == 300
+
+    man = map(float, man)
+    woman = map(float, woman)
+
+    return man, woman
 
 
 def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr]):
@@ -55,14 +76,15 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         print(f"Starting to process {translation.language} - {translation_count}/{len(translations)}")
 
         override_and_print(f"Loading {translation.language} into memory...")
-        current_model = model.load_vectors(data_directory, translation.language_code, 1000)
+        man, woman = get_man_and_woman_vectors(translation.man, translation.woman, data_directory, translation.language_code)
+        current_model = model.load_vectors(data_directory, translation.language_code, length=1000)
         override_and_print(f"Loaded {translation.language}")
 
         override_and_print(f"Processing {translation.language}")
 
         # Load the vectors of the translations
-        current_man_vec = current_model[translation.man]
-        current_woman_vec = current_model[translation.woman]
+        current_man_vec = list(man)
+        current_woman_vec = list(woman)
 
         amount_of_words = len(current_model)
         amount_of_words_done = 0
@@ -70,7 +92,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         words = list()
 
         with Pool() as pool:
-            it = pool.imap(func=worker, iterable=current_model, chunksize=10)
+            it = pool.imap(func=worker, iterable=current_model.items(), chunksize=10)
             while True:
                 try:
                     word, diff = next(it)

@@ -64,22 +64,22 @@ def download_languages(directory: AnyStr, language_codes: List[AnyStr]):
     chdir(root)
 
 
-def load_vectors(directory: AnyStr, language: AnyStr, amount: int) -> Dict[AnyStr, Iterator[float]]:
+def load_vectors(directory: AnyStr, language: AnyStr, length: int = 10e12) -> Dict[AnyStr, Iterator[float]]:
     root = getcwd()
     chdir(root + f"/{directory}")
-    fin = open(f'cc.{language}.300.vec', 'r', encoding='utf-8', newline='\n', errors='ignore')
+    fin = open(f'cc.{language}.300.vec', 'r', encoding='utf-8', newline='\n', errors='ignore', )
     chdir(root)
     n, d = map(int, fin.readline().split())
     data = {}
     current_amount = 0
     for line in fin:
-        if current_amount < amount:
+        if current_amount < length:
             tokens = line.rstrip().split(' ')
             data[tokens[0]] = map(float, tokens[1:])
             current_amount += 1
         else:
             break
-    assert(len(data) == amount)
+    assert(len(data) == length)
     return data
 
 
