@@ -61,7 +61,8 @@ def get_man_and_woman_vectors(man: AnyStr, woman: AnyStr, data_directory: AnyStr
     return man, woman
 
 
-def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr]):
+def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr],
+                        length: int = 10000):
     translations = load_translations(language_codes)
     translation_count = 0
     for translation in translations:
@@ -77,7 +78,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
 
         override_and_print(f"Loading {translation.language} into memory...")
         man, woman = get_man_and_woman_vectors(translation.man, translation.woman, data_directory, translation.language_code)
-        current_model = model.load_vectors(data_directory, translation.language_code, length=1000)
+        current_model = model.load_vectors(data_directory, translation.language_code, length)
         override_and_print(f"Loaded {translation.language}")
 
         override_and_print(f"Processing {translation.language}")

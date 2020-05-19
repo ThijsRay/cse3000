@@ -65,15 +65,48 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"dev.off();"
 
 
+def grouped_calculations(output_directory: AnyStr):
+    command = "library(\"data.table\"); " \
+              f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
+    # Set command output file
+    command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
+    # Convert language codes to factors
+    command += "data$V3 <- as.factor(data$V3);"
+    # Boxplot
+    command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
+               f"boxplot(data$V2~data$V3); " \
+               f"dev.off();"
+    # Do Kruskal-Wallis Rank sum test
+    command += "kw <- kruskal.test(data$V2, data$V3);"
+    # Check if value is significant, if so, run
+    command += "if (kw$p.value < 0.01) { " \
+               "    library(dunn.test);" \
+               "    dunn.test(data$V2, data$V3, table=FALSE, list=TRUE, method=\"holm\")" \
+               "} else {" \
+               "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
+               "};"
+    # Calculate median
+    command += "x <- aggregate(data$V2, by=list(data$V3), FUN=median);"
+    # Calculate ranksum
+    command += "ranksum <- aggregate(rank(V2) ~ V3, data=data, FUN=sum);" \
+               "ranksum_order <- order(ranksum[[2]]);" \
+               "ranksum[ranksum_order,];"
+    command += "sink()"
+    run_r(command)
+
+
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
     global OUTPUT_DIRECTORY
     OUTPUT_DIRECTORY = output_directory
 
-    # Limit the amount of processes in the pool to avoid memory starvation
-    with Pool() as pool:
-        it = pool.imap(func=worker, iterable=load_translations(languages), chunksize=1)
-        while True:
-            try:
-                next(it)
-            except StopIteration:
-                break
+    grouped_calculations(output_directory)
+
+    ## Limit the amount of processes in the pool to avoid memory starvation
+    #with Pool() as pool:
+    #    it = pool.imap(func=worker, iterable=load_translations(languages), chunksize=1)
+    #    while True:
+    #        try:
+    #            next(it)
+    #        except StopIteration:
+    #            break
+

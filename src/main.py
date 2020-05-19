@@ -11,8 +11,8 @@ LANGUAGES: List[AnyStr] = ["zh", "es", "en", "hi", "pt", "ru", "ja", "tr", "ko",
 
 
 def main():
-    download_languages(DATA_DIRECTORY, LANGUAGES)
-    perform_calculation(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
+    #download_languages(DATA_DIRECTORY, LANGUAGES)
+    perform_calculation(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES, length=1000)
     generate_reports(DATA_DIRECTORY, OUTPUT_DIRECTORY, LANGUAGES)
 
 
