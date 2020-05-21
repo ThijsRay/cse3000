@@ -111,8 +111,8 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
         # Mark the model for deletion
         del current_model, current_man_vec, current_woman_vec
 
-        override_and_print(f"Sorting result of {translation}")
-        words = sort_output(words)
+        # override_and_print(f"Sorting result of {translation}")
+        # words = sort_output(words)
 
         override_and_print(f"Writing result of {translation.language} to disk")
         write_result(output_directory, translation.language_code, words)

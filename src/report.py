@@ -85,12 +85,29 @@ def grouped_calculations(output_directory: AnyStr):
                "} else {" \
                "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
                "};"
+    # Add frequency to the data
+    command += "data$frequency <- 0.1 / (((1:nrow(data) - 1) %% 1000) + 1);"
+    # Define aggregate and print function
+    command += "aggr_and_print <- function(x, data, f) {" \
+               "x <- aggregate(x, data=data, FUN=f);" \
+               "x[order(x[[2]]),]};"
+    # Calculate mean
+    command += "cat(\"Mean\\n\"); aggr_and_print(V2~V3, data, mean);"
     # Calculate median
-    command += "x <- aggregate(data$V2, by=list(data$V3), FUN=median);"
+    command += "cat(\"Median\\n\"); aggr_and_print(V2~V3, data, median);"
+    # Calculate skewness
+    command += "cat(\"Skewness\\n\");"
+    command += "library(\"e1071\"); aggr_and_print(V2~V3, data, skewness);"
     # Calculate ranksum
-    command += "ranksum <- aggregate(rank(V2) ~ V3, data=data, FUN=sum);" \
-               "ranksum_order <- order(ranksum[[2]]);" \
-               "ranksum[ranksum_order,];"
+    command += "cat(\"Rank sum\\n\");"
+    command += "aggr_and_print(rank(V2)~V3, data, sum);"
+    # Calculate weighted mean
+    command += "options(scipen = 999);"
+    command += "cat(\"Weighted mean\\n\");"
+    command += "x <- aggr_and_print(V2 * frequency ~V3, data, function(x, y) {mean(x)}); x;"
+    # Calculate normalized mean
+    command += "cat(\"Weighted normalized mean\\n\");"
+    command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
     command += "sink()"
     run_r(command)
 
