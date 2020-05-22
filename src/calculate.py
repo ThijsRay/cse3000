@@ -62,7 +62,7 @@ def get_man_and_woman_vectors(man: AnyStr, woman: AnyStr, data_directory: AnyStr
 
 
 def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr],
-                        length: int = 10000):
+                        length: int = 10e9):
     translations = load_translations(language_codes)
     translation_count = 0
     for translation in translations:
