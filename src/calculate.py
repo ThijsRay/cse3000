@@ -63,8 +63,6 @@ def get_man_and_woman_vectors(man: AnyStr, woman: AnyStr, data_directory: AnyStr
 
 def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, language_codes: List[AnyStr],
                         length: int = 10e9):
-    assert harmonic_series(2000000) == 15.085873
-
     translations = load_translations(language_codes)
     translation_count = 0
     for translation in translations:
@@ -107,7 +105,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
                     if word is None:
                         continue
 
-                    freq = 1/(rank * pre_calculated_harmonic_series(amount_of_words))
+                    freq = 1/(rank * harmonic_series(amount_of_words))
                     words.append((word, diff, freq))
                 except StopIteration:
                     break
@@ -160,28 +158,4 @@ def harmonic_series(n: int) -> float:
     s = 0.0
     for i in range(1, n + 1):
         s = s + 1 / i
-    return round(s, 6)
-
-
-def pre_calculated_harmonic_series(n: int) -> float:
-    """I don't want to write something that calculates this efficiently for
-    a high value of n, so this is hardcoded with results from WolframAlpha for sum(1/n, 1, ???)"""
-    if n == 2000000:
-        return 15.085873653425731440798359606834264244724206398104562757148488061733943338344020398082517522302982304108
-    if n == 151125:
-        return 12.503081561334415442526100151300640538674733657480286619693566939763014806537634243189070327633866362865
-    if n == 1824848:
-        return 14.994223192755816384156697214033049853004555038664310905880365554124054450212066046010141173576921023547
-    if n == 1876653:
-        return 15.022216360338905566309638963520604319317334935897106943794454531723907173030271839602509053615446595923
-    if n == 1878288:
-        return 15.023087212726681336942971079904723457535981598487087890320490120416498105945121871841062744059609053733
-    if n == 242732:
-        return 12.976930957828938826623141265529380170610668707346014226484754727341677328443126701892619919235898770144
-    if n == 335230:
-        return 13.299789298806049059661667608870245314731315580786056027788761533669870263560299150801767444640479069448
-    if n == 515226:
-        return 13.729577553686571519585446941658857675289603240100189151066321851030339605034959123910918174889753512733
-    raise KeyError(f"Length {n} not found in pre-calculated harmonic series, please fill in missing value")
-
-
+    return s
