@@ -71,40 +71,38 @@ def grouped_calculations(output_directory: AnyStr):
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
     # Convert language codes to factors
-    command += "data$V3 <- as.factor(data$V3);"
+    command += "data$V4 <- as.factor(data$V4);"
     # Boxplot
     command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
                f"boxplot(data$V2~data$V3); " \
                f"dev.off();"
     # Do Kruskal-Wallis Rank sum test
-    command += "kw <- kruskal.test(data$V2, data$V3);"
+    command += "kw <- kruskal.test(data$V2, data$V4);"
     # Check if value is significant, if so, run
     command += "if (kw$p.value < 0.01) { " \
                "    library(dunn.test);" \
-               "    dunn.test(data$V2, data$V3, table=FALSE, list=TRUE, method=\"holm\")" \
+               "    dunn.test(data$V2, data$V4, table=FALSE, list=TRUE, method=\"holm\")" \
                "} else {" \
                "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
                "};"
-    # Add frequency to the data
-    command += "data$frequency <- 0.1 / (((1:nrow(data) - 1) %% 1000) + 1);"
     # Define aggregate and print function
     command += "aggr_and_print <- function(x, data, f) {" \
                "x <- aggregate(x, data=data, FUN=f);" \
                "x[order(x[[2]]),]};"
     # Calculate mean
-    command += "cat(\"Mean\\n\"); aggr_and_print(V2~V3, data, mean);"
+    command += "cat(\"Mean\\n\"); aggr_and_print(V2~V4, data, mean);"
     # Calculate median
-    command += "cat(\"Median\\n\"); aggr_and_print(V2~V3, data, median);"
+    command += "cat(\"Median\\n\"); aggr_and_print(V2~V4, data, median);"
     # Calculate skewness
     command += "cat(\"Skewness\\n\");"
-    command += "library(\"e1071\"); aggr_and_print(V2~V3, data, skewness);"
+    command += "library(\"e1071\"); aggr_and_print(V2~V4, data, skewness);"
     # Calculate ranksum
     command += "cat(\"Rank sum\\n\");"
     command += "aggr_and_print(rank(V2)~V3, data, sum);"
     # Calculate weighted mean
     command += "options(scipen = 999);"
     command += "cat(\"Weighted mean\\n\");"
-    command += "x <- aggr_and_print(V2 * frequency ~V3, data, function(x, y) {mean(x)}); x;"
+    command += "x <- aggr_and_print(V2*V3 ~ V4, data, function(x, y) {mean(x)}); x;"
     # Calculate normalized mean
     command += "cat(\"Weighted normalized mean\\n\");"
     command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
