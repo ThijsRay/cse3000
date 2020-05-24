@@ -92,6 +92,8 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
 
         words = list()
 
+        harmonic = harmonic_series(amount_of_words)
+
         with Pool() as pool:
             it = pool.imap(func=worker, iterable=current_model.items(), chunksize=1000)
             while True:
@@ -105,7 +107,7 @@ def perform_calculation(data_directory: AnyStr, output_directory: AnyStr, langua
                     if word is None:
                         continue
 
-                    freq = 1/(rank * harmonic_series(amount_of_words))
+                    freq = 1/(rank * harmonic)
                     words.append((word, diff, freq))
                 except StopIteration:
                     break
