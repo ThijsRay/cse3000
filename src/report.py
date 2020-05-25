@@ -69,7 +69,7 @@ def grouped_calculations(output_directory: AnyStr):
     command = "library(\"hyperSMURF\");" \
               "library(\"dplyr\");" \
               "library(\"data.table\");" \
-              f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
+              f"data <- fread(\"{quote(output_directory)}/all_sample.txt\", quote = \"\");"
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
     # Set the headers of the dataframe
@@ -84,43 +84,56 @@ def grouped_calculations(output_directory: AnyStr):
     # Add weighted bias column
     command += "data$wbias = data$bias * data$freq;"
     # Weighted bias per language
-    command += "aggregate(wbias ~lang, data = data, FUN = sum); "
-    # Group per languages
-    command += "grouped <- data %>% split(data$lang);"
+    command += "aggregate(wbias~lang, data = data, FUN = sum); "
     # Create pairs
-    command += "langs <- as.character(unique(data$lang)); langs <- expand.grid(langs, langs);"
+    command += "langs <- as.character(unique(data$lang)); langs <- expand.grid(langs, langs);" \
+               "x <- unique(as.data.frame(t(apply(langs, 1, sort))));" \
+               "langs <- x;" \
+               "langs <- x %>% filter(V1!=V2);"
     command += "x<-data.frame(L1=character(), L2=character(), diff=double(), p=double(), effect_size=double());"
-    command += "for (i in 1:nrow(langs)) {x[nrow(x) + 1, ] = list(langs[i,]$Var1, langs[i,]$Var2, 0, 0, 0)};" \
-               "langs <- x %>% filter(L1!=L2);"
+    command += "for (i in 1:nrow(langs)) {" \
+               "    x[nrow(x) + 1, ] = list(as.character(langs[i, 1]), as.character(langs[i, 2]), 0, 0, 0)" \
+               "};" \
+               "langs <- x;" \
+    # Filtered sets
+    command += "filtered <- list();" \
+               "for(x in 1:nrow(langs)) {" \
+               "    y <- langs[x,];" \
+               "    filtered[[x]] <- data %>% filter(lang==y$L1 | lang==y$L2);" \
+               "    filtered[[x]] <- data.table(filtered[[x]]);" \
+               "};"
     # Fill diff column of langs
     command += "diff <- c(); " \
                "for(x in 1:nrow(langs)) {" \
-               "  y <- langs[x,];" \
-               "  filtered <- data %>% filter(lang==y$L1 | lang==y$L2);" \
-               "  sums <- aggregate(wbias~lang, data=filtered, FUN=sum);" \
+               "  sums <- aggregate(wbias~lang, data=filtered[[x]], FUN=sum);" \
                "  diff <- c(diff, sums[1,2]-sums[2,2]); " \
                "}; " \
                "langs$diff <- diff;"
     # Calculate the p-score for each pair
-    command += "n_of_tests <- 2; " \
+    command += "n_of_tests <- 1; " \
                "p <- c(); " \
                "for(x in 1:nrow(langs)) {" \
-               "  y <- langs[x,];" \
-               "  filtered <- data %>% filter(lang==y$L1 | lang==y$L2);" \
-               "  filtered <- data.table(filtered);" \
-               "  ptest_success = 0;" \
+               "  ptest_success <- 0;" \
                "  for(z in 1:n_of_tests) {" \
-               "    partition = do.random.partition(nrow(filtered), 2);" \
-               "    f1<-filtered[partition[[1]]];" \
-               "    f2<-filtered[partition[[2]]];" \
+               "    partition <- do.random.partition(nrow(filtered[[x]]), 2);" \
+               "    f1<-filtered[[x]][partition[[1]]];" \
+               "    f2<-filtered[[x]][partition[[2]]];" \
                "    ptest <- sum(f1$wbias) - sum(f2$wbias);" \
-               "    if(ptest > y$diff) { p" \
-               "      test_success <- ptest_success+1 " \
+               "    if(ptest > y$diff) { " \
+               "      ptest_success <- ptest_success+1; " \
                "    } " \
                "  }; " \
                "  p <- c(p, ptest_success/n_of_tests);" \
                "}; " \
                "langs$p <- p;"
+    # Calculate effect size
+    command += "effect_size <- c(); " \
+               "for(x in 1:nrow(langs)) {" \
+               "    effect_size <- c(effect_size, y$diff / sd(filtered[[x]]$wbias));" \
+               "}; " \
+               "langs$effect_size <- effect_size;"
+    # Print langs table
+    command += "langs;"
     # Boxplot
     #command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
     #           f"boxplot(data$bias~data$lang); " \
@@ -135,7 +148,7 @@ def grouped_calculations(output_directory: AnyStr):
     #           "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
     #           "};"
     # Test statistic by Caliskan
-    command += "sum(apply(data[x[[1]]], MARGIN=1, FUN=function(x) { as.numeric(x[2]) * as.numeric(x[3]) }))"
+    #command += "sum(apply(data[x[[1]]], MARGIN=1, FUN=function(x) { as.numeric(x[2]) * as.numeric(x[3]) }));"
     # Define aggregate and print function
     #command += "aggr_and_print <- function(x, data, f) {" \
     #           "x <- aggregate(x, data=data, FUN=f);" \
@@ -157,7 +170,7 @@ def grouped_calculations(output_directory: AnyStr):
     ## Calculate normalized mean
     #command += "cat(\"Weighted normalized mean\\n\");"
     #command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
-    #command += "sink()"
+    command += "sink()"
     run_r(command)
 
 
