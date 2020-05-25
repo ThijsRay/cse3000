@@ -129,6 +129,7 @@ def grouped_calculations(output_directory: AnyStr):
     # Calculate effect size
     command += "effect_size <- c(); " \
                "for(x in 1:nrow(langs)) {" \
+               "    y <- langs[x,];" \
                "    effect_size <- c(effect_size, y$diff / sd(filtered[[x]]$wbias));" \
                "}; " \
                "langs$effect_size <- effect_size;"
