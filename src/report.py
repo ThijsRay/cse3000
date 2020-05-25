@@ -69,7 +69,7 @@ def grouped_calculations(output_directory: AnyStr):
     command = "library(\"hyperSMURF\");" \
               "library(\"dplyr\");" \
               "library(\"data.table\");" \
-              f"data <- fread(\"{quote(output_directory)}/all_sample.txt\", quote = \"\");"
+              f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
     # Set the headers of the dataframe
