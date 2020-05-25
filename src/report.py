@@ -66,47 +66,98 @@ def create_histogram(output_path: AnyStr, language: Translation):
 
 
 def grouped_calculations(output_directory: AnyStr):
-    command = "library(\"data.table\"); " \
+    command = "library(\"hyperSMURF\");" \
+              "library(\"dplyr\");" \
+              "library(\"data.table\");" \
               f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
+    # Set the headers of the dataframe
+    command += "colnames(data)[1] = \"word\";"
+    command += "colnames(data)[2] = \"bias\";"
+    command += "colnames(data)[3] = \"freq\";"
+    command += "colnames(data)[4] = \"lang\";"
+    # Define harmonic series
+    command += "harmonic <- function(n) { i<-1; s<-0.0; for(i in 1:n) { s<-s+(1/i);  }; s};"
     # Convert language codes to factors
-    command += "data$V4 <- as.factor(data$V4);"
+    command += "data$lang <- as.factor(data$lang);"
+    # Add weighted bias column
+    command += "data$wbias = data$bias * data$freq;"
+    # Weighted bias per language
+    command += "aggregate(wbias ~lang, data = data, FUN = sum); "
+    # Group per languages
+    command += "grouped <- data %>% split(data$lang);"
+    # Create pairs
+    command += "langs <- as.character(unique(data$lang)); langs <- expand.grid(langs, langs);"
+    command += "x<-data.frame(L1=character(), L2=character(), diff=double(), p=double(), effect_size=double());"
+    command += "for (i in 1:nrow(langs)) {x[nrow(x) + 1, ] = list(langs[i,]$Var1, langs[i,]$Var2, 0, 0, 0)};" \
+               "langs <- x %>% filter(L1!=L2);"
+    # Fill diff column of langs
+    command += "diff <- c(); " \
+               "for(x in 1:nrow(langs)) {" \
+               "  y <- langs[x,];" \
+               "  filtered <- data %>% filter(lang==y$L1 | lang==y$L2);" \
+               "  sums <- aggregate(wbias~lang, data=filtered, FUN=sum);" \
+               "  diff <- c(diff, sums[1,2]-sums[2,2]); " \
+               "}; " \
+               "langs$diff <- diff;"
+    # Calculate the p-score for each pair
+    command += "n_of_tests <- 2; " \
+               "p <- c(); " \
+               "for(x in 1:nrow(langs)) {" \
+               "  y <- langs[x,];" \
+               "  filtered <- data %>% filter(lang==y$L1 | lang==y$L2);" \
+               "  filtered <- data.table(filtered);" \
+               "  ptest_success = 0;" \
+               "  for(z in 1:n_of_tests) {" \
+               "    partition = do.random.partition(nrow(filtered), 2);" \
+               "    f1<-filtered[partition[[1]]];" \
+               "    f2<-filtered[partition[[2]]];" \
+               "    ptest <- sum(f1$wbias) - sum(f2$wbias);" \
+               "    if(ptest > y$diff) { p" \
+               "      test_success <- ptest_success+1 " \
+               "    } " \
+               "  }; " \
+               "  p <- c(p, ptest_success/n_of_tests);" \
+               "}; " \
+               "langs$p <- p;"
     # Boxplot
-    command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
-               f"boxplot(data$V2~data$V3); " \
-               f"dev.off();"
+    #command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
+    #           f"boxplot(data$bias~data$lang); " \
+    #           f"dev.off();"
     # Do Kruskal-Wallis Rank sum test
-    command += "kw <- kruskal.test(data$V2, data$V4);"
+    #command += "kw <- kruskal.test(data$bias, data$lang);"
     # Check if value is significant, if so, run
-    command += "if (kw$p.value < 0.01) { " \
-               "    library(dunn.test);" \
-               "    dunn.test(data$V2, data$V4, table=FALSE, list=TRUE, method=\"holm\")" \
-               "} else {" \
-               "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
-               "};"
+    #command += "if (kw$p.value < 0.01) { " \
+    #           "    library(dunn.test);" \
+    #           "    dunn.test(data$bias, data$lang, table=FALSE, list=TRUE, method=\"holm\")" \
+    #           "} else {" \
+    #           "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
+    #           "};"
+    # Test statistic by Caliskan
+    command += "sum(apply(data[x[[1]]], MARGIN=1, FUN=function(x) { as.numeric(x[2]) * as.numeric(x[3]) }))"
     # Define aggregate and print function
-    command += "aggr_and_print <- function(x, data, f) {" \
-               "x <- aggregate(x, data=data, FUN=f);" \
-               "x[order(x[[2]]),]};"
-    # Calculate mean
-    command += "cat(\"Mean\\n\"); aggr_and_print(V2~V4, data, mean);"
-    # Calculate median
-    command += "cat(\"Median\\n\"); aggr_and_print(V2~V4, data, median);"
-    # Calculate skewness
-    command += "cat(\"Skewness\\n\");"
-    command += "library(\"e1071\"); aggr_and_print(V2~V4, data, skewness);"
-    # Calculate ranksum
-    command += "cat(\"Rank sum\\n\");"
-    command += "aggr_and_print(rank(V2)~V3, data, sum);"
-    # Calculate weighted mean
-    command += "options(scipen = 999);"
-    command += "cat(\"Weighted mean\\n\");"
-    command += "x <- aggr_and_print(V2*V3 ~ V4, data, function(x, y) {mean(x)}); x;"
-    # Calculate normalized mean
-    command += "cat(\"Weighted normalized mean\\n\");"
-    command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
-    command += "sink()"
+    #command += "aggr_and_print <- function(x, data, f) {" \
+    #           "x <- aggregate(x, data=data, FUN=f);" \
+    #           "x[order(x[[2]]),]};"
+    ## Calculate mean
+    #command += "cat(\"Mean\\n\"); aggr_and_print(V2~V4, data, mean);"
+    ## Calculate median
+    #command += "cat(\"Median\\n\"); aggr_and_print(V2~V4, data, median);"
+    ## Calculate skewness
+    #command += "cat(\"Skewness\\n\");"
+    #command += "library(\"e1071\"); aggr_and_print(V2~V4, data, skewness);"
+    ## Calculate ranksum
+    #command += "cat(\"Rank sum\\n\");"
+    #command += "aggr_and_print(rank(V2)~V3, data, sum);"
+    ## Calculate weighted mean
+    #command += "options(scipen = 999);"
+    #command += "cat(\"Weighted mean\\n\");"
+    #command += "x <- aggr_and_print(V2*V3 ~ V4, data, function(x, y) {mean(x)}); x;"
+    ## Calculate normalized mean
+    #command += "cat(\"Weighted normalized mean\\n\");"
+    #command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
+    #command += "sink()"
     run_r(command)
 
 
