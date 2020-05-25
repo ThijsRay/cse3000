@@ -105,25 +105,26 @@ def grouped_calculations(output_directory: AnyStr):
     # Fill diff column of langs
     command += "diff <- c(); " \
                "for(x in 1:nrow(langs)) {" \
-               "  sums <- aggregate(wbias~lang, data=filtered[[x]], FUN=sum);" \
-               "  diff <- c(diff, sums[1,2]-sums[2,2]); " \
+               "    sums <- aggregate(wbias~lang, data=filtered[[x]], FUN=sum);" \
+               "    diff <- c(diff, sums[1,2]-sums[2,2]); " \
                "}; " \
                "langs$diff <- diff;"
     # Calculate the p-score for each pair
-    command += "n_of_tests <- 1; " \
+    command += "n_of_tests <- 10000; " \
                "p <- c(); " \
                "for(x in 1:nrow(langs)) {" \
-               "  ptest_success <- 0;" \
-               "  for(z in 1:n_of_tests) {" \
-               "    partition <- do.random.partition(nrow(filtered[[x]]), 2);" \
-               "    f1<-filtered[[x]][partition[[1]]];" \
-               "    f2<-filtered[[x]][partition[[2]]];" \
-               "    ptest <- sum(f1$wbias) - sum(f2$wbias);" \
-               "    if(ptest > y$diff) { " \
-               "      ptest_success <- ptest_success+1; " \
-               "    } " \
-               "  }; " \
-               "  p <- c(p, ptest_success/n_of_tests);" \
+               "    y <- langs[x,];" \
+               "    ptest_success <- 0;" \
+               "    for(z in 1:n_of_tests) {" \
+               "        partition <- do.random.partition(nrow(filtered[[x]]), 2);" \
+               "        f1<-filtered[[x]][partition[[1]]];" \
+               "        f2<-filtered[[x]][partition[[2]]];" \
+               "        ptest <- sum(f1$wbias) - sum(f2$wbias);" \
+               "        if(ptest > y$diff) { " \
+               "            ptest_success <- ptest_success+1; " \
+               "        } " \
+               "    }; " \
+               "    p <- c(p, ptest_success/n_of_tests);" \
                "}; " \
                "langs$p <- p;"
     # Calculate effect size
