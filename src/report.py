@@ -69,9 +69,13 @@ def grouped_calculations(output_directory: AnyStr):
     command = "library(\"hyperSMURF\");" \
               "library(\"dplyr\");" \
               "library(\"data.table\");" \
-              f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
+              "library(\"doParallel\");" \
+              "registerDoParallel(8);" \
+              f"data <- fread(\"{quote(output_directory)}/all_sample.txt\", quote = \"\");"
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
+    # Set scientific precision
+    command += "options(scipen=20);"
     # Set the headers of the dataframe
     command += "colnames(data)[1] = \"word\";"
     command += "colnames(data)[2] = \"bias\";"
@@ -97,22 +101,21 @@ def grouped_calculations(output_directory: AnyStr):
                "langs <- x;" \
     # Filtered sets
     command += "filtered <- list();" \
-               "for(x in 1:nrow(langs)) {" \
+               "filtered <- foreach(x=1:nrow(langs)) %dopar% {" \
                "    y <- langs[x,];" \
                "    filtered[[x]] <- data %>% filter(lang==y$L1 | lang==y$L2);" \
-               "    filtered[[x]] <- data.table(filtered[[x]]);" \
+               "    data.table(filtered[[x]])" \
                "};"
     # Fill diff column of langs
-    command += "diff <- c(); " \
-               "for(x in 1:nrow(langs)) {" \
+    command += "diff <- foreach(x=1:nrow(langs)) %dopar% {" \
                "    sums <- aggregate(wbias~lang, data=filtered[[x]], FUN=sum);" \
-               "    diff <- c(diff, sums[1,2]-sums[2,2]); " \
+               "    sums[1,2]-sums[2,2] " \
                "}; " \
-               "langs$diff <- diff;"
+               "langs$diff <- unlist(diff);" \
+               "langs;"
     # Calculate the p-score for each pair
-    command += "n_of_tests <- 10000; " \
-               "p <- c(); " \
-               "for(x in 1:nrow(langs)) {" \
+    command += "n_of_tests <- 1000; " \
+               "p <- foreach(x=1:nrow(langs)) %dopar% {" \
                "    y <- langs[x,];" \
                "    ptest_success <- 0;" \
                "    for(z in 1:n_of_tests) {" \
@@ -124,22 +127,26 @@ def grouped_calculations(output_directory: AnyStr):
                "            ptest_success <- ptest_success+1; " \
                "        } " \
                "    }; " \
-               "    p <- c(p, ptest_success/n_of_tests);" \
+               "    ptest_success/n_of_tests" \
                "}; " \
-               "langs$p <- p;"
+               "langs$p <- unlist(p);" \
+               "langs;"
     # Calculate effect size
     command += "effect_size <- c(); " \
-               "for(x in 1:nrow(langs)) {" \
+               "effect_size <- foreach(x=1:nrow(langs)) %dopar% {" \
                "    y <- langs[x,];" \
-               "    effect_size <- c(effect_size, y$diff / sd(filtered[[x]]$wbias));" \
+               "    y$diff[[1]] / sd(filtered[[x]]$wbias)" \
                "}; " \
-               "langs$effect_size <- effect_size;"
+               "langs$effect_size <- unlist(effect_size);"
     # Print langs table
     command += "langs;"
+    # Plot weighted biases
+    command += "library('ggplot2');" \
+               "data$lang <- factor(data$lang, levels=unique(data$lang[order(data$wbias)]));"
     # Boxplot
-    #command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
-    #           f"boxplot(data$bias~data$lang); " \
-    #           f"dev.off();"
+    command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
+               f"boxplot(data$bias~data$lang); " \
+               f"dev.off();"
     # Do Kruskal-Wallis Rank sum test
     #command += "kw <- kruskal.test(data$bias, data$lang);"
     # Check if value is significant, if so, run
