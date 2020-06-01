@@ -1,16 +1,4 @@
 \section{Methodology}
-The languages that have been used in this research, have been chosen based on a 
-few critera, 
-\begin{seriate}
-    \item the language has a pre-trained word embedding from \textcite{grave2018learning}
-    \item the language should be machine translatable with the help of tools like DeepL or
-    Google Translate and
-    \item the language is part of a different language family than the languages that
-    were already chosen.
-\end{seriate}
-This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{man} and \textit{woman}
-can be found in table~\ref{appendix:languages}.
-
 A common way of measuring gender bias in word embeddings uses the 
 WEAT~\parencite{caliskan_2017_semantics_language_corpora} method. This method measure the
 association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{woman}) 
@@ -23,91 +11,109 @@ First, not all words have a one-to-one translation into another
 language, because certain words might have a different meaning, depending on the
 context in which the word is used. It is therefore not possible to translate all the
 attribute and target words into a different language, because it might lead to an
-incorrect and unfair comparison. 
+incorrect and unfair comparison. A great example of this would the English word
+\textit{man}, which can mean \textit{male} or \textit{mankind}, depending on the context.
 Second, the inclusion or exclusion of words from
 the target set is a subjective decision~\parencite{nissim_fair_is_better_2020}. Therefore,
 the measurement itself could be biased, depending on what words are or are not in the set of target words.
-Third, it is labour intensive to correctly translate this set of words for various languages, especially because not all words have a one-to-one translation.
 
-A solution to these problems could be to limit the amount of words that have to be
+The first problem can be addressed by limiting the amount of words that have to be
 translated. The method that is used in this research will use the two attribute words 
-\textit{man} and \textit{woman}. The assumption is made that these words are universal and translatable in all languages. The research has looked at two ways to create the set of
-target words in a way that is reproducible for all languages. The first way uses the
+\textit{male} and \textit{female}. The assumption is made that these words are universal
+and translatable in all languages. However, this is an assumption that is difficult to
+verify without having a good understanding of all the languages that are involved.
+
+The second problem can be addressed in two ways. The goal is to create a reproducible
+set of target words for all languages. This can be done by either looking at all words
+in the
+word embedding, or by looking at the most used words in the word embedding.
+
+The first way uses the
 all the words in the word embedding as target words. The advantage of this approach is 
 that all words are considered, which eliminates the inclusion or exclusion subjectiveness
-described by \textcite{nissim_fair_is_better_2020}. The disadvantages of this approach
-are that the results are difficult to interpret, because the distributions for each
-language are quite different and because words with an explicit 
+described by \textcite{nissim_fair_is_better_2020}. A disadvantage of this approach
+are that the results are difficult to interpret, because words with an explicit
 gender (e.g. \textit{waiter}, \textit{waitress}, \textit{king}, \textit{queen}) are also 
 present.
 
-The second way uses only the words that are most commonly used in the language. This
-approach builds upon the assumption that 
-\begin{seriate}
-\item words that are regarded as neutral (e.g. \textit{and}, \textit{the}) should be
-    gender neutral, unless there exists some form of gender bias the the word embedding,
-\item word with an explicit gender are not the most commonly used words and
-\item since word corpora follow Zipf's law~\parencite{li1992random}, only about 100 words are needed to cover about 50\% of the used language and only about 1000 words are needed to cover about 75\% of the used language. If a word embedding is biased, it should be detectable by using the most commonly used words in a language.
-\end{seriate}
+The second way still uses all the words in the word embedding, but attaches a weight to
+each word, depending on its frequency. Effectively, this results in a measurement over
+the most commonly used words, because those words have the highest weight.
+This approach builds upon the assumption that words that are regarded as neutral words
+(e.g. \textit{and}, \textit{the}) should be gender neutral, unless there exists some form
+of gender bias in the word embedding.
+
 The advantage of this second approach is that results are more representative of how
 the language is actually used. While the amount of words associated with men and the
-amount of words associated with women might be equal, they are not used as often.
+amount of words associated with women might be equal, i.e. each male word has a female
+counterpart, they are not used as often.
 Taking the frequency of words into account addresses this issue. 
 The disadvantage of this is that
 it might miss forms of gender bias that might be present in the word embedding, because
-not all words are considered.
+not all words are considered to be as important as other words.
 
-Based on these considerations, the test statistic used by 
+Both of these approaches will be explored. Based on the considerations made above, the
+test statistic used by
 \textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
 $$
-s(X,Y,A,B) = \displaystyle\sum_{x \in X}t(x,X,A,B) - \displaystyle\sum_{y \in Y}t(y,Y,A,B)\quad\text{where}
+u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) - \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
 $$
+measures the difference between the \textit{cosine similarity} of a word $w$ of language $W$ and the set of attribute words $A$, and of the cosine similarity of a word $w$ and the
+set of attribute words $B$. The $A \cap W$ and $B \cap B$ ensure that the cosine
+similarity is only measured between two vectors in the same word embedding. The
+calculation of this difference can be used in
 $$
 t(w,W,A,B) = Z(\text{rank}(w), |W|) * u(w,W,A,B)\quad\text{where}
 $$
 $$
-u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) - \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
+Z(k, N) = 1 \quad\text{or}\quad Z(k, N) = \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)}
+$$
+This formula adds a weight to each word, depending on its frequency.
+In case the first approach is used, where all words are considered, $Z(k,N)$ will have a
+fixed value of 1 because the first approach does not include frequency.
+In case the second approach is used, the cosine simularity will get a weight attached
+to it because it built upon the assumption that
+if the word \textit{x} occurs more often than the word \textit{y}, then the former should be given more weight in the calculation, because that would more accurately reflect the usage of the words. The pre-trained models provided by \textcite{grave2018learning} are sorted by frequency, but exact information about how often a word occurs is omitted.
+Fortunately, the information about the frequency can be roughly approximated with the
+help of Zipf's law~\parencite{Zipf-1935} or $Z(k,N)$ where $k$ is the frequency rank of the
+word and where $N$ is the number of words in the language.
+
+This results in a test statistic of
+$$
+s(X,Y,A,B) = \displaystyle\sum_{x \in X}t(x,X,A,B) - \displaystyle\sum_{y \in Y}t(y,Y,A,B)\quad\text{where}
 $$
 where \textit{A} and \textit{B} are two sets of attribute words, in this case the
-translated versions of the words \textit{man} and
-\textit{woman} and where \textit{X} and \textit{Y} are two sets of target words
+translated versions of the words \textit{male} and
+\textit{female} and where \textit{X} and \textit{Y} are two sets of target words
 (e.g. \textit{engineer} and \textit{scientist}), in this case the sets of words from
 two distinct languages. 
+
 The one-sided $p$-value of the permutation test is described as
 $$
 \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)]
 $$
 where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
 size.
+
 The effect size can be described as
 $$
 \frac{
-    s(X,Y,A,B)
+    \text{mean}_{x \in X} u(x, X, A, B) - \text{mean}_{y \in Y} u(y, Y, A, B)
 }{
     \text{std-dev}_{w \in X \cup Y} u(w,W,A,B)
 }
 $$
 where $W$ is the language that $w$ is a part of.
 
-Their formulae have been be adopted for use in multiple languages with some adjustments. 
-$X$ and $Y$ will be the sets of words in the two distinct languages.
-$A$ will the set of $\textit{man} \in X \cup \textit{man} \in Y$ and $B$ will be
-the set of $\textit{woman} \in X \cup \textit{woman} \in Y$. An important remark
-here is that it can not be assumed that $A \subset X$, because $A$ contains 
-the definition of \textit{man} of both language $X$ and $Y$ and it cannot be
-assumed that these words exist in the other languages. Therefore, the definition of
-$s(w,A,B)$ needs to be adjusted.
 
-Another aspect that should be considered is the frequency of each word. If the
-word \textit{waiter} occurs more often than the word \textit{waitress}, then the former
-should be given more weight in the calculation, because that would more accurately 
-reflect the usage of the words. The pre-trained
-models provided by \textcite{grave2018learning} are sorted by frequency, but exact
-information about how often a word occurs is omitted.
-Fortunately, the information about the frequency can be roughly approximated with the
-help of Zipf's law~\parencite{Zipf-1935}:
-$$
-Z(k, N) = \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)}
-$$
-where $k$ is the frequency rank of the word and where $N$ is the number of words in the
-language.
+The languages that have been used in this research, have been chosen based on a
+few critera,
+\begin{seriate}
+    \item the language has a pre-trained word embedding from \textcite{grave2018learning}
+    \item the language should be machine translatable with the help of tools like DeepL or
+    Google Translate and
+    \item the language is part of a different language family than the languages that
+    were already chosen.
+\end{seriate}
+This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
+can be found in table~\ref{appendix:languages}.
