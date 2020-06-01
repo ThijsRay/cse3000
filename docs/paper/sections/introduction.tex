@@ -1,22 +1,40 @@
 \section{Introduction}
-Word embedding have become an important tool in the field of natural language
+Word embeddings have become an important tool in the field of natural language
 processing. They can be used to represent the semantics and the meaning of
-words as a vector of numbers, which is useful for all sorts of applications.
-However, word embeddings should be used with care because they can contain human
+words as a vector of numbers, which is used for all sorts of applications, like
+recommendation systems~\parencite{10.1145/3219819.3219885} or résumé
+scanning~\parencite{large-scale-hoang-2017}. Word
+embeddings are often used to solve analogies. An example of this would be that the
+vector that represents the word
+$\overrightarrow{queen}$ would be equal to $\overrightarrow{king} -
+\overrightarrow{man} +
+\overrightarrow{woman}$. This analogy would capture an `opposite gender' relation.
+Other examples of these analogies would be $\overrightarrow{Paris} -
+\overrightarrow{France} + \overrightarrow{Germany} \approx \overrightarrow{Berlin}$,
+capturing a `capital of' relation and
+$\overrightarrow{cars} - \overrightarrow{car} + \overrightarrow{apple} \approx
+\overrightarrow{apples}$, which would capture a `pluralisation' relation~\parencite{vylomova-etal-2016-take}.
+However, these word embeddings should be used with care because they have been
+shown to contain human
 biases~\parencite{caliskan_2017_semantics_language_corpora}.
+\textcite{caliskan_2017_semantics_language_corpora} showed
+that words related to science are more related to male terms and that
+words related to arts are more related to female terms. This is a form of gender bias
+that can be problematic when the word embedding is used in a scenario where gender bias
+should be avoided, such as
+the case in which Amazons recruiting tool penalized female candidates, because they
+included words related to women on their résumé~\parencite{dastin_2018}.
 
-As described by \textcite{nissim_fair_is_better_2020}, bias in
-the form of gender stereotypes is generally measured with the help of analogies (e.g.
-\textit{man} is to \textit{king} as \textit{woman} is to \textit{queen}).
-Analogies are shown to be an inaccurate diagnostic for measuring gender bias, because
-they might miss forms of implicit gender bias \parencite{gonen-goldberg-2019-lipstick-pig}
-or because the algorithms to calculate the analogy are too restrictive
-\parencite{nissim_fair_is_better_2020}.
+Recently, efforts have been made to reduce the effect of bias in word embeddings.
+\textcite{bolukbasi_2016_quantifying_stereotypes} showed that debiasing word embeddings
+is possible to some extend, but \textcite{gonen-goldberg-2019-lipstick-pig} showed that
+the approach of \textcite{bolukbasi_2016_quantifying_stereotypes} merely hides the
+gender bias, instead of removing it.
 
-Generally, gender bias is measured in English word embeddings. This research aims to
-look at the analogical gender differences between word embeddings trained on different
-languages. The main method of measuring the gender difference will be based on
-analogies, but with certain adjustments to account for the issues raised by
-\textcite{nissim_fair_is_better_2020}. While this research will not and does not aim
-to measure the gender \textit{bias} of a certain language, it will look at the
-gender \textit{differences} in a word embedding between the words \textit{man} and \textit{woman}.
+This paper aims to take a step back and look into whether there is a difference in gender
+bias between word embeddings of different languages. Generally, debiasing efforts
+have focussed on word embeddings of the English language. However, it might be the
+case that some languages are less biased than the English language. Knowing whether this
+is the case can enable future research to look into why certain languages are or are not
+more gender biased than others. This insight could be useful in the search towards a novel
+debiasing algorithm.
