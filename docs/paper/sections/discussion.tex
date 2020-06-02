@@ -1,4 +1,25 @@
+\section{Discussion}
 %There are some limitations with this approach.
 %
 %- Concept of 'man' and 'woman' might not be properly translated
 %- Doesn't give much insight into why
+There are some limitations with the used method, mainly that it is built upon quite a few
+assumptions.
+The assumption that the words attribute `male` and `female` are universal is difficult
+to verify without having a good understanding of all the languages that are involved.
+This issue can be solved by only looking at the languages that I have a thorough
+understanding of, but this would not enable me to look at languages that are completely
+different from English.
+
+Another assumption is that the most commonly used words, like \textit{and} and \textit{the}
+are gender neutral. This might not necessarily the case, since words like \textit{he} and
+\textit{she} are also very common. Attaching a weight based on the frequency might do
+nothing more than measure the frequency of gender specific words, because they have a
+more pronouced cosine distance.
+
+It is also difficult to make any conclusions about the differences between the languages
+themselves, because it is not fair to assume that a word embedding is a perfect
+representation of a language. Besides that, it is difficult to assume that this is
+the best method of measuring gender bias of a language as a whole. All of the used
+test statistics have their limitations, which makes it difficult to draw a clear
+conclusion based on the test statistics.
