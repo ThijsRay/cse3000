@@ -70,8 +70,9 @@ def grouped_calculations(output_directory: AnyStr):
               "library(\"dplyr\");" \
               "library(\"data.table\");" \
               "library(\"doParallel\");" \
-              "registerDoParallel(8);" \
-              f"data <- fread(\"{quote(output_directory)}/all_sample.txt\", quote = \"\");"
+              "library(\"radiant.data\");" \
+              "registerDoParallel(10);" \
+              f"data <- fread(\"{quote(output_directory)}/all.txt\", quote = \"\");"
     # Set command output file
     command += f"sink(\"{quote(output_directory)}/calculations.txt\");"
     # Set scientific precision
@@ -87,57 +88,95 @@ def grouped_calculations(output_directory: AnyStr):
     command += "data$lang <- as.factor(data$lang);"
     # Add weighted bias column
     command += "data$wbias = data$bias * data$freq;"
+    # Bias per language
+    command += "aggregate(bias~lang, data = data, FUN = mean); "
     # Weighted bias per language
     command += "aggregate(wbias~lang, data = data, FUN = sum); "
-    # Create pairs
-    command += "langs <- as.character(unique(data$lang)); langs <- expand.grid(langs, langs);" \
-               "x <- unique(as.data.frame(t(apply(langs, 1, sort))));" \
-               "langs <- x;" \
-               "langs <- x %>% filter(V1!=V2);"
-    command += "x<-data.frame(L1=character(), L2=character(), diff=double(), p=double(), effect_size=double());"
+    # Create pairs with "zero" language
+    command += "langs <- as.character(unique(data$lang)); langs <- expand.grid(langs, \"00\");"
+    command += "x<-data.frame(" \
+               "    L1=character()," \
+               "    L2=character()," \
+               "    diff=double()," \
+               "    wdiff=double()," \
+               "    p=double()," \
+               "    wp=double()," \
+               "    effect_size=double()," \
+               "    weffect_size=double()" \
+               ");"
     command += "for (i in 1:nrow(langs)) {" \
-               "    x[nrow(x) + 1, ] = list(as.character(langs[i, 1]), as.character(langs[i, 2]), 0, 0, 0)" \
+               "    x[nrow(x) + 1, ] = list(as.character(langs[i, 1]), as.character(langs[i, 2]), 0, 0, 0, 0, 0, 0)" \
                "};" \
                "langs <- x;" \
     # Filtered sets
-    command += "filtered <- list();" \
-               "filtered <- foreach(x=1:nrow(langs)) %dopar% {" \
-               "    y <- langs[x,];" \
-               "    filtered[[x]] <- data %>% filter(lang==y$L1 | lang==y$L2);" \
-               "    data.table(filtered[[x]])" \
-               "};"
+    command += "size <- count(data,lang);" \
+               "zero_combined <- foreach(x=1:nrow(langs)) %dopar% {" \
+               "    length=size[x,2];" \
+               "    y=langs[x,];" \
+               "    rbind(" \
+               "        data.table(" \
+               "            data %>% filter(lang==y$L1)" \
+               "        ), " \
+               "        data.table(" \
+               "            word=rep("", length)," \
+               "            bias=rep(0, length)," \
+               "            freq=rep(1/length, length)," \
+               "            lang=rep(\"00\", length)," \
+               "            wbias=rep(0, length)" \
+               "        )" \
+               "    ) " \
+               "};" \
     # Fill diff column of langs
     command += "diff <- foreach(x=1:nrow(langs)) %dopar% {" \
-               "    sums <- aggregate(wbias~lang, data=filtered[[x]], FUN=sum);" \
-               "    sums[1,2]-sums[2,2] " \
-               "}; " \
-               "langs$diff <- unlist(diff);" \
+               "    list(diff=sum(zero_combined[[x]]$bias), wdiff=sum(zero_combined[[x]]$wbias)) " \
+               "};" \
+               "diff <- do.call(rbind.data.frame, diff);" \
+               "langs$diff <- diff$diff;" \
+               "langs$wdiff <- diff$wdiff;" \
                "langs;"
     # Calculate the p-score for each pair
     command += "n_of_tests <- 1000; " \
                "p <- foreach(x=1:nrow(langs)) %dopar% {" \
                "    y <- langs[x,];" \
-               "    ptest_success <- 0;" \
+               "    p_test_success <- 0;" \
+               "    wp_test_success <- 0;" \
                "    for(z in 1:n_of_tests) {" \
-               "        partition <- do.random.partition(nrow(filtered[[x]]), 2);" \
-               "        f1<-filtered[[x]][partition[[1]]];" \
-               "        f2<-filtered[[x]][partition[[2]]];" \
-               "        ptest <- sum(f1$wbias) - sum(f2$wbias);" \
-               "        if(ptest > y$diff) { " \
-               "            ptest_success <- ptest_success+1; " \
-               "        } " \
-               "    }; " \
-               "    ptest_success/n_of_tests" \
-               "}; " \
-               "langs$p <- unlist(p);" \
+               "        partition <- do.random.partition(nrow(zero_combined[[x]]), 2);" \
+               "        f1<-zero_combined[[x]][partition[[1]]];" \
+               "        f2<-zero_combined[[x]][partition[[2]]];" \
+               "        p_test <- sum(f1$bias) - sum(f2$bias);" \
+               "        wp_test <- sum(f1$wbias) - sum(f2$wbias);" \
+               "        if(p_test > y$diff) { " \
+               "            p_test_success <- p_test_success+1; " \
+               "        };" \
+               "        if(wp_test > y$wdiff) { " \
+               "            wp_test_success <- wp_test_success+1; " \
+               "        };" \
+               "    };" \
+               "    if(y$diff < 0) {" \
+               "        p_test_success <- n_of_tests-p_test_success;" \
+               "    };" \
+               "    if(y$wdiff < 0) {" \
+               "        wp_test_success <- n_of_tests-wp_test_success;" \
+               "    };" \
+               "    list(p=p_test_success/n_of_tests, wp=wp_test_success/n_of_tests)" \
+               "};" \
+               "p <- do.call(rbind.data.frame, p);" \
+               "langs$p <- p$p;" \
+               "langs$wp <- p$wp;" \
                "langs;"
     # Calculate effect size
-    command += "effect_size <- c(); " \
-               "effect_size <- foreach(x=1:nrow(langs)) %dopar% {" \
-               "    y <- langs[x,];" \
-               "    y$diff[[1]] / sd(filtered[[x]]$wbias)" \
+    command += "effect_size <- foreach(x=1:nrow(langs)) %dopar% {" \
+               "    orig_lang <- zero_combined[[x]] %>% filter(lang!=00);" \
+               "    e<-mean(orig_lang$bias)/sd(zero_combined[[x]]$bias);" \
+               "    we<-sum(orig_lang$wbias)/weighted.sd(" \
+               "        unlist(zero_combined[[x]]$bias), unlist(zero_combined[[x]]$freq)" \
+               "    );" \
+               "    list(effect_size=e, weffect_size=we)" \
                "}; " \
-               "langs$effect_size <- unlist(effect_size);"
+               "effect_size <- do.call(rbind.data.frame,effect_size);effect_size" \
+               "langs$effect_size <- effect_size$effect_size;" \
+               "langs$weffect_size <- effect_size$weffect_size;"
     # Print langs table
     command += "langs;"
     # Plot weighted biases
