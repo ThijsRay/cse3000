@@ -1,15 +1,18 @@
 \section{Setup and results}
-The results were calculated on a machine with 10 CPU cores with 60 GB of 
+The results were calculated on a machine with 10 CPU cores with 512 GB of
 memory. The program calculates the results by first downloading
 the required pre-trained word embeddings created by \textcite{grave2018learning}. 
-For each downloaded language, the words \textit{man} and \textit{woman} have been
+For each downloaded language, the words \textit{male} and \textit{female} have been
 translated beforehand.
-The vectors associated with the translated words \textit{man} and \textit{woman} are
-extracted from the word embedding. 
+The vectors associated with the translated words \textit{male} and \textit{female} are
+extracted from the word embedding. Then, the cosine similarity is calculated
+according to the methodology.
 
 The code used to calculate the results can be found on 
 GitHub\footnote{Git repository can be found on \url{https://github.com/ThijsRay/cse3000}} 
-and was run with Python version 3.8.2 with R version 3.5.2. 
+and was run with Python version 3.8.2 with R version 4.0.0.
+
+\textit{This section is still a work in progress}
 
 
 
