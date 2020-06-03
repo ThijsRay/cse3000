@@ -111,14 +111,14 @@ def grouped_calculations(output_directory: AnyStr):
     # Filtered sets
     command += "size <- count(data,lang);" \
                "zero_combined <- foreach(x=1:nrow(langs)) %dopar% {" \
-               "    length=size[x,2];" \
-               "    y=langs[x,];" \
+               "    length <- size[x,2];" \
+               "    y <- langs[x,];" \
                "    rbind(" \
                "        data.table(" \
                "            data %>% filter(lang==y$L1)" \
                "        ), " \
                "        data.table(" \
-               "            word=rep("", length)," \
+               "            word=rep(\"\", length)," \
                "            bias=rep(0, length)," \
                "            freq=rep(1/length, length)," \
                "            lang=rep(\"00\", length)," \
