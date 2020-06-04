@@ -136,7 +136,7 @@ def grouped_calculations(output_directory: AnyStr):
                "langs;"
     # Calculate the p-score for each pair
     command += "n_of_tests <- 1000; " \
-               "p <- foreach(x=1:nrow(langs)) %dopar% {" \
+               "p <- foreach(x=1:nrow(langs)) %do% {" \
                "    y <- langs[x,];" \
                "    p_test_success <- 0;" \
                "    wp_test_success <- 0;" \
@@ -160,7 +160,7 @@ def grouped_calculations(output_directory: AnyStr):
                "    };" \
                "    if(y$wdiff < 0) {" \
                "        wp_test_success <- n_of_tests-wp_test_success;" \
-               "    };" \
+               "    };gc();" \
                "    list(p=p_test_success/n_of_tests, wp=wp_test_success/n_of_tests)" \
                "};" \
                "p <- do.call(rbind.data.frame, p);" \
