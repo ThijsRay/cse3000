@@ -140,6 +140,7 @@ def grouped_calculations(output_directory: AnyStr):
                "    y <- langs[x,];" \
                "    p_test_success <- 0;" \
                "    wp_test_success <- 0;" \
+               "    cat(\"Start processing language\", y$L1, \"\\n\");" \
                "    for(z in 1:n_of_tests) {" \
                "        partition <- do.random.partition(nrow(zero_combined[[x]]), 2);" \
                "        f1<-zero_combined[[x]][partition[[1]]];" \
@@ -152,6 +153,7 @@ def grouped_calculations(output_directory: AnyStr):
                "        if(wp_test > y$wdiff) { " \
                "            wp_test_success <- wp_test_success+1; " \
                "        };" \
+               "        cat(y$L1, z, \"/\", n_of_tests, \"=\", p_test_success, wp_test_success,\"\\n\");" \
                "    };" \
                "    if(y$diff < 0) {" \
                "        p_test_success <- n_of_tests-p_test_success;" \
@@ -174,7 +176,7 @@ def grouped_calculations(output_directory: AnyStr):
                "    );" \
                "    list(effect_size=e, weffect_size=we)" \
                "}; " \
-               "effect_size <- do.call(rbind.data.frame,effect_size);effect_size" \
+               "effect_size <- do.call(rbind.data.frame,effect_size);effect_size;" \
                "langs$effect_size <- effect_size$effect_size;" \
                "langs$weffect_size <- effect_size$weffect_size;"
     # Print langs table
