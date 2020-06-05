@@ -1,11 +1,14 @@
 \section{Methodology}
 A common way of measuring gender bias in word embeddings uses the 
-WEAT~\parencite{caliskan_2017_semantics_language_corpora} method. This method measure the
+Word Embedding Association Test (WEAT) method by
+\textcite{caliskan_2017_semantics_language_corpora}. This method measure the
 association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{woman}) 
-and a set of \textit{target} words (e.g. \textit{programmer}, \textit{family}, \textit{nurse}, \textit{engineer}). This
-approach can work when looking at a single language, but has some problems when 
-trying to compare differences between
-different languages. 
+and a set of \textit{target} words (e.g. \textit{programmer}, \textit{family},
+\textit{nurse}, \textit{engineer}).
+WEAT has been used before by \textcite{gonen-goldberg-2019-lipstick-pig}
+and \textcite{10.1145/3306618.3314270}.
+This approach can work when looking at a single language, but has some problems when
+trying to compare differences between different languages.
 
 First, not all words have a one-to-one translation into another
 language, because certain words might have a different meaning, depending on the
@@ -15,7 +18,9 @@ incorrect and unfair comparison. A great example of this would the English word
 \textit{man}, which can mean \textit{male} or \textit{mankind}, depending on the context.
 Second, the inclusion or exclusion of words from
 the target set is a subjective decision~\parencite{nissim_fair_is_better_2020}. Therefore,
-the measurement itself could be biased, depending on what words are or are not in the set of target words.
+the measurement itself could be biased, depending on what words are or are not in the set
+of target words. This problem is only amplified if WEAT is used for multiple languages,
+because this subjective decision has to be made for every single language.
 
 The first problem can be addressed by limiting the amount of words that have to be
 translated. The method that is used in this research will use the two attribute words 
@@ -28,14 +33,22 @@ set of target words for all languages. This can be done by either looking at all
 in the
 word embedding, or by looking at the most used words in the word embedding.
 
-The first way uses the
-all the words in the word embedding as target words. The advantage of this approach is 
+\subsection{Method 1}
+The first way uses
+all the words in the word embedding as target words. The advantage of this approach is
 that all words are considered, which eliminates the inclusion or exclusion subjectiveness
-described by \textcite{nissim_fair_is_better_2020}. A disadvantage of this approach
+described by \textcite{nissim_fair_is_better_2020}.  This is because there is no metric
+on which a word could be excluded, because all words are included by default.
+A disadvantage of this approach
 are that the results are difficult to interpret, because words with an explicit
-gender (e.g. \textit{waiter}, \textit{waitress}, \textit{king}, \textit{queen}) are also 
-present.
+gender (e.g. \textit{he}, \textit{she}, \textit{waiter}, \textit{waitress},
+\textit{king}, \textit{queen}) are also
+present in the set of target words. This is a problem because these words tend to be biased
+towards a gender, but with a valid reason. These words increase the probability of a
+type I error, where the null hypothesis is rejected even if the word embedding is not
+biased.
 
+\subsection{Method 2}
 The second way still uses all the words in the word embedding, but attaches a weight to
 each word, depending on its frequency. Effectively, this results in a measurement over
 the most commonly used words, because those words have the highest weight.
@@ -50,33 +63,51 @@ counterpart, they are not used as often.
 Taking the frequency of words into account addresses this issue. 
 The disadvantage of this is that
 it might miss forms of gender bias that might be present in the word embedding, because
-not all words are considered to be as important as other words.
+not all words are considered to be as important as other words. For example, if the words
+\textit{doctor} and \textit{nurse} have a large amount of bias associated with them,
+but they only have a weight of $0.00001$, then their reported bias would be almost
+invisible when compared to a presumably neutral word like \textit{and}, which might have
+a weight of $0.1$. Words that are not used as often will therefore have a negligible impact
+on the measurement.
 
+\subsection{Test statistics}
 Both of these approaches will be explored. Based on the considerations made above, the
 test statistic used by
 \textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
 $$
-u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) - \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
+\begin{aligned}
+u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) \\
+- \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
+\end{aligned}
 $$
 measures the difference between the \textit{cosine similarity} of a word $w$ of language $W$ and the set of attribute words $A$, and of the cosine similarity of a word $w$ and the
-set of attribute words $B$. The $A \cap W$ and $B \cap B$ ensure that the cosine
+set of attribute words $B$. The $A \cap W$ and $B \cap W$ ensure that the cosine
 similarity is only measured between two vectors in the same word embedding. The
 calculation of this difference can be used in
 $$
 t(w,W,A,B) = Z(\text{rank}(w), |W|) * u(w,W,A,B)\quad\text{where}
 $$
 $$
-Z(k, N) = 1 \quad\text{or}\quad Z(k, N) = \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)}
+Z(k,N) =
+\begin{cases}
+    1 & \quad \text{for method 1} \\
+    \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)} & \quad \text{for method 2}
+\end{cases}
 $$
 This formula adds a weight to each word, depending on its frequency.
 In case the first approach is used, where all words are considered, $Z(k,N)$ will have a
 fixed value of 1 because the first approach does not include frequency.
-In case the second approach is used, the cosine simularity will get a weight attached
+In case the second approach is used, the cosine similarity will get a weight attached
 to it because it built upon the assumption that
-if the word \textit{x} occurs more often than the word \textit{y}, then the former should be given more weight in the calculation, because that would more accurately reflect the usage of the words. The pre-trained models provided by \textcite{grave2018learning} are sorted by frequency, but exact information about how often a word occurs is omitted.
+if the word \textit{x} occurs more often than the word \textit{y}, then the former should
+be given more weight in the calculation, because that would more accurately reflect the
+usage of the words. The pre-trained models provided by \textcite{grave2018learning} will be
+used and these models are sorted by frequency, but exact information about how often a
+word occurs is omitted.
 Fortunately, the information about the frequency can be roughly approximated with the
 help of Zipf's law~\parencite{Zipf-1935} or $Z(k,N)$ where $k$ is the frequency rank of the
-word and where $N$ is the number of words in the language.
+word and where $N$ is the number of words in the language, or in this case, the word
+embedding.
 
 This results in a test statistic of
 $$
@@ -84,13 +115,15 @@ s(X,Y,A,B) = \displaystyle\sum_{x \in X}t(x,X,A,B) - \displaystyle\sum_{y \in Y}
 $$
 where \textit{A} and \textit{B} are two sets of attribute words, in this case the
 translated versions of the words \textit{male} and
-\textit{female} and where \textit{X} and \textit{Y} are two sets of target words
-(e.g. \textit{engineer} and \textit{scientist}), in this case the sets of words from
-two distinct languages. 
+\textit{female} and where \textit{X} and \textit{Y} are the sets of target words, i.e.
+all words in the word embedding.
 
-The one-sided $p$-value of the permutation test is described as
+The two-sided $p$-value is calculated with a permutation test and is described as
 $$
-\text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)]
+\begin{cases}
+    \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) > 0 \\
+    \text{Pr}_i[s(X_i, Y,_i, A, B) < s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) < 0
+\end{cases}
 $$
 where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
 size.
@@ -105,9 +138,15 @@ $$
 $$
 where $W$ is the language that $w$ is a part of.
 
+In order investigate whether the null hypothesis $H_0$ can be rejected, these tests will
+be performed with pairs of two languages $X$ and $Y$, where $X$ is an actual word embedding
+from languages in table~\ref{appendix:languages} and where $Y$ is an equally sized dummy
+language that
+contains no bias at all. Language $Y$ can be seen as a language where
+$\forall y \in Y(u(y,Y,A,B) = 0)$.
 
 The languages that have been used in this research, have been chosen based on a
-few critera,
+few criteria,
 \begin{seriate}
     \item the language has a pre-trained word embedding from \textcite{grave2018learning}
     \item the language should be machine translatable with the help of tools like DeepL or
