@@ -4,22 +4,6 @@ from translation import load_translations, Translation
 from subprocess import run
 from shlex import quote
 
-OUTPUT_DIRECTORY: AnyStr = None
-
-
-def worker(language: Translation):
-    print(f"Plotting {language.language}")
-    input_file = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}.txt"
-    command = f"library(\"data.table\"); data <- fread(\"{input_file}\", quote = \"\");"
-
-    output_path = f"{quote(OUTPUT_DIRECTORY)}/{quote(language.language_code)}"
-    command += calculate_skewness(output_path, language)
-    command += create_histogram(output_path, language)
-    command += create_qq_plot(output_path, language)
-    command += outlier_percentage(output_path, language)
-    command += write_summary(output_path, language)
-    run_r(command)
-
 
 def run_r(command: AnyStr):
     run(f"R -q -e '{command}'",
@@ -27,32 +11,11 @@ def run_r(command: AnyStr):
         shell=True, check=True)
 
 
-def calculate_skewness(output_path: AnyStr, language: Translation) -> AnyStr:
-    return f"" \
-           f"Mode <- function(x) {{ ux <- unique(x); ux[which.max(tabulate(match(x, ux)))] }};" \
-           f"cat(\"{quote(language.language_code)}\", " \
-           f"(mean(data[[2]]) - Mode(data[[2]])) / sd(data[[2]])," \
-           f"(mean(data[[2]]) - median(data[[2]])) / sd(data[[2]])," \
-           f"file=\"{output_path}_skew.txt\", sep=\"\\t\");"
-
-
-def outlier_percentage(output_path: AnyStr, language: Translation):
-    return f"library(\"StatMeasures\");" \
-           f"cat(outliers(data[[2]])$numOutliers / length(data[[2]])," \
-           f"file=\"{output_path}_outlier_percentage.txt\");"
-
-
-def write_summary(output_path: AnyStr, language: Translation):
-    # Write the summary info to a file
-    return f"cat(\"{quote(language.language)}\", summary(data[[2]]), " \
-           f"file=\"{output_path}_summary.txt\", sep=\"\\n\")"
-
-
-def create_qq_plot(output_path: AnyStr, language: Translation):
-    return f"png(file=\"{output_path}_qq.png\", width=1000, height=1000);" \
-           f"qqnorm(data[[2]]);" \
-           f"qqline(data[[2]]);" \
-           f"dev.off();"
+def prepare_files(output_path: AnyStr):
+    output_path = quote(output_path)
+    run(f"head -n 27 {output_path}/calculations.txt > {output_path}/bias.txt", shell=True, check=True)
+    run(f"tail -n +28 {output_path}/calculations.txt | head -n 27 > {output_path}/wbias.txt", shell=True, check=True)
+    run(f"tail -n 29 {output_path}/calculations.txt | head -n 27 > {output_path}/total.txt", shell=True, check=True)
 
 
 def create_histogram(output_path: AnyStr, language: Translation):
@@ -63,6 +26,38 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"breaks=20," \
            f"prob=TRUE); " \
            f"dev.off();"
+
+
+def _plot_hist(file_name: AnyStr, column_name: AnyStr, x_label: AnyStr):
+    return f"pdf(\"{file_name}\", height=6, width=10);" \
+            "print(" \
+            "    langs " \
+            f"    %>% arrange({column_name}) " \
+            "    %>% mutate(language=factor(language, levels=language)) " \
+            f"    %>% ggplot(aes(x={column_name}, y=language))" \
+            "    + geom_bar(stat=\"identity\")" \
+            f"    + xlab(\"{x_label}\")" \
+            "    + ylab(\"Languages\")" \
+            ");" \
+            "dev.off();"
+
+
+def create_graphs(data_dir: AnyStr, output_dir: AnyStr):
+    data_dir = quote(data_dir)
+    output_dir = quote(output_dir)
+    command = "library(\"ggplot2\");" \
+              "library(\"data.table\");" \
+              "library(\"dplyr\");" \
+              f"langs <- fread(\"{data_dir}/translations.txt\");" \
+              f"bias <- fread(\"{output_dir}/bias.txt\");" \
+              f"total <- fread(\"{output_dir}/total.txt\");" \
+              "langs <- merge(x=langs, y=bias, by.x=\"language_code\", by.y=\"lang\");" \
+              "langs <- merge(x=langs, y=total, by.x=\"language_code\", by.y=\"L1\");" \
+              + _plot_hist(f"{output_dir}/hist_bias.pdf", "bias",
+                           "Mean of difference in cosine distance between the translation of male and female") \
+              + _plot_hist(f"{output_dir}/hist_wdiff.pdf", "wdiff",
+                           "Sum of weighted cosine distances between translation of male and female")
+    run_r(command)
 
 
 def grouped_calculations(output_directory: AnyStr):
@@ -188,54 +183,11 @@ def grouped_calculations(output_directory: AnyStr):
     command += f"png(file=\"{quote(output_directory)}/boxplot.png\", width=1000, height=500); " \
                f"boxplot(data$bias~data$lang); " \
                f"dev.off();"
-    # Do Kruskal-Wallis Rank sum test
-    #command += "kw <- kruskal.test(data$bias, data$lang);"
-    # Check if value is significant, if so, run
-    #command += "if (kw$p.value < 0.01) { " \
-    #           "    library(dunn.test);" \
-    #           "    dunn.test(data$bias, data$lang, table=FALSE, list=TRUE, method=\"holm\")" \
-    #           "} else {" \
-    #           "    print(\"Kruskal-Wallis not significant, cannot reject H0\")" \
-    #           "};"
-    # Test statistic by Caliskan
-    #command += "sum(apply(data[x[[1]]], MARGIN=1, FUN=function(x) { as.numeric(x[2]) * as.numeric(x[3]) }));"
-    # Define aggregate and print function
-    #command += "aggr_and_print <- function(x, data, f) {" \
-    #           "x <- aggregate(x, data=data, FUN=f);" \
-    #           "x[order(x[[2]]),]};"
-    ## Calculate mean
-    #command += "cat(\"Mean\\n\"); aggr_and_print(V2~V4, data, mean);"
-    ## Calculate median
-    #command += "cat(\"Median\\n\"); aggr_and_print(V2~V4, data, median);"
-    ## Calculate skewness
-    #command += "cat(\"Skewness\\n\");"
-    #command += "library(\"e1071\"); aggr_and_print(V2~V4, data, skewness);"
-    ## Calculate ranksum
-    #command += "cat(\"Rank sum\\n\");"
-    #command += "aggr_and_print(rank(V2)~V3, data, sum);"
-    ## Calculate weighted mean
-    #command += "options(scipen = 999);"
-    #command += "cat(\"Weighted mean\\n\");"
-    #command += "x <- aggr_and_print(V2*V3 ~ V4, data, function(x, y) {mean(x)}); x;"
-    ## Calculate normalized mean
-    #command += "cat(\"Weighted normalized mean\\n\");"
-    #command += "x[2] <- (1/sum(x[2]))*x[2]; x;"
     command += "sink()"
     run_r(command)
 
 
 def generate_reports(data_directory: AnyStr, output_directory: AnyStr, languages: List[AnyStr]):
-    global OUTPUT_DIRECTORY
-    OUTPUT_DIRECTORY = output_directory
-
-    grouped_calculations(output_directory)
-
-    ## Limit the amount of processes in the pool to avoid memory starvation
-    #with Pool() as pool:
-    #    it = pool.imap(func=worker, iterable=load_translations(languages), chunksize=1)
-    #    while True:
-    #        try:
-    #            next(it)
-    #        except StopIteration:
-    #            break
-
+    #grouped_calculations(output_directory)
+    #prepare_files(output_directory)
+    create_graphs(data_directory, output_directory)

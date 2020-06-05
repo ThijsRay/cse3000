@@ -1,9 +1,11 @@
-\documentclass[man, biblatex, longtable]{apa7}
+\documentclass[jou, biblatex, longtable]{apa7}
 \usepackage{fontspec}
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
 \usepackage{csquotes}
 \usepackage{mathtools}
+\usepackage{graphicx}
+\graphicspath{ {./figures/} }
 \geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
 \usepackage{babel}
 \usepackage{url}
@@ -39,9 +41,7 @@
 \input{sections/setup_and_results}
 \input{sections/discussion}
 \input{sections/conclusions_and_recommendations}
-\iffalse
-\subfile{sections/appendices}
-\fi
+%\subfile{sections/appendices}
 
 \printbibliography
 
