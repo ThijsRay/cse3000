@@ -9,17 +9,24 @@ The assumption that the words attribute `male` and `female` are universal is dif
 to verify without having a good understanding of all the languages that are involved.
 This issue can be solved by only looking at the languages that I have a thorough
 understanding of, but this would not enable me to look at languages that are completely
-different from English.
+different from English. This limitation can also be alleviated by using more than one
+attribute word for each gender, as done by \textcite{caliskan_2017_semantics_language_corpora}.
 
 Another assumption is that the most commonly used words, like \textit{and} and \textit{the}
 are gender neutral. This might not necessarily the case, since words like \textit{he} and
 \textit{she} are also very common. Attaching a weight based on the frequency might do
 nothing more than measure the frequency of gender specific words, because they have a
-more pronouced cosine distance.
+more pronounced cosine distance. If the word \textit{he} occurs much more often than
+the word \textit{she}, then the language will appear to have a strong bias towards
+\textit{male}. While one could argue that the fact that masculine words have a higher
+frequency is also a form of bias, it is probably not something that has an impact when
+these word embeddings are actually used. If an application cares about frequency of words,
+it will probably use a different tool.
 
-It is also difficult to make any conclusions about the differences between the languages
+It is also difficult to draw any conclusions about the differences between the languages
 themselves, because it is not fair to assume that a word embedding is a perfect
 representation of a language. Besides that, it is difficult to assume that this is
-the best method of measuring gender bias of a language as a whole. All of the used
-test statistics have their limitations, which makes it difficult to draw a clear
-conclusion based on the test statistics.
+good method of measuring gender bias of a language as a whole. The WEAT method by
+\textcite{caliskan_2017_semantics_language_corpora} has received critique from
+\textcite{ethayarajh-etal-2019-understanding}, who argue that WEAT has theoretical flaws 
+that cause it to systematically over-estimate bias.
