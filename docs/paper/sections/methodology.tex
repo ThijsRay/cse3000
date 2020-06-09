@@ -34,6 +34,7 @@ in the
 word embedding, or by looking at the most used words in the word embedding.
 
 \subsection{Method 1}
+\label{method:1}
 The first way uses
 all the words in the word embedding as target words. The advantage of this approach is
 that all words are considered, which eliminates the inclusion or exclusion subjectiveness
@@ -49,6 +50,7 @@ type I error, where the null hypothesis is rejected even if the word embedding i
 biased.
 
 \subsection{Method 2}
+\label{method:2}
 The second way still uses all the words in the word embedding, but attaches a weight to
 each word, depending on its frequency. Effectively, this results in a measurement over
 the most commonly used words, because those words have the highest weight.
@@ -118,7 +120,7 @@ translated versions of the words \textit{male} and
 \textit{female} and where \textit{X} and \textit{Y} are the sets of target words, i.e.
 all words in the word embedding.
 
-The two-sided $p$-value is calculated with a permutation test and is described as
+The two-sided \emph{p} value is calculated with a permutation test and is described as
 $$
 \begin{cases}
     \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) > 0 \\
