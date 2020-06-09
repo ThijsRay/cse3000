@@ -28,16 +28,17 @@ def create_histogram(output_path: AnyStr, language: Translation):
            f"dev.off();"
 
 
-def _plot_hist(file_name: AnyStr, column_name: AnyStr, x_label: AnyStr):
+def _plot_hist(file_name: AnyStr, column_name: AnyStr, x_label: AnyStr, language_names: AnyStr = "language"):
     return f"pdf(\"{file_name}\", height=6, width=10);" \
             "print(" \
             "    langs " \
             f"    %>% arrange({column_name}) " \
-            "    %>% mutate(language=factor(language, levels=language)) " \
-            f"    %>% ggplot(aes(x={column_name}, y=language))" \
+            f"    %>% mutate({language_names}=factor({language_names}, levels={language_names})) " \
+            f"    %>% ggplot(aes(x={column_name}, y={language_names}))" \
             "    + geom_bar(stat=\"identity\")" \
             f"    + xlab(\"{x_label}\")" \
             "    + ylab(\"Languages\")" \
+            "    + theme(text=element_text(size=15))" \
             ");" \
             "dev.off();"
 
@@ -48,15 +49,27 @@ def create_graphs(data_dir: AnyStr, output_dir: AnyStr):
     command = "library(\"ggplot2\");" \
               "library(\"data.table\");" \
               "library(\"dplyr\");" \
+              "library(\"doParallel\");" \
               f"langs <- fread(\"{data_dir}/translations.txt\");" \
               f"bias <- fread(\"{output_dir}/bias.txt\");" \
               f"total <- fread(\"{output_dir}/total.txt\");" \
               "langs <- merge(x=langs, y=bias, by.x=\"language_code\", by.y=\"lang\");" \
               "langs <- merge(x=langs, y=total, by.x=\"language_code\", by.y=\"L1\");" \
+              "langs$language_wp <- foreach(x=1:nrow(langs)) %do% {" \
+              "     if(langs[x]$wp > 0.001) {" \
+              "         paste(langs[x]$language, \"*\",sep=\"\")" \
+              "     } else {" \
+              "         langs[x]$language" \
+              "     } " \
+              "};" \
               + _plot_hist(f"{output_dir}/hist_bias.pdf", "bias",
                            "Mean of difference in cosine distance between the translation of male and female") \
               + _plot_hist(f"{output_dir}/hist_wdiff.pdf", "wdiff",
-                           "Sum of weighted cosine distances between translation of male and female")
+                           "Sum of weighted cosine distances between translation of male and female") \
+              + _plot_hist(f"{output_dir}/hist_effect_size.pdf", "effect_size",
+                           "Effect size of method 1") \
+              + _plot_hist(f"{output_dir}/hist_weffect_size.pdf", "weffect_size",
+                           "Effect size of method 2", language_names="language_wp")
     run_r(command)
 
 
