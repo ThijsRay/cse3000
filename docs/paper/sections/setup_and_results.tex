@@ -1,27 +1,128 @@
 \section{Setup}
 The results were calculated on a machine with 10 CPU cores with 512 GB of
 memory. The program calculates the results by first downloading
-the required pre-trained word embeddings created by \textcite{grave2018learning}. 
+the required pre-trained word embeddings created by \textcite{grave2018learning}.
 For each downloaded language, the words \textit{male} and \textit{female} have been
 translated beforehand.
 The vectors associated with the translated words \textit{male} and \textit{female} are
 extracted from the word embedding. Then, the cosine similarity is calculated
 according to the methodology.
 
-The code used to calculate the results can be found on 
-GitHub\footnote{Git repository can be found on \url{https://github.com/ThijsRay/cse3000}} 
+The code used to calculate the results can be found on
+GitHub\footnote{Git repository can be found on \url{https://github.com/ThijsRay/cse3000}}
 and was run with Python version 3.8.2 with R version 4.0.0.
 
 \section{Results}
+%\begin{figure*}
+%    \caption{Mean difference in cosine distance between \emph{male} and \emph{female}
+%    by language}
+%    \label{fig:mean_difference}
+%    \fitfigure{hist_bias.pdf}
+%    \figurenote{Figure~\ref{fig:mean_difference} shows the mean of difference in
+%        cosine distance between the translation of \emph{male} and \emph{female}. In
+%        other words, whether words
+%        are, on average, more associated with \emph{male} or more associated with
+%        \emph{female}. A value greater than zero indicates that a words are on average more
+%        associated with \emph{male}, while a value below zero indicates that words are on
+%        average more associated with \emph{female}.
+%    }
+%\end{figure*}
+%
+%\begin{figure*}
+%    \caption{Sum of weighted cosine distances between \emph{male} and \emph{female}
+%    by language}
+%    \label{fig:sum_weighted}
+%    \fitfigure{hist_wdiff.pdf}
+%    \figurenote{Figure~\ref{fig:sum_weighted} shows the sum of the weighted cosine
+%        distance between the translation of \emph{male} and \emph{female}. In other
+%        words, whether the most used words are more associated with \emph{male} or
+%        more associated with \emph{female}.
+%        A value greater than zero indicates that a words are more
+%        associated with \emph{male}, while a value below zero indicates that words are
+%        more associated with \emph{female}.
+%}
+%\end{figure*}
+
 \begin{figure*}
-\caption{hey}
-\fitfigure{hist_bias.pdf}
+    \caption{Effect size of the mean difference in cosine distance between \emph{male} and \emph{female}
+    by language}
+    \label{fig:effect_size}
+    \fitfigure{hist_effect_size.pdf}
+    \figurenote{Figure~\ref{fig:effect_size} shows the measured effect size of method 1,
+        whether words
+        are, on average, more associated with \emph{male} or more associated with
+        \emph{female}. A value greater than zero indicates that a words are on average more
+        associated with \emph{male}, while a value below zero indicates that words are on
+        average more associated with \emph{female}.
+    }
 \end{figure*}
 
 \begin{figure*}
-\caption{hey}
-\fitfigure{hist_wdiff.pdf}
+    \caption{Effect size of the sum of weighted cosine distances between \emph{male} and \emph{female}
+    by language}
+    \label{fig:weffect_size}
+    \fitfigure{hist_weffect_size.pdf}
+    \figurenote{Figure~\ref{fig:weffect_size} shows the measured effect size of
+        method 2, whether the most used words are more associated with \emph{male} or
+        more associated with \emph{female}.
+        A value greater than zero indicates that a words are more
+        associated with \emph{male}, while a value below zero indicates that words are
+        more associated with \emph{female}.
+        Languages appended with an asterisk were found to have a \emph{p} value > 0.001.
+    }
 \end{figure*}
 
+\begin{table}
+    \centering
+    \begin{threeparttable}
+        \caption{Calculated \emph{p} values from values method 2}
+        \label{tab:p-values-method-2}
+        \begin{tabular*}{0.9\columnwidth}{l@{\extracolsep{\fill}}l}
+            \toprule
+            Language & \emph{p} value \\ \midrule
+            Portuguese & 0.173 \\
+            Russian & 0.424 \\
+            Japanese & 0.008 \\
+            Turkish & 0.033 \\
+            Korean & 0.003 \\
+            French & 0.146 \\
+            Polish & 0.448 \\
+            Hungarian & 0.456 \\
+            Thai & 0.494 \\
+            Javanese & 0.017 \\
+            \midrule
+        \end{tabular*}
+        \begin{tablenotes}[para,flushleft]
+            {\small \textit{Note:} All languages with \emph{p} value < 0.001 are not
+            shown in this table.}
+        \end{tablenotes}
+    \end{threeparttable}
+\end{table}
 
-\textit{This section is still a work in progress}
+An approximation of the \emph{p} value has been performed with a random permutation test with $N = 1000$ random permutations. When performed on the set generated by method 1, it
+was found that all languages have a \mbox{\emph{p} value < 0.001} with respect to the dummy
+language described in the methodology. This was not the case when the random permutation
+test was performed on a set generated by method 2, where some languages did have a
+\mbox{\emph{p} value > 0.001}. These languages and their respective \emph{p} values
+are shown in table~\ref{tab:p-values-method-2}.
+
+In figure~\ref{fig:effect_size} the effect size is shown for each language for method 1.
+Finnish has the highest positive effect size of all the tested languages, indicating that
+Finnish has the highest association with \emph{male} of all the tested languages.
+On the other hand, Basque has the highest negative effect size of all the tested languages,
+an indication that Basque has the highest association with \emph{female} of all the tested
+languages.
+Most of the tested languages have a positive effect size, indicating that most of the
+languages have a higher association with \emph{male} than \emph{female} when the
+association is calculated with method 1.
+
+In figure~\ref{fig:weffect_size} the effect size is shown of each language for method 2.
+Burmese has highest positive effect size of all the tested languages, indicating that
+the most used words in Burmese have the highest association with \emph{male} of all the
+tested languages.
+Greek has the highest negative effect size of all the tested languages, indicating that
+the most used words in Greek have the highest association with \emph{female} of all the
+tested languages.
+Most of the tested languages have a positive effect size, indicating that the most used
+words of most of the languages have a higher association with \emph{male} than
+\emph{female} when the association is calculated with method 2.
