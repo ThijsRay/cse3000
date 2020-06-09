@@ -1,5 +1,22 @@
 \section{Methodology}
-A common way of measuring gender bias in word embeddings uses the 
+This study uses the word embeddings provided by \textcite{grave2018learning}. They have
+trained word embeddings for various different languages on texts from Wikipedia and
+the Common Crawl Project.
+
+The languages that have been used in this research, have been chosen based on a
+few criteria,
+\begin{seriate}
+    \item the language has a pre-trained word embedding from \textcite{grave2018learning}
+    \item the language should be machine translatable with the help of tools like DeepL or
+    Google Translate and
+    \item the language is part of a different language family than the languages that
+    were already chosen.
+\end{seriate}
+This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
+can be found in table~\ref{table:languages}.
+
+The main calculations of this study are focussed on the measurement of gender bias.
+A common way of measuring bias in word embeddings uses the 
 Word Embedding Association Test (WEAT) method by
 \textcite{caliskan_2017_semantics_language_corpora}. This method measure the
 association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{woman}) 
@@ -23,7 +40,7 @@ of target words. This problem is only amplified if WEAT is used for multiple lan
 because this subjective decision has to be made for every single language.
 
 The first problem can be addressed by limiting the amount of words that have to be
-translated. The method that is used in this research will use the two attribute words 
+translated. The method that is used in this research uses the two attribute words 
 \textit{male} and \textit{female}. The assumption is made that these words are universal
 and translatable in all languages. However, this is an assumption that is difficult to
 verify without having a good understanding of all the languages that are involved.
@@ -73,7 +90,7 @@ a weight of $0.1$. Words that are not used as often will therefore have a neglig
 on the measurement.
 
 \subsection{Test statistics}
-Both of these approaches will be explored. Based on the considerations made above, the
+Both of these approaches have been explored. Based on the considerations made above, the
 test statistic used by
 \textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
 $$
@@ -103,8 +120,8 @@ In case the second approach is used, the cosine similarity will get a weight att
 to it because it built upon the assumption that
 if the word \textit{x} occurs more often than the word \textit{y}, then the former should
 be given more weight in the calculation, because that would more accurately reflect the
-usage of the words. The pre-trained models provided by \textcite{grave2018learning} will be
-used and these models are sorted by frequency, but exact information about how often a
+usage of the words. The pre-trained models provided by \textcite{grave2018learning} 
+are sorted by frequency, but exact information about how often a
 word occurs is omitted.
 Fortunately, the information about the frequency can be roughly approximated with the
 help of Zipf's law~\parencite{Zipf-1935, word_embedding_zipf_context} or $Z(k,N)$ where
@@ -120,7 +137,8 @@ translated versions of the words \textit{male} and
 \textit{female} and where \textit{X} and \textit{Y} are the sets of target words, i.e.
 all words in the word embedding.
 
-The two-sided \emph{p} value is calculated with a permutation test and is described as
+The significance of this test statistic is calculated with a \emph{p} value that is
+calculated with an approximated permutation test and is described as
 $$
 \begin{cases}
     \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) > 0 \\
@@ -128,7 +146,7 @@ $$
 \end{cases}
 $$
 where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
-size.
+size. 
 
 The effect size can be described as
 $$
@@ -138,27 +156,16 @@ $$
     \text{std-dev}_{w \in X \cup Y} u(w,W,A,B)
 }
 $$
-where $W$ is the language that $w$ is a part of.
+where $W$ is the language that $w$ is a part of. The effect size can be interpreted as
+the amount of bias~\parencite{lauscher-glavas-2019-consistently}.
 
-In order investigate whether the null hypothesis $H_0$ can be rejected, these tests will
-be performed with pairs of two languages $X$ and $Y$, where $X$ is an actual word embedding
-from languages in table~\ref{appendix:languages} and where $Y$ is an equally sized dummy
+In order investigate whether the null hypothesis $H_0$ can be rejected, these tests have
+been performed with pairs of two languages $X$ and $Y$, where $X$ is an actual word
+embedding
+from languages in table~\ref{table:languages} and where $Y$ is an equally sized dummy
 language that
 contains no bias at all. Language $Y$ can be seen as a language where
 $\forall y \in Y(u(y,Y,A,B) = 0)$.
-
-\subsection{Languages}
-The languages that have been used in this research, have been chosen based on a
-few criteria,
-\begin{seriate}
-    \item the language has a pre-trained word embedding from \textcite{grave2018learning}
-    \item the language should be machine translatable with the help of tools like DeepL or
-    Google Translate and
-    \item the language is part of a different language family than the languages that
-    were already chosen.
-\end{seriate}
-This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
-can be found in table~\ref{table:languages}.
 
 \begin{table*}
     \centering
