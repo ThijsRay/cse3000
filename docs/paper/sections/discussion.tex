@@ -1,8 +1,38 @@
 \section{Discussion}
-%There are some limitations with this approach.
-%
-%- Concept of 'man' and 'woman' might not be properly translated
-%- Doesn't give much insight into why
+A few observations can be made from figure~\ref{fig:effect_size}. Most
+of the languages have an effect size above 0, indicating that most of the reviewed
+languages are more associated with \emph{male}. Assuming that there is a relation between
+the association of a word and bias, then this could mean that
+most of the tested languages have a bias towards \emph{male}. Based on this observation,
+the null hypothesis can be rejected.
+
+Another observation is that some languages that are from the same language family have
+a similar rank. For example, both Finnish and Hungarian are Uralic languages and have a
+relatively high effect size compared to the other languages. A similar pattern can be seen
+with Portuguese and Spanish, both Iberian languages. However, this might be a incidental
+because some closely related languages seem to have opposite effects, like German and
+Dutch. Further research could show whether this effect is indeed incidental or if
+there is a underlying reason behind it.
+
+Similar observations can be made from figure~\ref{fig:weffect_size}. Most
+of the languages have an effect size above 0, indicating that most used words of the
+reviewed languages are more associated with \emph{male} than with \emph{female}. This
+is interesting because the most used words of a language say something about how a
+language is used by people.
+From this result it can be concluded that people are more inclined to use
+\mbox{\emph{male}-related words}.
+
+Some of the languages seem to be closer associated with \emph{female}-related words, like
+Basque, Hindi and French in figure~\ref{fig:effect_size} and Greek in
+figure~\ref{fig:weffect_size}. Why do the words in these languages have a stronger
+relation with \emph{female}-related words?
+Understanding why this is
+the case could be beneficial in the search towards a debiasing algorithm for word
+embeddings and possible explanations of why these languages show these characteristics can
+be explored in future research.
+
+
+\subsection{Limitations}
 There are some limitations with the used method, mainly that it is built upon quite a few
 assumptions.
 The assumption that the words attribute `male` and `female` are universal is difficult
@@ -25,7 +55,10 @@ it will probably use a different tool.
 
 It is also difficult to draw any conclusions about the differences between the languages
 themselves, because it is not fair to assume that a word embedding is a perfect
-representation of a language. Besides that, it is difficult to assume that this is
+representation of a language. The used models have been trained on text that was 
+posted on the internet~\parencite{grave2018learning}. The writers of these texts might
+not fully represent the speakers of the language.
+Besides that, it is difficult to assume that this is
 good method of measuring gender bias of a language as a whole. The WEAT method by
 \textcite{caliskan_2017_semantics_language_corpora} has received critique from
 \textcite{ethayarajh-etal-2019-understanding}, who argue that WEAT has theoretical flaws 
