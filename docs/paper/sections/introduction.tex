@@ -1,10 +1,10 @@
 \section{Introduction}
-Word embeddings have become an important tool in the field of natural language
+Word embeddings have become a useful tool in the field of natural language
 processing. They can be used to represent the semantics and the meaning of
-words as a vector of numbers, which is used for all sorts of applications, like
+words as a vector of numbers, which is used for all sorts of applications, such as
 recommendation systems~\parencite{10.1145/3219819.3219885} or résumé
-scanning~\parencite{large-scale-hoang-2017}. Word
-embeddings are often used to solve analogies. An example of this would be that the
+parsing~\parencite{large-scale-hoang-2017, nasser2018convolutional}. Word
+embeddings can be used to solve analogies. An example of this would be that the
 vector that represents the word
 $\overrightarrow{queen}$ would be equal to $\overrightarrow{king} -
 \overrightarrow{man} +
@@ -14,21 +14,21 @@ Other examples of these analogies would be $\overrightarrow{Paris} -
 capturing a `capital of' relation and
 $\overrightarrow{cars} - \overrightarrow{car} + \overrightarrow{apple} \approx
 \overrightarrow{apples}$, which would capture a `pluralisation' relation~\parencite{vylomova-etal-2016-take}.
+
 However, these word embeddings should be used with care because they have been
-shown to contain human
-biases~\parencite{caliskan_2017_semantics_language_corpora}.
+shown to contain biases~\parencite{caliskan_2017_semantics_language_corpora}.
 \textcite{caliskan_2017_semantics_language_corpora} showed
 that words related to science are more related to male terms and that
 words related to arts are more related to female terms. This is a form of gender bias
-that can be problematic when the word embedding is used in a scenario where gender bias
-should be avoided, such as
-the case in which Amazons recruiting tool penalized female candidates, because they
+that can be problematic when the word embedding is used in a context where gender bias
+should be avoided, such as automatic résumé recommendation. A recent example of a failure
+of such a system is Amazons recruiting tool that penalized female candidates, because they
 included words related to women on their résumé~\parencite{dastin_2018}.
 
 Recently, efforts have been made to reduce the effect of bias in word embeddings.
 \textcite{bolukbasi_2016_quantifying_stereotypes} showed that debiasing word embeddings
 is possible to some extent, but \textcite{gonen-goldberg-2019-lipstick-pig} showed that
-the approach of \textcite{bolukbasi_2016_quantifying_stereotypes} merely hides the
+the approach of \textcite{bolukbasi_2016_quantifying_stereotypes} may hide the
 gender bias, instead of removing it.
 
 This paper aims to take a step back and look into whether there is a difference in gender
@@ -36,24 +36,16 @@ bias between word embeddings of different languages. Some existing related resea
 looked into this difference before, like \textcite{2015arXiv150106307W}, who looked at
 gender bias on Wikipedia across six different languages and like \textcite{lauscher-glavas-2019-consistently}, who looked at biases when different languages, models and training
 sources are used.
-Besides looking at whether this difference exists, this paper has also looked at how much
-this difference occurs in word embeddings of different languages.
 
-It is important to look at this
-because debiasing
-efforts have generally been focussed on word embeddings of the English language.
+Previous efforts have generally been focussed on word embeddings of the English language.
 However, it might be the
-case that some languages are inherently less biased than the English language.
-Knowing whether and how much languages differ in gender bias
-can enable future research to look into why certain languages are or are not
-more gender biased than others. This insight could be useful in the search towards a novel
-debiasing algorithm. This insight could also be useful in determining whether previous
-debiasing efforts have a stronger or more effective effect on languages that have
-a different amount of gender bias.
+case that some languages are inherently less biased.
+This insight could be useful in the search towards a novel
+debiasing algorithm. 
+Furthermore, this could explain why debiasing is easier or harder for certain languages.
 
 This difference has been studied with the help of the research
 question ``To what extend are word
-embeddings of different languages biased towards gender?'' with a null hypothesis $H_0$
-that ``Word embeddings of different languages are not biased towards gender''.
+embeddings of different languages biased towards gender?''. 
 This question will be answered with the help of the WEAT method by
 \textcite{caliskan_2017_semantics_language_corpora}.
