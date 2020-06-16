@@ -44,32 +44,32 @@ and was run with Python version 3.8.2 with R version 4.0.0.
 %\end{figure*}
 
 \begin{figure*}
+    \label{fig:effect_size}
+    \includegraphics[width=\textwidth]{hist_effect_size.pdf}
     \caption{Effect size of the mean difference in cosine distance between \emph{male} and \emph{female}
     by language}
-    \label{fig:effect_size}
-    \fitfigure{hist_effect_size.pdf}
-    \figurenote{Figure~\ref{fig:effect_size} shows the measured effect size of method 1,
-        whether words
-        are, on average, more associated with \emph{male} or more associated with
-        \emph{female}. A value greater than zero indicates that a words are on average more
-        associated with \emph{male}, while a value below zero indicates that words are on
-        average more associated with \emph{female}.
-    }
+%    \figurenote{Figure~\ref{fig:effect_size} shows the measured effect size of method 1,
+%        whether words
+%        are, on average, more associated with \emph{male} or more associated with
+%        \emph{female}. A value greater than zero indicates that a words are on average more
+%        associated with \emph{male}, while a value below zero indicates that words are on
+%        average more associated with \emph{female}.
+%    }
 \end{figure*}
 
 \begin{figure*}
+    \label{fig:weffect_size}
+    \includegraphics[width=\textwidth]{hist_weffect_size.pdf}
     \caption{Effect size of the sum of weighted cosine distances between \emph{male} and \emph{female}
     by language}
-    \label{fig:weffect_size}
-    \fitfigure{hist_weffect_size.pdf}
-    \figurenote{Figure~\ref{fig:weffect_size} shows the measured effect size of
-        method 2, whether the most used words are more associated with \emph{male} or
-        more associated with \emph{female}.
-        A value greater than zero indicates that a words are more
-        associated with \emph{male}, while a value below zero indicates that words are
-        more associated with \emph{female}.
-        Languages appended with an asterisk were found to have a \emph{p} value > 0.001.
-    }
+    %\figurenote{Figure~\ref{fig:weffect_size} shows the measured effect size of
+    %    method 2, whether the most used words are more associated with \emph{male} or
+    %    more associated with \emph{female}.
+    %    A value greater than zero indicates that a words are more
+    %    associated with \emph{male}, while a value below zero indicates that words are
+    %    more associated with \emph{female}.
+    %    Languages appended with an asterisk were found to have a \emph{p} value > 0.001.
+    %}
 \end{figure*}
 
 \begin{table}
@@ -78,8 +78,8 @@ and was run with Python version 3.8.2 with R version 4.0.0.
         \caption{Calculated \emph{p} values from values method 2}
         \label{tab:p-values-method-2}
         \begin{tabular*}{0.9\columnwidth}{l@{\extracolsep{\fill}}l}
-            \toprule
-            Language & \emph{p} value \\ \midrule
+            \hline
+            Language & \emph{p} value \\ \hline
             Portuguese & 0.173 \\
             Russian & 0.424 \\
             Japanese & 0.008 \\
@@ -90,7 +90,7 @@ and was run with Python version 3.8.2 with R version 4.0.0.
             Hungarian & 0.456 \\
             Thai & 0.494 \\
             Javanese & 0.017 \\
-            \midrule
+            \hline
         \end{tabular*}
         \begin{tablenotes}[para,flushleft]
             {\small \textit{Note:} All languages with \emph{p} value < 0.001 are not

@@ -1,10 +1,19 @@
-\documentclass[jou, biblatex, longtable]{apa7}
+\documentclass[twocolumn]{article}
 \usepackage{fontspec}
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
+\usepackage[inline]{enumitem}
 \usepackage{csquotes}
 \usepackage{mathtools}
 \usepackage{graphicx}
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
+\usepackage{threeparttable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{float}
 \graphicspath{ {./figures/} }
 \geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
 \usepackage{babel}
@@ -22,21 +31,22 @@
 \newcommand{\arab}[1]{\setmainfont{NotoNaskhArabic-Regular}#1}
 \newcommand{\noto}[1]{\setmainfont{NotoSerif-Regular}#1}
 
-
-\usepackage{subfiles}
-
-\shorttitle{Gender bias in word embeddings of different languages}
 \title{Gender bias between word embeddings of different languages}
-\author{Thijs Raymakers}
-\affiliation{Delft University of Technology}
-\course{CSE3000: Research project}
 
-\abstract{\emph{Abstract:} \input{sections/abstract}}
-
-\keywords{natural language processing, gender bias, word embedding, WEAT, language}
+\author{Thijs Raymakers \\ \small{Delft University of Technology}}
 
 \begin{document}
-\maketitle
+
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+    \input{sections/abstract}
+    \newline
+    \newline
+    \end{abstract}
+  \end{@twocolumnfalse}
+]
 
 \input{sections/introduction}
 \input{sections/methodology}

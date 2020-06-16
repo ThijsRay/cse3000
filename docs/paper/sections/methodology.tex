@@ -5,13 +5,13 @@ the Common Crawl Project.
 
 The languages that have been used in this research, have been chosen based on a
 few criteria,
-\begin{seriate}
+\begin{enumerate*}
     \item the language has a pre-trained word embedding from \textcite{grave2018learning}
     \item the language should be machine translatable with the help of tools like DeepL or
     Google Translate and
     \item the language is part of a different language family than the languages that
     were already chosen.
-\end{seriate}
+\end{enumerate*}
 This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
 can be found in table~\ref{table:languages}.
 
@@ -167,14 +167,15 @@ language that
 contains no bias at all. Language $Y$ can be seen as a language where
 $\forall y \in Y(u(y,Y,A,B) = 0)$.
 
+\iffalse
 \begin{table*}
     \centering
     \begin{threeparttable}
         \caption{Chosen languages and their translations}
         \label{table:languages}
         \begin{tabular}{lllll}
-            \toprule
-            Language & Language family & Branch & Translation \emph{male} & Translation \emph{female} \\ \midrule
+            \hline
+            Language & Language family & Branch & Translation \emph{male} & Translation \emph{female} \\ \hline
             Arabic & Afroasiatic & Semitic & \arab{الذكر} & \arab{أنثى} \\
             Basque & Isolate & Basque & gizonezkoa & emakumezkoak \\
             Burmese & Sino-Tibetan & Lolo-Burmese & \myanmar{အထီး} & \myanmar{အမျိုးသမီး} \\
@@ -201,7 +202,7 @@ $\forall y \in Y(u(y,Y,A,B) = 0)$.
             Thai & Kra-Dai & Tai & \thai{ชาย} & \thai{หญิง} \\
             Turkish & Turkic & Oghuz & \noto{erkek} & \noto{kadın} \\
             Yoruba & Niger-Congo & Volta-Niger & \noto{akọ} & \noto{abo} \\
-            \midrule
+            \hline
         \end{tabular}
         \begin{tablenotes}[para,flushleft]
             {\small \textit{Note:} An overview of all the languages that were used in this
@@ -209,3 +210,4 @@ $\forall y \in Y(u(y,Y,A,B) = 0)$.
         \end{tablenotes}
     \end{threeparttable}
 \end{table*}
+\fi

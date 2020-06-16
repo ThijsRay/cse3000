@@ -12,6 +12,7 @@
 *.snm
 *.toc
 *.bin
+*.fff
 **/.idea/**
 **/venv/**
 **/output/**
