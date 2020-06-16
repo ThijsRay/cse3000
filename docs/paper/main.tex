@@ -17,12 +17,23 @@ pdfkeywords={natural language processing, gender bias, word embedding, WEAT, lan
 hidelinks=false
 }
 \usepackage{booktabs}
-\usepackage{caption}
 \usepackage{fancyhdr}
 \usepackage{float}
 \graphicspath{ {./figures/} }
 \usepackage{babel}
+\usepackage{amsmath}
 \usepackage{url}
+
+\everymath{\displaystyle}
+
+\newcommand{\figurenote}[1]{\par \small \textit{Note.} {#1}}
+\RequirePackage[singlelinecheck=off]{caption}
+\DeclareCaptionLabelFormat{tablelabel}{\hspace{-\parindent}\raggedright\textbf{#1 #2}}
+\DeclareCaptionLabelFormat{figurelabel}{\hspace{-\parindent}\raggedright\textbf{#1 #2}}
+\DeclareCaptionTextFormat{tabletext}{\hspace{-\parindent}\textit{#1}}
+\DeclareCaptionLabelSeparator{apalabelsep}{\\ \\} 
+\captionsetup[table]{position=above,skip=0pt,labelformat=tablelabel,labelsep=apalabelsep,textformat=tabletext}
+\captionsetup[figure]{position=above,skip=0pt,labelformat=figurelabel,labelsep=apalabelsep,textfont=it}
 
 \addbibresource{references.bib}
 \DeclareLanguageMapping{english}{english-apa}
