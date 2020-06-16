@@ -5,8 +5,8 @@ Wikipedia\footnote{\url{https://wikipedia.org/}} and
 the Common Crawl Project\footnote{\url{https://commoncrawl.org/}}.
 
 The languages that have been used in this research, have been chosen based on a
-few criteria,
-\begin{enumerate*}
+few criteria;
+\begin{enumerate*}[label={(\alph*)}]
     \item the language has a pre-trained word embedding from \textcite{grave2018learning}
     \item the language should be machine translatable with the help of tools like
         DeepL\footnote{\url{https://deepl.com/}} or
@@ -17,17 +17,63 @@ few criteria,
 This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
 can be found in table~\ref{table:languages}.
 
-The main calculations of this study are focussed on the measurement of gender bias.
-A common way of measuring bias in word embeddings uses the 
+\subsection{WEAT}
+A popular way of measuring bias in word embeddings uses the 
 Word Embedding Association Test (WEAT) method by
-\textcite{caliskan_2017_semantics_language_corpora}. This method measure the
-association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{woman}) 
-and a set of \textit{target} words (e.g. \textit{programmer}, \textit{family},
-\textit{nurse}, \textit{engineer}).
+\textcite{caliskan_2017_semantics_language_corpora}. 
 WEAT has been used before by \textcite{gonen-goldberg-2019-lipstick-pig}
 and \textcite{10.1145/3306618.3314270}.
-This approach can work when looking at a single language, but has some problems when
-trying to compare differences between different languages.
+This method measures the
+association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{male},
+\textit{woman}, \textit{female}) 
+and a set of \textit{target} words (e.g. \textit{programmer}, \textit{family},
+\textit{nurse}, \textit{engineer}). 
+
+The WEAT method calculates the association between attribute words and target words
+by measuring the difference in cosine similarity. Formally, 
+let $X$ and $Y$ be two equally-sized sets of target words and let $A$ and $B$ be two
+sets of attribute words. The test statistic is defined as
+\begin{align} \label{eq:weat_s_sum}
+\textstyle s(X,Y,A,B) &= \displaystyle\sum_{x \in X} s(x,A,B)\nonumber \\
+                      &- \displaystyle\sum_{y \in Y} s(y,A,B)\quad\text{where}\\
+\label{eq:weat_s_mean}
+s(w,A,B) &= \text{mean}_{a \in A} \text{cos}(\vec{w}, \vec{a})
+            \nonumber\\
+         &- \text{mean}_{b \in B} \text{cos}(\vec{w}, \vec{b})
+\end{align}
+where $\text{cos}(\overrightarrow{a}, \overrightarrow{b})$ measures the cosine of the angle
+between $\vec{a}$ and $\vec{b}$ and where the mean is the sample mean of the values.
+Formula~\eqref{eq:weat_s_mean} can be described as a measurement of the association of the
+target word $w$ with
+an attribute and formula~\eqref{eq:weat_s_sum} can be descibred as a measurement of the
+differential association of the sets of target words with the attributes~ 
+\parencite{caliskan_2017_semantics_language_corpora}.
+
+The null hypothesis is that there is no difference between the two sets of target words $X$
+and $Y$, i.e. that formula~\eqref{eq:weat_s_sum} equals $0$.
+The WEAT method tests the significance of this test statistic with a one-sided
+\emph{p}~value of the permutation test
+\begin{align} \label{eq:weat_p_test}
+    \text{Pr}_i[s(X_i,Y_i,A,B) > s(X,Y,A,B)]
+\end{align}
+where $X_i$ and $Y_i$ stand for all equally-sized partitions of
+$X \cup Y$~\parencite{caliskan_2017_semantics_language_corpora}.
+
+The effect size of the test statistic is defined as the normalized measure of separation
+between two distributions of associations.
+\begin{align} \label{eq:weat_effect_size}
+\frac{
+    \text{mean}_{x \in X} s(x, A, B) - \text{mean}_{y \in Y} s(y, A, B)
+}{
+    \text{std-dev}_{w \in X \cup Y} s(w,A,B)
+}
+\end{align}
+The effect size can be interpreted as the ``amount of bias'' \parencite{lauscher-glavas-2019-consistently}.
+
+\subsection{Weaknesses of WEAT for multilingual use}
+The WEAT method works for when measurements are being performed in single language, but
+some problems may arise when the differences between different languages are
+compared.
 
 First, not all words have a one-to-one translation into another
 language, because certain words might have a different meaning, depending on the
@@ -35,6 +81,7 @@ context in which the word is used. It is therefore not possible to translate all
 attribute and target words into a different language, because it might lead to an
 incorrect and unfair comparison. A great example of this would the English word
 \textit{man}, which can mean \textit{male} or \textit{mankind}, depending on the context.
+
 Second, the inclusion or exclusion of words from
 the target set is a subjective decision~\parencite{nissim_fair_is_better_2020}. Therefore,
 the measurement itself could be biased, depending on what words are or are not in the set
@@ -44,15 +91,21 @@ because this subjective decision has to be made for every single language.
 The first problem can be addressed by limiting the amount of words that have to be
 translated. The method that is used in this research uses the two attribute words 
 \textit{male} and \textit{female}. The assumption is made that these words are universal
-and translatable in all languages. However, this is an assumption that is difficult to
-verify without having a good understanding of all the languages that are involved.
+and translatable in all languages. 
 
-The second problem can be addressed in two ways. The goal is to create a reproducible
-set of target words for all languages. This can be done by either looking at all words
-in the
-word embedding, or by looking at the most used words in the word embedding.
+We propose to solve the second problem with two different approaches. The goal is to
+remove the subjective decision and include words based on a language-independent metric
+that is not based on the meaning of words. This has been done by
+\begin{enumerate*}[label={(\arabic*)}]
+    \item looking at \emph{all} the words in the word embedding and by
+    \item looking at the \emph{most used} words in the word embedding
+\end{enumerate*}.
+These approaches will be explained in more detail in section~\ref{method:1} and
+\ref{method:2} respectively.
 
-\subsection{Method 1}
+\subsection{Proposed multilingual WEAT}
+
+\subsubsection{Uniform weighting method}
 \label{method:1}
 The first way uses
 all the words in the word embedding as target words. The advantage of this approach is
@@ -68,7 +121,7 @@ towards a gender, but with a valid reason. These words increase the probability 
 type I error, where the null hypothesis is rejected even if the word embedding is not
 biased.
 
-\subsection{Method 2}
+\subsubsection{Frequency weighting method}
 \label{method:2}
 The second way still uses all the words in the word embedding, but attaches a weight to
 each word, depending on its frequency. Effectively, this results in a measurement over
@@ -91,7 +144,7 @@ invisible when compared to a presumably neutral word like \textit{and}, which mi
 a weight of $0.1$. Words that are not used as often will therefore have a negligible impact
 on the measurement.
 
-\subsection{Test statistics}
+\subsubsection{Test statistics}
 Both of these approaches have been explored. Based on the considerations made above, the
 test statistic used by
 \textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
