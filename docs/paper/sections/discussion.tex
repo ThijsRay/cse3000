@@ -32,6 +32,44 @@ embeddings and possible explanations of why these languages show these character
 be explored in future research.
 
 \subsection{Limitations}
+
+\subsubsection{Uniform weighting method} \label{section:discussion_uniform_method}
+The advantage of this approach is
+that all words are considered, which eliminates the inclusion or exclusion subjectiveness
+described by \textcite{nissim_fair_is_better_2020}.  This is because there is no metric
+on which a word could be excluded, because all words are included by default.
+A disadvantage of this approach
+are that the results are difficult to interpret, because words with an explicit
+gender (e.g. \textit{he}, \textit{she}, \textit{waiter}, \textit{waitress},
+\textit{king}, \textit{queen}) are also
+present in the set of target words. This is a problem because these words tend to be biased
+towards a gender, but with a valid reason. These words increase the probability of a
+type I error, where the null hypothesis is rejected even if the word embedding is not
+biased.
+
+\subsubsection{Frequency weighting method} \label{section:discussion_frequency_method}
+This approach builds upon the assumption that words that are regarded as neutral words
+(e.g. \textit{and}, \textit{the}) should be gender neutral, unless there exists some form
+of gender bias in the word embedding.
+The advantage of this second approach is that results are more representative of how
+the language is actually used. While the amount of words associated with men and the
+amount of words associated with women might be equal, i.e. each male word has a female
+counterpart, they are not used as often.
+Taking the frequency of words into account addresses this issue. 
+The disadvantage of this is that
+it might miss forms of gender bias that might be present in the word embedding, because
+not all words are considered to be as important as other words. For example, if the words
+\textit{doctor} and \textit{nurse} have a large amount of bias associated with them,
+but they only have a weight of $0.00001$, then their reported bias would be almost
+invisible when compared to a presumably neutral word like \textit{and}, which might have
+a weight of $0.1$. Words that are not used as often will therefore have a negligible impact
+on the measurement.
+
+
+
+
+
+
 There are some limitations with the used method, mainly that it is built upon quite a few
 assumptions.
 The assumption that the attribute words `male' and `female' are universal is difficult
