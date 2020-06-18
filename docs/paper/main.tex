@@ -1,4 +1,4 @@
-\documentclass[a4paper,twocolumn]{article}
+\documentclass[a4paper]{article}
 \usepackage{fontspec}
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
@@ -17,12 +17,14 @@ pdfkeywords={natural language processing, gender bias, word embedding, WEAT, lan
 hidelinks=false
 }
 \usepackage{booktabs}
+\usepackage{cleveref}
 \usepackage{fancyhdr}
 \usepackage{float}
 \graphicspath{ {./figures/} }
 \usepackage{babel}
 \usepackage{amsmath}
 \usepackage{url}
+\usepackage{multicol}
 
 \everymath{\displaystyle}
 
@@ -52,17 +54,14 @@ hidelinks=false
 \author{Thijs Raymakers \\ \small{Delft University of Technology}}
 
 \begin{document}
-
-\twocolumn[
-  \begin{@twocolumnfalse}
     \maketitle
     \begin{abstract}
     \input{sections/abstract}
     \newline
     \newline
     \end{abstract}
-  \end{@twocolumnfalse}
-]
+
+\begin{multicols}{2}
 
 \input{sections/introduction}
 \input{sections/methodology}
@@ -71,5 +70,5 @@ hidelinks=false
 \input{sections/conclusions_and_recommendations}
 
 \printbibliography
-
+\end{multicols}
 \end{document}

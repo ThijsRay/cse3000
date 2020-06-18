@@ -1,10 +1,10 @@
-\section{Methodology}
+\section{Methodology} \label{ch:method}
 We used the word embeddings provided by \textcite{grave2018learning}. They have
 trained word embeddings for various different languages on texts from
 Wikipedia\footnote{\url{https://wikipedia.org/}} and
 the Common Crawl Project\footnote{\url{https://commoncrawl.org/}}.
 
-The languages that have been used in this research, have been chosen based on a
+The languages that are used in this research, are chosen based on a
 few criteria;
 \begin{enumerate*}[label={(\alph*)}]
     \item the language has a pre-trained word embedding from \textcite{grave2018learning}
@@ -49,18 +49,8 @@ an attribute and formula~\eqref{eq:weat_s_sum} can be descibred as a measurement
 differential association of the sets of target words with the attributes~ 
 \parencite{caliskan_2017_semantics_language_corpora}.
 
-The null hypothesis is that there is no difference between the two sets of target words $X$
-and $Y$, i.e. that formula~\eqref{eq:weat_s_sum} equals $0$.
-The WEAT method tests the significance of this test statistic with a one-sided
-\emph{p}~value of the permutation test
-\begin{align} \label{eq:weat_p_test}
-    \text{Pr}_i[s(X_i,Y_i,A,B) > s(X,Y,A,B)]
-\end{align}
-where $X_i$ and $Y_i$ stand for all equally-sized partitions of
-$X \cup Y$~\parencite{caliskan_2017_semantics_language_corpora}.
-
-The effect size of the test statistic is defined as the normalized measure of separation
-between two distributions of associations.
+In WEAT, the effect size of the test statistic is defined as the normalized measure of separation
+between two distributions of associations~\parencite{caliskan_2017_semantics_language_corpora}
 \begin{align} \label{eq:weat_effect_size}
 \frac{
     \text{mean}_{\vec{x} \in X} s(\vec{x}, A, B) - \text{mean}_{\vec{y} \in Y} s(\vec{y}, A, B)
@@ -110,7 +100,7 @@ The first method uses all the words in the word embedding as target words.
 The uniform weighting method uses an adjusted version of the WEAT method described in
 section~\ref{section:method:weat}. The adjustments account for the fact that
 the languages have different target and attribute words. Formulas~\eqref{eq:weat_s_sum} and
-\eqref{eq:weat_s_mean} have been redefined as 
+\eqref{eq:weat_s_mean} are redefined as 
 \begin{align} \label{eq:uniform_s_sum}
     s(X,Y,a,b) &= \displaystyle\sum_{\vec{x} \in X} s(\vec{x},\vec{a_X},\vec{b_X})
     \nonumber \\
@@ -121,22 +111,9 @@ the languages have different target and attribute words. Formulas~\eqref{eq:weat
 \end{align}
 where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine of the angle between
 $\vec{a}$ and $\vec{b}$. 
-In formula~\eqref{eq:uniform_s_sum}, $X$ and $Y$ refer to the two languages that have
-been compared, and $a_X$ and $b_X$ refer to the translations of the
+In formula~\eqref{eq:uniform_s_sum}, $X$ and $Y$ refer to the two languages that are
+compared, and $a_X$ and $b_X$ refer to the translations of the
 two attribute words $a$ and $b$ into language $X$ respectively. 
-
-The null hypothesis is that there is no difference between the two languages X and Y,
-i.e. that formula~\eqref{eq:uniform_s_sum} equals 0. The significance of the
-test statistic~\eqref{eq:uniform_s_sum} has been tested with a two-sided \emph{p} value
-of the permutation test
-\begin{align}
-    p &= \begin{cases}
-    \text{Pr}_i[s(X_i, Y,_i, a, b) > z] \quad \text{if } z > 0 \\
-    \text{Pr}_i[s(X_i, Y,_i, a, b) < z] \quad \text{if } z < 0
-\end{cases}\nonumber \\
-\text{where} \ z &= s(X,Y,a,b)
-\end{align}
-and where $X_i$ and $Y_i$ stand for all equally-sized partitions of $X \cup Y$.
 
 The effect size is calculated the same way as WEAT, with
 formula~\eqref{eq:weat_effect_size}.
@@ -157,101 +134,113 @@ over the most commonly used words, because those words have the highest weight.
 %The advantages and disadvantages of this method are discussion in section~\ref{section:discussion_frequency_method}.
 The frequency weighting method uses an adjusted version of the uniform weighting method.
 The adjustments aim to include information about the usage frequency.
-Formulas~\eqref{eq:uniform_s_sum} and~\eqref{eq:uniform_s_mean} have been redefined
+Formulas~\eqref{eq:uniform_s_sum} and~\eqref{eq:uniform_s_mean} are redefined
 as
-\begin{align} 
+\begin{align} \label{eq:frequency_s_sum}
 s(X,Y,a,b) =& \displaystyle\sum_{\vec{x} \in X}\! f(\vec{x})*s(\vec{x},\vec{a_X},\vec{b_X})
     \nonumber \\
 -& \displaystyle\sum_{\vec{y} \in Y}\! f(\vec{y})\! *\! s(\vec{y},\vec{a_Y},\vec{b_Y})
-    \quad\text{where} \nonumber \\
+    \quad\text{where} \\
 \label{eq:frequency_s_mean}
 s(\vec{w},\vec{a},\vec{b}) =&\ \text{cos}(\vec{w}, \vec{a}) - \text{cos}(\vec{w}, \vec{b})
 \end{align}
 where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine of the angle between
 $\vec{a}$ and $\vec{b}$. 
-In formula~\eqref{eq:frequency_s_mean}, $X$ and $Y$ refer to the two languages that have
-been compared, and $a_X$ and $b_X$ refer to the translations of the
+In formula~\eqref{eq:frequency_s_sum}, $X$ and $Y$ refer to the two languages that are
+compared, and $a_X$ and $b_X$ refer to the translations of the
 two attribute words $a$ and $b$ into language $X$ respectively. 
 $f(\vec{x})$ refers to the probability that the word $x$ occurs in a text written
 in language $X$.
 
-\subsubsection{Test statistics}
-Both of these approaches have been explored. Based on the considerations made above, the
-test statistic used by
-\textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
-$$
-\begin{aligned}
-u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) \\
-- \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
-\end{aligned}
-$$
-measures the difference between the \textit{cosine similarity} of a word $w$ of language $W$ and the set of attribute words $A$, and of the cosine similarity of a word $w$ and the
-set of attribute words $B$. The $A \cap W$ and $B \cap W$ ensure that the cosine
-similarity is only measured between two vectors in the same word embedding. The
-calculation of this difference can be used in
-$$
-t(w,W,A,B) = Z(\text{rank}(w), |W|) * u(w,W,A,B)\quad\text{where}
-$$
-$$
-Z(k,N) =
-\begin{cases}
-    1 & \quad \text{for method 1} \\
-    \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)} & \quad \text{for method 2}
-\end{cases}
-$$
-This formula adds a weight to each word, depending on its frequency.
-In case the first approach is used, where all words are considered, $Z(k,N)$ will have a
-fixed value of 1 because the first approach does not include frequency.
-In case the second approach is used, the cosine similarity will get a weight attached
-to it because it built upon the assumption that
-if the word \textit{x} occurs more often than the word \textit{y}, then the former should
-be given more weight in the calculation, because that would more accurately reflect the
-usage of the words. The pre-trained models provided by \textcite{grave2018learning} 
-are sorted by frequency, but exact information about how often a
-word occurs is omitted.
-Fortunately, the information about the frequency can be roughly approximated with the
-help of Zipf's law~\parencite{Zipf-1935, word_embedding_zipf_context} or $Z(k,N)$ where
-$k$ is the frequency rank of the word and where $N$ is the number of words in the language,
-or in this case, the word embedding.
-
-This results in a test statistic of
-$$
-s(X,Y,A,B) = \displaystyle\sum_{x \in X}t(x,X,A,B) - \displaystyle\sum_{y \in Y}t(y,Y,A,B)
-$$
-where \textit{A} and \textit{B} are two sets of attribute words, in this case the
-translated versions of the words \textit{male} and
-\textit{female} and where \textit{X} and \textit{Y} are the sets of target words, i.e.
-all words in the word embedding.
-
-The significance of this test statistic is calculated with a \emph{p} value that is
-calculated with an approximated permutation test and is described as
-$$
-\begin{cases}
-    \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) > 0 \\
-    \text{Pr}_i[s(X_i, Y,_i, A, B) < s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) < 0
-\end{cases}
-$$
-where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
-size. 
-
-The effect size can be described as
-$$
+The effect size of the test is defined as an adjusted version of
+formula~\eqref{eq:weat_effect_size} that takes the frequency of the words into account:
+\begin{equation}\label{eq:frequency_effect_size}
 \frac{
-    \text{mean}_{x \in X} u(x, X, A, B) - \text{mean}_{y \in Y} u(y, Y, A, B)
+    \displaystyle\sum_{\vec{x} \in X} f(\vec{x}) * s(\vec{x}, A, B) - \sum_{\vec{y} \in Y} f(\vec{y}) * s(\vec{y}, A, B)
 }{
-    \text{std-dev}_{w \in X \cup Y} u(w,W,A,B)
+\text{std-dev}_{\vec{w} \in X \cup Y} s(\vec{w},A,B)
 }
-$$
-where $W$ is the language that $w$ is a part of. The effect size can be interpreted as
-the amount of bias~\parencite{lauscher-glavas-2019-consistently}.
+\end{equation}
+where the standard deviation takes the frequencies defined by $f$ into account.
 
-In order investigate whether the null hypothesis $H_0$ can be rejected, these tests have
-been performed with pairs of two languages $X$ and $Y$, where $X$ is an actual word
-embedding
-from languages in table~\ref{table:languages} and where $Y$ is an equally sized dummy
-language that
-contains no bias at all. Language $Y$ can be seen as a language where
-$\forall y \in Y(u(y,Y,A,B) = 0)$.
+
+%\subsubsection{Test statistics}
+%Both of these approaches have been explored. Based on the considerations made above, the
+%test statistic used by
+%\textcite{caliskan_2017_semantics_language_corpora} can be reused with some adjustments. 
+%$$
+%\begin{aligned}
+%u(w,W,A,B) = \text{mean}_{\forall a \in (A \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{a}) \\
+%- \text{mean}_{\forall b \in (B \cap W)}\text{cos}(\overrightarrow{w}, \overrightarrow{b})
+%\end{aligned}
+%$$
+%measures the difference between the \textit{cosine similarity} of a word $w$ of language $W$ and the set of attribute words $A$, and of the cosine similarity of a word $w$ and the
+%set of attribute words $B$. The $A \cap W$ and $B \cap W$ ensure that the cosine
+%similarity is only measured between two vectors in the same word embedding. The
+%calculation of this difference can be used in
+%$$
+%t(w,W,A,B) = Z(\text{rank}(w), |W|) * u(w,W,A,B)\quad\text{where}
+%$$
+%$$
+%Z(k,N) =
+%\begin{cases}
+%    1 & \quad \text{for method 1} \\
+%    \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)} & \quad \text{for method 2}
+%\end{cases}
+%$$
+%This formula adds a weight to each word, depending on its frequency.
+%In case the first approach is used, where all words are considered, $Z(k,N)$ will have a
+%fixed value of 1 because the first approach does not include frequency.
+%In case the second approach is used, the cosine similarity will get a weight attached
+%to it because it built upon the assumption that
+%if the word \textit{x} occurs more often than the word \textit{y}, then the former should
+%be given more weight in the calculation, because that would more accurately reflect the
+%usage of the words. The pre-trained models provided by \textcite{grave2018learning} 
+%are sorted by frequency, but exact information about how often a
+%word occurs is omitted.
+%Fortunately, the information about the frequency can be roughly approximated with the
+%help of Zipf's law~\parencite{Zipf-1935, word_embedding_zipf_context} or $Z(k,N)$ where
+%$k$ is the frequency rank of the word and where $N$ is the number of words in the language,
+%or in this case, the word embedding.
+%
+%This results in a test statistic of
+%$$
+%s(X,Y,A,B) = \displaystyle\sum_{x \in X}t(x,X,A,B) - \displaystyle\sum_{y \in Y}t(y,Y,A,B)
+%$$
+%where \textit{A} and \textit{B} are two sets of attribute words, in this case the
+%translated versions of the words \textit{male} and
+%\textit{female} and where \textit{X} and \textit{Y} are the sets of target words, i.e.
+%all words in the word embedding.
+%
+%The significance of this test statistic is calculated with a \emph{p} value that is
+%calculated with an approximated permutation test and is described as
+%$$
+%\begin{cases}
+%    \text{Pr}_i[s(X_i, Y,_i, A, B) > s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) > 0 \\
+%    \text{Pr}_i[s(X_i, Y,_i, A, B) < s(X,Y,A,B)] \quad \text{if } s(X,Y,A,B) < 0
+%\end{cases}
+%$$
+%where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
+%size. 
+%
+%The effect size can be described as
+%$$
+%\frac{
+%    \text{mean}_{x \in X} u(x, X, A, B) - \text{mean}_{y \in Y} u(y, Y, A, B)
+%}{
+%    \text{std-dev}_{w \in X \cup Y} u(w,W,A,B)
+%}
+%$$
+%where $W$ is the language that $w$ is a part of. The effect size can be interpreted as
+%the amount of bias~\parencite{lauscher-glavas-2019-consistently}.
+%
+%In order investigate whether the null hypothesis $H_0$ can be rejected, these tests have
+%been performed with pairs of two languages $X$ and $Y$, where $X$ is an actual word
+%embedding
+%from languages in table~\ref{table:languages} and where $Y$ is an equally sized dummy
+%language that
+%contains no bias at all. Language $Y$ can be seen as a language where
+%$\forall y \in Y(u(y,Y,A,B) = 0)$.
 
 \iffalse
 \begin{table*}
