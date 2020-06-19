@@ -29,7 +29,7 @@ def create_histogram(output_path: AnyStr, language: Translation):
 
 
 def _plot_hist(file_name: AnyStr, column_name: AnyStr, x_label: AnyStr, language_names: AnyStr = "language"):
-    return f"pdf(\"{file_name}\", height=6, width=10);" \
+    return f"pdf(\"{file_name}\", height=6, width=5);" \
             "print(" \
             "    langs " \
             f"    %>% arrange({column_name}) " \
@@ -57,19 +57,19 @@ def create_graphs(data_dir: AnyStr, output_dir: AnyStr):
               "langs <- merge(x=langs, y=total, by.x=\"language_code\", by.y=\"L1\");" \
               "langs$language_wp <- foreach(x=1:nrow(langs)) %do% {" \
               "     if(langs[x]$wp > 0.001) {" \
-              "         paste(langs[x]$language, \"*\",sep=\"\")" \
+              "         paste(langs[x]$language, \" ** \",sep=\"\")" \
               "     } else {" \
               "         langs[x]$language" \
               "     } " \
               "};" \
               + _plot_hist(f"{output_dir}/hist_bias.pdf", "bias",
-                           "Mean of difference in cosine distance between the translation of male and female") \
+                           "Mean of cosine distances") \
               + _plot_hist(f"{output_dir}/hist_wdiff.pdf", "wdiff",
-                           "Sum of weighted cosine distances between translation of male and female") \
+                           "Weighted mean of cosine distances", language_names="language_wp") \
               + _plot_hist(f"{output_dir}/hist_effect_size.pdf", "effect_size",
-                           "Effect size of method 1") \
+                           "Effect size") \
               + _plot_hist(f"{output_dir}/hist_weffect_size.pdf", "weffect_size",
-                           "Effect size of method 2", language_names="language_wp")
+                           "Effect size", language_names="language_wp")
     run_r(command)
 
 

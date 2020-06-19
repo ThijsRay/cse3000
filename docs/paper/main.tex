@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[english,a4paper]{article}
 \usepackage{fontspec}
 \usepackage[T1]{fontenc}
 \usepackage{geometry}
@@ -17,7 +17,6 @@ pdfkeywords={natural language processing, gender bias, word embedding, WEAT, lan
 hidelinks=false
 }
 \usepackage{booktabs}
-\usepackage{cleveref}
 \usepackage{fancyhdr}
 \usepackage{float}
 \graphicspath{ {./figures/} }
@@ -25,7 +24,7 @@ hidelinks=false
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{multicol}
-
+\usepackage{subfig}
 \everymath{\displaystyle}
 
 \newcommand{\figurenote}[1]{\par \small \textit{Note.} {#1}}
@@ -33,9 +32,11 @@ hidelinks=false
 \DeclareCaptionLabelFormat{tablelabel}{\hspace{-\parindent}\raggedright\textbf{#1 #2}}
 \DeclareCaptionLabelFormat{figurelabel}{\hspace{-\parindent}\raggedright\textbf{#1 #2}}
 \DeclareCaptionTextFormat{tabletext}{\hspace{-\parindent}\textit{#1}}
+\DeclareCaptionTextFormat{subfloattext}{\hspace{-\parindent}#1}
 \DeclareCaptionLabelSeparator{apalabelsep}{\\ \\} 
 \captionsetup[table]{position=above,skip=0pt,labelformat=tablelabel,labelsep=apalabelsep,textformat=tabletext}
 \captionsetup[figure]{position=above,skip=0pt,labelformat=figurelabel,labelsep=apalabelsep,textfont=it}
+\captionsetup[subfloat]{textfont=normalfont, position=below}
 
 \addbibresource{references.bib}
 \DeclareLanguageMapping{english}{english-apa}
@@ -61,14 +62,15 @@ hidelinks=false
     \newline
     \end{abstract}
 
-\begin{multicols}{2}
+\begin{multicols*}{2}
 
 \input{sections/introduction}
 \input{sections/methodology}
-\input{sections/setup_and_results}
+\input{sections/setup}
+\input{sections/results}
 \input{sections/discussion}
 \input{sections/conclusions_and_recommendations}
 
 \printbibliography
-\end{multicols}
+\end{multicols*}
 \end{document}

@@ -1,0 +1,57 @@
+\section{Experimental setup}
+We downloaded the pre-trained word embeddings created
+by~\textcite{grave2018learning} for all languages defined in table~\ref{table:languages}.
+For each downloaded language, the words \textit{male} and \textit{female} have been
+translated beforehand.
+The vectors associated with the translated words \textit{male} and \textit{female} are
+extracted from the word embedding. Then, the cosine similarity is calculated
+according to the methodology.
+
+The code used to calculate the results can be found on
+GitHub\footnote{Git repository can be found on \url{https://github.com/ThijsRay/cse3000}}.
+
+\subsection{Frequency information}
+The words contained in the pre-trained models provided by~\textcite{grave2018learning}
+are sorted by frequency, but exact information about how often a word occurs in
+a regular text is omitted. We approximate the frequency with the help of
+Zipf's~law~\parencite{Zipf-1935, word_embedding_zipf_context}, defined as 
+\begin{equation}
+    \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)}
+\end{equation}
+where $k$ denotes the rank of a word and
+$N$ denotes the amount of words in the word embedding.
+
+\subsection{Dummy language} \label{seq:dummy_language}
+A ``dummy language'' has been created in order to test whether and to what extend a language has gender bias. This language is defined to have
+no gender bias and is therefore used as a baseline to which the other languages
+are compared.
+It can be constructed by creating a language where $s(\vec{w}, \vec{a}, \vec{b}) = 0$ for all values of $\vec{w}$.
+All languages in table~\ref{table:languages} are compared to this
+dummy language. In all formulas, the word embedding $X$ is an actual embedding from
+the languages in table~\ref{table:language} and $Y$ is
+the dummy language that has the same size as $X$. This has the effect that all terms
+containing $Y$ are
+reduced to $0$, except in formulas where $X$ and $Y$ are used in the
+same term such as in formulas
+\eqref{eq:weat_effect_size}, \eqref{eq:frequency_effect_size} and \eqref{eq:setup_p_test}.
+
+\subsection{Hypothesis test} \label{sec:hypothesis_test}
+The null hypothesis is defined as ``The word embedding of the tested language is
+not biased towards gender''. This null hypothesis will be tested for all 26 languages
+and for both the uniform and the frequency weighting method.
+Each language is compared against the dummy language with formula \eqref{eq:uniform_s_sum}
+and \eqref{eq:frequency_s_sum}. 
+The significance of each comparison is measured with an 
+${\alpha = 1-\sqrt[26]{1 - 0.05} \approx 0.001}$ and
+a two-sided approximated permutation test
+\begin{align}\label{eq:setup_p_test}
+    p &= \begin{cases}
+    \text{Pr}_i[s(X_i, Y,_i, a, b) > z] \quad \text{if } z > 0 \\
+    \text{Pr}_i[s(X_i, Y,_i, a, b) < z] \quad \text{if } z < 0
+\end{cases}\nonumber \\
+\text{where} \ z &= s(X,Y,a,b)
+\end{align}
+where $X_i$ and $Y_i$ stand for all equally-sized partitions of
+$X \cup Y$~\parencite{caliskan_2017_semantics_language_corpora}. The permutation test has
+been performed with $N = 1000$ random permutations.
+
