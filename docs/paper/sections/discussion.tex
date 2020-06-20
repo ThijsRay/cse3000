@@ -1,46 +1,84 @@
 \section{Discussion}
-Therefore, the
-null hypothesis can be rejected for all the languages when the uniform weighting method
-is used.
+First, we discuss the results from chapter~\ref{ch:results}. Then,
+we will explain the rationale behind the choices that were made.
+Finally, we will discuss the limitations of our approach and reflect on some
+of the aspects of this research.
 
+\subsection{About the result}
+\subsubsection{\emph{p} values}
+The results show that all languages have \mbox{a \emph{p} value < $\alpha$} when
+the uniform weighting method is used. Therefore, we can reject the null hypothesis
+defined in section~\ref{sec:hypothesis_test} for all of the tested languages.
 
-Therefore, the null hypothesis described in section \ref{sec:hypothesis_test} can
-not be rejected for the languages in table~\ref{tab:p-values-frequency} when the
-frequency weighting method is used. The null hypothesis can be rejected for all
-other tested languages.
+This is not the case for the frequency weighting method. The null hypothesis can
+\emph{not} be rejected for all the languages with \mbox{a \emph{p} value > $\alpha$}.
+These languages are shown in table~\ref{tab:p-values-frequency}. However, it
+can be rejected for all other tested languages.
 
+We can conclude from the significance test that all of the tested languages are
+gender biased, when gender bias is measured across \emph{all the words} in the
+word embedding (uniform weighting method).
+It can also be concluded that a majority of the tested languages is gender biased,
+when this is calculated across \emph{the most used words} in the word
+embedding (frequency weighting method). This conclusion builds
+upon the assumption that there is a relation between word association and bias.
+
+It is interesting to see that there is a difference in \emph{p} values for both methods.
+A probable explanation for this is that most of the values in the frequency weighting
+method are extremely close to zero due to the introduction of frequency
+weights in formula~\eqref{eq:frequency_s_sum}. Therefore, the values are not
+significantly different from
+the zero values of the dummy language. Unless the most used words of a language
+show bias, the permutation test is essentially comparing a lot of zeroes with each
+other. 
+
+\subsubsection{Observations}
 A few observations can be made from figure~\ref{fig:effect_size}. Most
 of the languages have an effect size above 0, indicating that most of the reviewed
 languages are more associated with \emph{male}. Assuming that there is a relation between
 the association of a word and bias, then this could mean that
-most of the tested languages have a bias towards \emph{male}. Based on this observation,
-the null hypothesis can be rejected.
+most of the tested languages have a bias towards \emph{male}. 
 
-Another observation is that some languages that are from the same language family have
-a similar rank. For example, both Finnish and Hungarian are Uralic languages and have a
-relatively high effect size compared to the other languages. A similar pattern can be seen
+Another observation from figure~\ref{fig:effect_size} and \ref{fig:mean_difference} is that
+some languages that are from the same language family have
+a similar rank. For example, both Finnish and Hungarian
+are Uralic languages and have a
+relatively high effect size compared to the other
+languages. A similar pattern can be seen
 with Portuguese and Spanish, both Iberian languages. However, this might be a incidental
 because some closely related languages seem to have opposite effects, like German and
 Dutch. Further research could show whether this effect is indeed incidental or if
 there is a underlying reason behind it.
 
-Similar observations can be made from figure~\ref{fig:weffect_size}. Most
-of the languages have an effect size above 0, indicating that most used words of the
+Similar observations can be made from figure~\ref{fig:weffect_size} and
+\ref{fig:sum_weighted}. Most
+of the languages have an value above 0, indicating that \emph{most used words} of the
 reviewed languages are more associated with \emph{male} than with \emph{female}. This
 is interesting because the most used words of a language say something about how a
-language is used by people.
-From this result it can be concluded that people are more inclined to use
-\mbox{\emph{male}-related words}.
+language actually is used by people.
+From this result it can be concluded that either people are more inclined to use
+\mbox{\emph{male}-related words} or the most used words happen to be more related
+to \mbox{\emph{male}}.
 
 Some of the languages seem to be closer associated with \emph{female}-related words, like
-Basque, Hindi and French in figure~\ref{fig:effect_size} and Greek in
-figure~\ref{fig:weffect_size}. Why do the words in these languages have a stronger
-relation with \emph{female}-related words?
-Understanding why this is
-the case could be beneficial in the search towards a debiasing algorithm for word
-embeddings and possible explanations of why these languages show these characteristics can
-be explored in future research.
+Basque, Hindi and French in figure~\ref{fig:effect_size} and \ref{fig:mean_difference},
+and Greek in figure~\ref{fig:weffect_size} and \ref{fig:sum_weighted}. Why do the words
+in these languages have a stronger
+relation with \emph{female}-related words? Why does the majority of the languages have
+a stronger link with \emph{male}-related words? Is there a link between gender bias
+in languages and gender equality? Future research could answer these
+questions and look into the link between social and gender-equality developments.
 
+These results show that the words of the majority of the tested languages have
+a stronger association with \emph{male} than with \emph{female}. If there is a link
+between this result and gender-equality, this could be seen as empirical evidence
+in favour of the linguistic relativity hypothesis, that states that the
+language we speak influences the way we think~\parencite{lucy_linguistic_1997}.
+However, one can also argue that it is the other way around, i.e. that the language itself
+is influenced by the way that we think.
+
+
+\subsection{About methodology and setup}
 \subsection{Limitations}
 
 \subsubsection{Uniform weighting method} \label{section:discussion_uniform_method}
