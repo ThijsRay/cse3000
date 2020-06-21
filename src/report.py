@@ -57,7 +57,7 @@ def create_graphs(data_dir: AnyStr, output_dir: AnyStr):
               "langs <- merge(x=langs, y=total, by.x=\"language_code\", by.y=\"L1\");" \
               "langs$language_wp <- foreach(x=1:nrow(langs)) %do% {" \
               "     if(langs[x]$wp > 0.001) {" \
-              "         paste(langs[x]$language, \" ** \",sep=\"\")" \
+              "         paste(langs[x]$language, \" (ns) \",sep=\"\")" \
               "     } else {" \
               "         langs[x]$language" \
               "     } " \
@@ -67,9 +67,9 @@ def create_graphs(data_dir: AnyStr, output_dir: AnyStr):
               + _plot_hist(f"{output_dir}/hist_wdiff.pdf", "wdiff",
                            "Weighted mean of cosine distances", language_names="language_wp") \
               + _plot_hist(f"{output_dir}/hist_effect_size.pdf", "effect_size",
-                           "Effect size") \
+                           "Effect size d1") \
               + _plot_hist(f"{output_dir}/hist_weffect_size.pdf", "weffect_size",
-                           "Effect size", language_names="language_wp")
+                           "Effect size d2", language_names="language_wp")
     run_r(command)
 
 
