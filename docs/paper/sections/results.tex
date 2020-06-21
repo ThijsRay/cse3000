@@ -1,52 +1,46 @@
 \section{Results} \label{ch:results}
-The results are divided in two sections. The first section looks into
-the results of the uniform weighting method and the second section focuses on 
-the frequency weighting method. Each section addresses the results of the
-permutation test from formula \eqref{eq:setup_p_test}. We will also take a look
-at the effect sizes and means of each method.
+%The results are divided in two sections. The first section looks into
+%the results of the uniform weighting method and the second section focuses on 
+%the frequency weighting method. Each section addresses the results of the
+%permutation test from formula \eqref{eq:setup_p_test}. We will also take a look
+%at the effect size $d$s and means of each method.
 
 \subsection{Uniform weighting method}
 The permutation test has been performed on the uniform weighting method and it showed that
-all 26 languages have a \mbox{\emph{p} value < $\alpha$} with respect to
+all 26 languages have a \mbox{\emph{p} value < $\alpha$}, and are
+therefore significant, with respect to
 the dummy language described in section~\ref{seq:dummy_language}. 
+Therefore, the null hypothesis, defined in section~\ref{sec:hypothesis_test},
+is rejected for all of the tested languages when
+the uniform weighting method is used.
 
-In figure~\ref{fig:effect_size} the effect size is shown for each language for the
+In figure~\ref{fig:effect_size} the effect size $d_1$ is shown for each language for the
 uniform weighting method.
-Finnish has the highest positive effect size of all the tested languages, indicating that,
+Finnish has the highest positive $d_1$ of all the tested languages, indicating that,
 on average,
 Finnish words have the highest association with \emph{male} of all the tested languages.
-On the other hand, Basque has the highest negative effect size of all the tested languages,
+On the other hand, Basque has the highest negative $d_1$ of all the tested languages,
 showing that Basque words, on average, have the strongest relation with \emph{female} of
 all the tested languages.
-Most of the tested languages have a positive effect size, which demonstrates that most of
+16 out of 26 of the tested languages have a positive effect size $d_1$, which demonstrates that most of
 the languages have a stronger link with \emph{male} than \emph{female} when this
 is calculated with the uniform weighting method.
 
 Figure~\ref{fig:mean_difference} presents the mean of the cosine distance and it
-shows a similar result to figure~\ref{fig:effect_size}. Most of the languages
+shows a similar result to figure~\ref{fig:effect_size}. Again, 16 out 26 of the languages
 have a positive value, which leads to the same observation as in
-figure~\ref{fig:effect_size}. In this figure, Hungarian has the most 
+figure~\ref{fig:effect_size}. In figure~\ref{fig:mean_difference}, Hungarian has the most 
 association with \emph{male} and Hindi has the most association with \emph{female}.
 
 \subsection{Frequency weighting method}
 The permutation test has also been performed on the frequency weighting method,
-which showed that most languages have a \mbox{\emph{p} value < $\alpha$} with respect to
-the dummy language described in section~\ref{seq:dummy_language}. The languages
-that had a \mbox{\emph{p} value > $\alpha$} and their respective \emph{p} values
-are shown in table~\ref{tab:p-values-frequency}.
+which showed that 16 out of 26 languages have a \mbox{\emph{p} value < $\alpha$} with respect to
+the dummy language described in section~\ref{seq:dummy_language}. This is deemed
+significant and the null hypothesis can be rejected for these languages.
 
-Figure~\ref{fig:weffect_size} shows the effect size of each language for the
-frequency weighting method.
-Burmese has highest positive effect size of all the tested languages, indicating that
-the most used words in Burmese have the highest link with \emph{male} of all the
-tested languages.
-Greek has the highest negative effect size of all the tested languages, indicating that
-the most used words in Greek have the strongest relation with \emph{female} of all the
-tested languages.
-
-Figure~\ref{fig:sum_weighted} displays the weighted mean of the cosine distance for
-the frequency weighting method. Again, the majority of the languages have a positive
-value, which leads to the same observation made for figure~\ref{fig:sum_weighted}. 
+The 10 languages that have a \mbox{\emph{p} value > $\alpha$} and their respective \emph{p} values
+are shown in table~\ref{tab:p-values-frequency}. The null hypothesis can \emph{not}
+be rejected for these languages.
 
 \begin{table}[H]
     \begin{threeparttable}
@@ -75,38 +69,55 @@ value, which leads to the same observation made for figure~\ref{fig:sum_weighted
     \end{threeparttable}
 \end{table}
 
+Figure~\ref{fig:weffect_size} shows the effect size $d_2$ of each language for the
+frequency weighting method.
+Burmese has highest positive $d_2$ of all the tested languages, indicating that
+the most used words in Burmese have the highest link with \emph{male} of all the
+tested languages.
+Greek has the highest negative effect size $d_2$ of all the tested languages, indicating that
+the most used words in Greek have the strongest relation with \emph{female} of all the
+tested languages.
+
+Figure~\ref{fig:sum_weighted} displays the weighted mean of the cosine distance for
+the frequency weighting method. 15 out of 16 of the significant languages have a positive
+value, which leads to the same observation made for figure~\ref{fig:weffect_size}. 
+
 The overall result is similar for both methods. A notable
-difference is that there are more languages that have a positive effect size in
-figure~\ref{fig:weffect_size} than in figure~\ref{fig:effect_size}. This means
-that the most used words of the tested languages are more associated with
+difference is that there are more languages that have a positive effect size $d_2$ in
+figure~\ref{fig:weffect_size} than $d_1$ in figure~\ref{fig:effect_size}. This means
+that the most used words of the tested languages are more associated
 with word \emph{male} than all of the words in the language are.
 
-\begin{figure*}[tb]%
+
+
+\begin{figure*}[t]%
     \caption{Figures \ref{fig:effect_size} and \ref{fig:weffect_size} show the
-    measured effect size per language for both the uniform and the frequency weighting
+    measured effect size $d_1$ and $d_2$ per language for both the uniform and the frequency weighting
     method respectively. Because these languages were compared against the dummy language
     described in section~\ref{seq:dummy_language}, the effect size is a metric of whether
 words are, on average, more associated with \emph{male} or more associated with \emph{female}.}
     \label{fig:effect_weffect}
-    \subfloat[Uniform weighting method. The effect size has been calculated with
+    \subfloat[Uniform weighting method. The effect size $d_1$ has been calculated with
     formula~\eqref{eq:weat_effect_size}. A value greater than zero
     indicates that words are on average more associated with \emph{male}, while a value
     below zero indicates that words are on average more associated with \emph{female}.]{
         \includegraphics[width=0.48\textwidth]{hist_effect_size.pdf}
         \label{fig:effect_size}
     } \quad
-    \subfloat[Frequency weighting method. The effect size has been calculated with
+    \subfloat[Frequency weighting method. The effect size $d_2$ has been calculated with
     formula~\eqref{eq:frequency_effect_size}.
         A value greater than zero indicates that the most used words are more
         associated with \emph{male}, while a value below zero indicates that words are
-        more associated with \emph{female}. Languages appended with two asterisk (**)
-        were found to have \vbox{a \emph{p} value > $\alpha$.}]{
-    \includegraphics[width=0.48\textwidth]{hist_weffect_size.pdf}
+        more associated with \emph{female}. Languages appended with (ns)
+        were found to have \vbox{a \emph{p} value > $\alpha$ and therefore not
+            significant.}]{
+            \includegraphics[width=0.48\textwidth]{hist_weffect_size.pdf}
     \label{fig:weffect_size}
     }
+    \hrule
 \end{figure*}
 
-\begin{figure*}[tb]%
+\begin{figure*}[t]%
     \caption{Figures \ref{fig:mean_difference} and \ref{fig:sum_weighted} show the mean
         and weighted mean of the cosine distance per language between each word and
         \emph{male} and each word and \emph{female} for the uniform and frequency
@@ -127,9 +138,11 @@ words are, on average, more associated with \emph{male} or more associated with 
         A value greater than zero indicates that a words are more
         associated with \emph{male}, while a value below zero indicates that words are
         more associated with \emph{female}.
-        Languages appended with two asterisk (**)
-        were found to have \vbox{a \emph{p} value > $\alpha$.} ]{
+        Languages appended with (ns)
+        were found to have \vbox{a \emph{p} value > $\alpha$ and therefore
+            not significant.} ]{
             \includegraphics[width=0.48\textwidth]{hist_wdiff.pdf}
         \label{fig:sum_weighted}
     }
+    \hrule
 \end{figure*}

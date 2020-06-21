@@ -1,4 +1,4 @@
-\section{Introduction}
+\section{Introduction}\label{ch:introduction}
 Word embeddings have become a useful tool in the field of natural language
 processing. They can be used to represent the semantics and the meaning of
 words as a vector of numbers, which is used for all sorts of applications, such as
@@ -11,7 +11,7 @@ $\overrightarrow{queen}$ would be equal to $\overrightarrow{king} -
 \overrightarrow{woman}$. This analogy would capture an `opposite gender' relation.
 Other examples of these analogies would be $\overrightarrow{Paris} -
 \overrightarrow{France} + \overrightarrow{Germany} \approx \overrightarrow{Berlin}$,
-capturing a `capital of' relation and
+capturing a `capital of' relation, and
 $\overrightarrow{cars} - \overrightarrow{car} + \overrightarrow{apple} \approx
 \overrightarrow{apples}$, which would capture a `pluralisation' relation \parencite{vylomova-etal-2016-take}.
 
@@ -26,26 +26,28 @@ of such a system is Amazons recruiting tool that penalized female candidates, be
 included words related to women on their résumé~\parencite{dastin_2018}.
 
 Recently, efforts have been made to reduce the effect of bias in word embeddings.
-\textcite{bolukbasi_2016_quantifying_stereotypes} showed that debiasing word embeddings
-is possible to some extent, but \textcite{gonen-goldberg-2019-lipstick-pig} showed that
-the approach of \textcite{bolukbasi_2016_quantifying_stereotypes} may hide the
-gender bias, instead of removing it.
+Research showed that debiasing word embeddings
+is possible to some extent~\parencite{bolukbasi_2016_quantifying_stereotypes}, but another
+study showed that this approach may hide the
+gender bias, instead of removing it~\parencite{gonen-goldberg-2019-lipstick-pig}.
 
 This paper aims to take a step back and look into whether there is a difference in gender
 bias between word embeddings of different languages. Some existing related research has
-looked into this difference before, like \textcite{2015arXiv150106307W}, who looked at
-gender bias on Wikipedia across six different languages and like \textcite{lauscher-glavas-2019-consistently}, who looked at biases when different languages, models and training
-sources are used.
+studied this difference before, looking at
+gender bias on Wikipedia across six different languages~\parencite{2015arXiv150106307W},
+and looking at biases when different languages, models and training
+sources are used~\parencite{lauscher-glavas-2019-consistently}.
 
-Previous efforts have generally been focussed on word embeddings of the English language.
+Previous efforts have generally been focused on word embeddings of the English language.
 However, it might be the
 case that some languages are inherently less biased.
 This insight could be useful in the search towards a novel
 debiasing algorithm. 
 Furthermore, this could explain why debiasing is easier or harder for certain languages.
 
-This difference has been studied with the help of the research
-question ``To what extend are word
-embeddings of different languages biased towards gender?''. 
-This question will be answered with the help of the WEAT method by
+The aim of this research is to investigate possible differences in gender bias in word
+embeddings of different languages. This difference has been researched by studying to
+what extent word
+embeddings of different languages are biased towards gender.
+This research question will be answered with the help of the WEAT method by
 \textcite{caliskan_2017_semantics_language_corpora}.

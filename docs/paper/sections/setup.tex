@@ -1,19 +1,19 @@
 \section{Experimental setup}
-We downloaded the pre-trained word embeddings created
-by~\textcite{grave2018learning} for all languages defined in table~\ref{table:languages}.
+Pre-trained word embeddings created
+by~\textcite{grave2018learning} were downloaded for all languages defined in
+table~\ref{table:languages} in the Appendix.
 For each downloaded language, the words \textit{male} and \textit{female} have been
 translated beforehand.
 The vectors associated with the translated words \textit{male} and \textit{female} are
 extracted from the word embedding. Then, the cosine similarity is calculated
 according to the methodology.
-
 The code used to calculate the results can be found on
 GitHub\footnote{Git repository can be found on \url{https://github.com/ThijsRay/cse3000}}.
 
 \subsection{Frequency information}
 The words contained in the pre-trained models provided by~\textcite{grave2018learning}
 are sorted by frequency, but exact information about how often a word occurs in
-a regular text is omitted. We approximate the frequency with the help of
+a regular text is omitted. It is approximated that the frequency with the help of
 Zipf's~law~\parencite{Zipf-1935, word_embedding_zipf_context}, defined as 
 \begin{equation}
     \frac{1/k}{\displaystyle\sum_{n=1}^{N}(1/n)}
@@ -22,13 +22,13 @@ where $k$ denotes the rank of a word and
 $N$ denotes the amount of words in the word embedding.
 
 \subsection{Dummy language} \label{seq:dummy_language}
-A ``dummy language'' has been created in order to test whether and to what extend a language has gender bias. This language is defined to have
+A ``dummy language'' has been created in order to test whether and to what extent a language has gender bias. This language is defined to have
 no gender bias and is therefore used as a baseline to which the other languages
 are compared.
 It can be constructed by creating a language where $s(\vec{w}, \vec{a}, \vec{b}) = 0$ for all values of $\vec{w}$.
-All languages in table~\ref{table:languages} are compared to this
+All languages in table~\ref{table:languages} in the Appendix are compared to this
 dummy language. In all formulas, the word embedding $X$ is an actual embedding from
-the languages in table~\ref{table:language} and $Y$ is
+the languages in table~\ref{table:languages}, and $Y$ is
 the dummy language that has the same size as $X$. This has the effect that all terms
 containing $Y$ are
 reduced to $0$, except in formulas where $X$ and $Y$ are used in the

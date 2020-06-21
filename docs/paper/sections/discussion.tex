@@ -1,40 +1,32 @@
 \section{Discussion}
-First, we discuss the results from chapter~\ref{ch:results}. Then,
-we will explain the rationale behind the choices that were made.
-Finally, we will discuss the limitations of our approach and reflect on some
-of the aspects of this research.
+The objective of this study was to identify to what extent word embeddings of different
+languages are biased towards gender.
+It was hypothesised that word embeddings of the tested languages were not biased towards
+gender.
 
-\subsection{About the result}
-\subsubsection{\emph{p} values}
-The results show that all languages have \mbox{a \emph{p} value < $\alpha$} when
-the uniform weighting method is used. Therefore, we can reject the null hypothesis
-defined in section~\ref{sec:hypothesis_test} for all of the tested languages.
-
-This is not the case for the frequency weighting method. The null hypothesis can
-\emph{not} be rejected for all the languages with \mbox{a \emph{p} value > $\alpha$}.
-These languages are shown in table~\ref{tab:p-values-frequency}. However, it
-can be rejected for all other tested languages.
-
-We can conclude from the significance test that all of the tested languages are
+\subsection{\emph{P} values}
+It can concluded from the significance test that all of the tested languages are
 gender biased, when gender bias is measured across \emph{all the words} in the
 word embedding (uniform weighting method).
 It can also be concluded that a majority of the tested languages is gender biased,
 when this is calculated across \emph{the most used words} in the word
 embedding (frequency weighting method). This conclusion builds
-upon the assumption that there is a relation between word association and bias.
+upon the assumption that there is a \mbox{relation between word association and bias.}
 
 It is interesting to see that there is a difference in \emph{p} values for both methods.
 A probable explanation for this is that most of the values in the frequency weighting
 method are extremely close to zero due to the introduction of frequency
 weights in formula~\eqref{eq:frequency_s_sum}. Therefore, the values are not
 significantly different from
-the zero values of the dummy language. Unless the most used words of a language
-show bias, the permutation test is essentially comparing a lot of zeroes with each
+the zero values of the dummy language. 
+Unless the most used words of a language
+show bias, the permutation test is essentially comparing negligible values with each
 other. 
 
-\subsubsection{Observations}
-A few observations can be made from figure~\ref{fig:effect_size}. Most
-of the languages have an effect size above 0, indicating that most of the reviewed
+\subsection{Observations}
+A few observations can be made from figure~\ref{fig:effect_size}. 16 out of 26
+languages have a significant effect size $d_1$ above 0, indicating that most of
+the reviewed
 languages are more associated with \emph{male}. Assuming that there is a relation between
 the association of a word and bias, then this could mean that
 most of the tested languages have a bias towards \emph{male}. 
@@ -43,31 +35,32 @@ Another observation from figure~\ref{fig:effect_size} and \ref{fig:mean_differen
 some languages that are from the same language family have
 a similar rank. For example, both Finnish and Hungarian
 are Uralic languages and have a
-relatively high effect size compared to the other
+relatively high effect size $d_1$ compared to the other
 languages. A similar pattern can be seen
-with Portuguese and Spanish, both Iberian languages. However, this might be a incidental
+with Portuguese and Spanish, both Iberian languages. However, this might be incidental
 because some closely related languages seem to have opposite effects, like German and
 Dutch. Further research could show whether this effect is indeed incidental or if
 there is a underlying reason behind it.
 
-Similar observations can be made from figure~\ref{fig:weffect_size} and
-\ref{fig:sum_weighted}. Most
-of the languages have an value above 0, indicating that \emph{most used words} of the
+Comparable observations can be made from figure~\ref{fig:weffect_size} and
+\ref{fig:sum_weighted}. 15 out of 16 significant 
+languages have an value above 0, indicating that \emph{most used words} of the
 reviewed languages are more associated with \emph{male} than with \emph{female}. This
 is interesting because the most used words of a language say something about how a
-language actually is used by people.
+language is actually used by people.
 From this result it can be concluded that either people are more inclined to use
 \mbox{\emph{male}-related words} or the most used words happen to be more related
 to \mbox{\emph{male}}.
 
 Some of the languages seem to be closer associated with \emph{female}-related words, like
 Basque, Hindi and French in figure~\ref{fig:effect_size} and \ref{fig:mean_difference},
-and Greek in figure~\ref{fig:weffect_size} and \ref{fig:sum_weighted}. Why do the words
-in these languages have a stronger
-relation with \emph{female}-related words? Why does the majority of the languages have
-a stronger link with \emph{male}-related words? Is there a link between gender bias
-in languages and gender equality? Future research could answer these
-questions and look into the link between social and gender-equality developments.
+and Greek in figure~\ref{fig:weffect_size} and \ref{fig:sum_weighted}. 
+Several questions remain unanswered at present, such as why these languages have a stronger
+relation with \emph{female}-related words and why the majority of the languages have
+a stronger link with \emph{male}-related words. 
+Another important issue for future research is the possible link between gender bias
+in languages and gender equality. 
+Future studies on these topics are therefore recommended.
 
 These results show that the words of the majority of the tested languages have
 a stronger association with \emph{male} than with \emph{female}. If there is a link
@@ -77,74 +70,91 @@ language we speak influences the way we think~\parencite{lucy_linguistic_1997}.
 However, one can also argue that it is the other way around, i.e. that the language itself
 is influenced by the way that we think.
 
+Thus, from these results and observations it is concluded that the null
+hypothesis can be fully rejected for the uniform weighting method, and partly rejected for
+the frequency weighting method. This is because only 62\% of the tested languages had a
+significant result for the frequency weighting method.
+Based on the results from the null hypothesis and on the observations that were made,
+it can be stated that word embeddings of different languages
+are biased towards gender, but that the amount of bias differs per language.
+These results are in line with those of previous research~\parencite{caliskan_2017_semantics_language_corpora}.
 
-\subsection{About methodology and setup}
 \subsection{Limitations}
-
-\subsubsection{Uniform weighting method} \label{section:discussion_uniform_method}
-The advantage of this approach is
-that all words are considered, which eliminates the inclusion or exclusion subjectiveness
-described by \textcite{nissim_fair_is_better_2020}.  This is because there is no metric
-on which a word could be excluded, because all words are included by default.
-A disadvantage of this approach
-are that the results are difficult to interpret, because words with an explicit
-gender (e.g. \textit{he}, \textit{she}, \textit{waiter}, \textit{waitress},
-\textit{king}, \textit{queen}) are also
-present in the set of target words. This is a problem because these words tend to be biased
-towards a gender, but with a valid reason. These words increase the probability of a
-type I error, where the null hypothesis is rejected even if the word embedding is not
-biased.
-
-\subsubsection{Frequency weighting method} \label{section:discussion_frequency_method}
-This approach builds upon the assumption that words that are regarded as neutral words
-(e.g. \textit{and}, \textit{the}) should be gender neutral, unless there exists some form
-of gender bias in the word embedding.
-The advantage of this second approach is that results are more representative of how
-the language is actually used. While the amount of words associated with men and the
-amount of words associated with women might be equal, i.e. each male word has a female
-counterpart, they are not used as often.
-Taking the frequency of words into account addresses this issue. 
-The disadvantage of this is that
-it might miss forms of gender bias that might be present in the word embedding, because
-not all words are considered to be as important as other words. For example, if the words
-\textit{doctor} and \textit{nurse} have a large amount of bias associated with them,
-but they only have a weight of $0.00001$, then their reported bias would be almost
-invisible when compared to a presumably neutral word like \textit{and}, which might have
-a weight of $0.1$. Words that are not used as often will therefore have a negligible impact
-on the measurement.
-
-
-
-
-
-
-There are some limitations with the used method, mainly that it is built upon quite a few
-assumptions.
-The assumption that the attribute words `male' and `female' are universal is difficult
+This study has potential limitations, mainly concerning the assumptions the research is based on, the critique the used methodology has previously received, and the generalisability of the results.  
+The first of these limitations is the assumption is that
+the attribute words \emph{male} and \emph{female} are universal and that their translations
+have identical meaning in all of the tested languages. This is difficult
 to verify without having a good understanding of all the languages that are involved.
-This issue can be solved by only looking at the languages that I have a thorough
-understanding of, but this would not enable me to look at languages that are completely
-different from English. This limitation can also be alleviated by using more than one
-attribute word for each gender, as done by \textcite{caliskan_2017_semantics_language_corpora}.
+This issue could be alleviated if language experts would confirm that the
+translations are accurate.
+This limitation can also be alleviated by using more than one
+attribute word for each gender, as originally done by \textcite{caliskan_2017_semantics_language_corpora}. This reduces the probability that a word is mistranslated. 
 
 Another assumption is that the most commonly used words, like \textit{and} and \textit{the}
 are gender neutral. This might not necessarily the case, since words like \textit{he} and
 \textit{she} are also very common. Attaching a weight based on the frequency might do
 nothing more than measure the frequency of gender specific words, because they have a
 more pronounced cosine distance. If the word \textit{he} occurs much more often than
-the word \textit{she}, then the language will appear to have a strong bias towards
-\textit{male}. While one could argue that the fact that masculine words have a higher
-frequency is also a form of bias, it is probably not something that has an impact when
-these word embeddings are actually used. If an application cares about frequency of words,
-it will probably use a different tool.
+the word \textit{she}, then the word embedding as a whole will appear to have a strong
+bias towards \textit{male}. Based on the reasoning behind the
+linguistic relativity hypothesis~\parencite{lucy_linguistic_1997}, one could argue that the fact
+that masculine words
+have a higher frequency is also a form of bias. If people are more probable
+to use masculine words, then it is likely that people will also, on average, think and
+act more in favor of males.
 
-It is also difficult to draw any conclusions about the differences between the languages
-themselves, because it is not fair to assume that a word embedding is a perfect
+It is also difficult to draw any conclusions based on the relation between word
+embeddings and the language itself, because a word embedding is not a perfect
 representation of a language. The used models have been trained on text that was 
-posted on the internet~\parencite{grave2018learning}. The writers of these texts might
-not fully represent the speakers of the language.
-Besides that, it is difficult to assume that this is
-good method of measuring gender bias of a language as a whole. The WEAT method by
-\textcite{caliskan_2017_semantics_language_corpora} has received critique from
-\textcite{ethayarajh-etal-2019-understanding}, who argue that WEAT has theoretical flaws 
-that cause it to systematically over-estimate bias.
+posted on the internet, on websites such as Wikipedia~\parencite{grave2018learning}.
+Research has found that less than 15\% of the
+contributors of Wikipedia were female~\parencite{collier_wikipedia_gender_gap_2012}.  It is reasonable to assume that a word embedding
+would be a better representation of a language if it was trained on text that was written
+for 50\% by males and 50\% by females.
+
+Besides that, it should be takes into account that the WEAT method by 
+\textcite{caliskan_2017_semantics_language_corpora}
+has received critique from \textcite{ethayarajh-etal-2019-understanding}, who argue that
+WEAT has theoretical flaws that cause it to systematically over-estimate bias. Since
+our methodology is an adjusted form of WEAT, it might be the case that these
+theoretical flaws are present in our methodology.
+
+Finally, the results are heavily reliant upon the generated dummy language from
+chapter~\ref{seq:dummy_language}. If the parameters used for generating the dummy language
+are changed, the entire result changes. The results can therefore only be considered
+in the context of the dummy language. This reduces the generalisability of the results.
+
+
+%\subsubsection{Uniform weighting method} \label{section:discussion_uniform_method}
+%The advantage of this approach is
+%that all words are considered, which eliminates the inclusion or exclusion subjectiveness
+%described by \textcite{nissim_fair_is_better_2020}.  This is because there is no metric
+%on which a word could be excluded, because all words are included by default.
+%A disadvantage of this approach
+%are that the results are difficult to interpret, because words with an explicit
+%gender (e.g. \textit{he}, \textit{she}, \textit{waiter}, \textit{waitress},
+%\textit{king}, \textit{queen}) are also
+%present in the set of target words. This is a problem because these words tend to be biased
+%towards a gender, but with a valid reason. These words increase the probability of a
+%type I error, where the null hypothesis is rejected even if the word embedding is not
+%biased.
+%
+%\subsubsection{Frequency weighting method} \label{section:discussion_frequency_method}
+%This approach builds upon the assumption that words that are regarded as neutral words
+%(e.g. \textit{and}, \textit{the}) should be gender neutral, unless there exists some form
+%of gender bias in the word embedding.
+%The advantage of this second approach is that results are more representative of how
+%the language is actually used. While the amount of words associated with men and the
+%amount of words associated with women might be equal, i.e. each male word has a female
+%counterpart, they are not used as often.
+%Taking the frequency of words into account addresses this issue. 
+%The disadvantage of this is that
+%it might miss forms of gender bias that might be present in the word embedding, because
+%not all words are considered to be as important as other words. For example, if the words
+%\textit{doctor} and \textit{nurse} have a large amount of bias associated with them,
+%but they only have a weight of $0.00001$, then their reported bias would be almost
+%invisible when compared to a presumably neutral word like \textit{and}, which might have
+%a weight of $0.1$. Words that are not used as often will therefore have a negligible impact
+%on the measurement.
+%
+%

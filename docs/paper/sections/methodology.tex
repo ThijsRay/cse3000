@@ -1,11 +1,12 @@
 \section{Methodology} \label{ch:method}
-We used the word embeddings provided by \textcite{grave2018learning}. They have
-trained word embeddings for various different languages on texts from
+The word embeddings provided by previous research are used for this
+study~\parencite{grave2018learning}.
+These word embeddings have been
+trained for various different languages on texts from
 Wikipedia\footnote{\url{https://wikipedia.org/}} and
 the Common Crawl Project\footnote{\url{https://commoncrawl.org/}}.
-
-The languages that are used in this research, are chosen based on a
-few criteria;
+The languages that are used in this research, are chosen based on the
+following criteria;
 \begin{enumerate*}[label={(\alph*)}]
     \item the language has a pre-trained word embedding from \textcite{grave2018learning}
     \item the language should be machine translatable with the help of tools like
@@ -14,15 +15,14 @@ few criteria;
     \item the language is part of a different language family than the languages that
     were already chosen.
 \end{enumerate*}
-This resulted 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
-can be found in table~\ref{table:languages}.
+This resulted in 26 languages from 16 different language families. An overview of these languages, their language families and the translations of \textit{male} and \textit{female}
+can be found in table~\ref{table:languages} in the Appendix.
 
-\subsection{WEAT} \label{section:method:weat}
+\subsection{Explanation of WEAT} \label{section:method:weat}
 A popular way of measuring bias in word embeddings uses the 
 Word Embedding Association Test (WEAT) method by
 \textcite{caliskan_2017_semantics_language_corpora}. 
-WEAT has been used before by \textcite{gonen-goldberg-2019-lipstick-pig}
-and \textcite{10.1145/3306618.3314270}.
+WEAT has been successfully used in previous research~\parencite{gonen-goldberg-2019-lipstick-pig, 10.1145/3306618.3314270}.
 This method measures the
 association between a set of \textit{attribute words} (e.g. \textit{man}, \textit{male},
 \textit{woman}, \textit{female}) 
@@ -45,61 +45,64 @@ where $\text{cos}(\overrightarrow{a}, \overrightarrow{b})$ measures the cosine o
 between $\vec{a}$ and $\vec{b}$ and where the mean is the sample mean of the values.
 Formula~\eqref{eq:weat_s_mean} can be described as a measurement of the association of the
 target word $w$ with
-an attribute and formula~\eqref{eq:weat_s_sum} can be descibred as a measurement of the
+an attribute, and formula~\eqref{eq:weat_s_sum} can be described as a measurement of the
 differential association of the sets of target words with the attributes~ 
 \parencite{caliskan_2017_semantics_language_corpora}.
 
-In WEAT, the effect size of the test statistic is defined as the normalized measure of separation
+In WEAT, the effect size $d_1$ of the test statistic is defined as the normalized measure of separation
 between two distributions of associations~\parencite{caliskan_2017_semantics_language_corpora}
 \begin{align} \label{eq:weat_effect_size}
-\frac{
+d_1 = \frac{
     \text{mean}_{\vec{x} \in X} s(\vec{x}, A, B) - \text{mean}_{\vec{y} \in Y} s(\vec{y}, A, B)
 }{
 \text{std-dev}_{\vec{w} \in X \cup Y} s(\vec{w},A,B)
 }
 \end{align}
-The effect size can be interpreted as the ``amount of bias'' \parencite{lauscher-glavas-2019-consistently}.
+The effect size $d_1$ can be interpreted as the ``amount of bias'' \parencite{lauscher-glavas-2019-consistently}.
 
 \subsection{Weaknesses of WEAT for multilingual use}
-The WEAT method works for when measurements are being performed in single language, but
-some problems may arise when the differences between different languages are
+The WEAT method works for when measurements are being performed in a single language, but
+some problems could arise when the differences between different languages are
 compared.
 
 First, not all words have a one-to-one translation into another
 language, because certain words might have a different meaning, depending on the
 context in which the word is used. It is therefore not possible to translate all the
 attribute and target words into a different language, because it might lead to an
-incorrect and unfair comparison. A great example of this would the English word
+incorrect and unfair comparison. A great example of this would be the English word
 \textit{man}, which can mean \textit{male} or \textit{mankind}, depending on the context.
 
 Second, the inclusion or exclusion of words from
 the target set is a subjective decision~\parencite{nissim_fair_is_better_2020}. Therefore,
 the measurement itself could be biased, depending on what words are or are not in the set
-of target words. This problem is only amplified if WEAT is used for multiple languages,
-because this subjective decision has to be made for every single language.
+of target words. This problem will only be amplified when WEAT is used for multiple
+languages, because this subjective decision has to be made for every single language.
 
 \subsection{Proposed multilingual WEAT}
-The first problem can be addressed by limiting the amount of words that have to be
-translated. The method that is used in this research uses the only two attribute words 
+The first problem of translation can be addressed by limiting the amount of words that
+have to be
+translated. The method that is used in this research only uses the two attribute words 
 \textit{male} and \textit{female}. The assumption is made that these words are universal
 and translatable in all languages. 
 
-We propose to solve the second problem with two different approaches. The goal is to
+It is proposed to solve the second problem of subjectivity with two different approaches.
+The goal is to
 remove the subjective decision and include words based on a language-independent metric
 that is not based on the meaning of words. This has been done by
-\begin{enumerate*}[label={(\alph*)}]
+\begin{enumerate*}[label={(\arabic*)}]
     \item looking at \emph{all} the words in the word embedding and by
     \item looking at the \emph{most used} words in the word embedding
 \end{enumerate*}.
-These approaches will be explained in more detail in section~\ref{method:1} and
-\ref{method:2} respectively.
+%These approaches will be explained in more detail in section~\ref{method:1} and
+%\ref{method:2} respectively.
 
-\subsubsection{Uniform weighting method}
+\subsubsection{Method 1: Uniform weighting}
 \label{method:1}
-The first method uses all the words in the word embedding as target words. 
-The uniform weighting method uses an adjusted version of the WEAT method described in
-section~\ref{section:method:weat}. The adjustments account for the fact that
-the languages have different target and attribute words. Formulas~\eqref{eq:weat_s_sum} and
+The first method, the uniform weighting method, uses all the words in the word embedding as target words. 
+This method uses an adjusted version of the WEAT method described in
+section~\ref{section:method:weat}. The adjustments made take into account that
+the compared languages have different target and attribute words.
+Formulas~\eqref{eq:weat_s_sum} and
 \eqref{eq:weat_s_mean} are redefined as 
 \begin{align} \label{eq:uniform_s_sum}
     s(X,Y,a,b) &= \displaystyle\sum_{\vec{x} \in X} s(\vec{x},\vec{a_X},\vec{b_X})
@@ -109,13 +112,12 @@ the languages have different target and attribute words. Formulas~\eqref{eq:weat
 \label{eq:uniform_s_mean}
     s(\vec{w},\vec{a},\vec{b}) &= \text{cos}(\vec{w}, \vec{a}) - \text{cos}(\vec{w}, \vec{b})
 \end{align}
-where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine of the angle between
+where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine distance between between
 $\vec{a}$ and $\vec{b}$. 
 In formula~\eqref{eq:uniform_s_sum}, $X$ and $Y$ refer to the two languages that are
 compared, and $a_X$ and $b_X$ refer to the translations of the
 two attribute words $a$ and $b$ into language $X$ respectively. 
-
-The effect size is calculated the same way as WEAT, with
+The effect size $d_1$ is calculated the same way as WEAT, with
 formula~\eqref{eq:weat_effect_size}.
 
 The advantage of this approach is
@@ -126,37 +128,40 @@ The disadvantage is that all words have the same weight, which might not be an a
 representation of the language, as not all words are used as often as others. This is
 addressed in an alternative method described in section~\ref{method:2}.
 
-\subsubsection{Frequency weighting method}
+\subsubsection{Method 2: Frequency weighting}
 \label{method:2}
-The second way still uses all the words in the word embedding, but attaches a weight to
+The disadvantage of method 1, the uniform weighting method, is addressed in method 2,
+the frequency weighting method.
+The second method still uses all the words in the word embedding, but attaches a
+weight to
 each word, depending on its usage frequency. Effectively, this results in a measurement
 over the most commonly used words, because those words have the highest weight.
 %The advantages and disadvantages of this method are discussion in section~\ref{section:discussion_frequency_method}.
 The frequency weighting method uses an adjusted version of the uniform weighting method.
-The adjustments aim to include information about the usage frequency.
+The adjustments (in red) aim to include information about the usage frequency.
 Formulas~\eqref{eq:uniform_s_sum} and~\eqref{eq:uniform_s_mean} are redefined
 as
 \begin{align} \label{eq:frequency_s_sum}
-s(X,Y,a,b) =& \displaystyle\sum_{\vec{x} \in X}\! f(\vec{x})*s(\vec{x},\vec{a_X},\vec{b_X})
+    s(X,Y,a,b) =& \displaystyle\sum_{\vec{x} \in X}\! \textcolor{red}{f(\vec{x})}*s(\vec{x},\vec{a_X},\vec{b_X})
     \nonumber \\
--& \displaystyle\sum_{\vec{y} \in Y}\! f(\vec{y})\! *\! s(\vec{y},\vec{a_Y},\vec{b_Y})
+    -& \displaystyle\sum_{\vec{y} \in Y}\! \textcolor{red}{f(\vec{y})}\! *\! s(\vec{y},\vec{a_Y},\vec{b_Y})
     \quad\text{where} \\
 \label{eq:frequency_s_mean}
 s(\vec{w},\vec{a},\vec{b}) =&\ \text{cos}(\vec{w}, \vec{a}) - \text{cos}(\vec{w}, \vec{b})
 \end{align}
-where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine of the angle between
+where $\text{cos}(\vec{a}, \vec{b})$ measures the cosine distance between between
 $\vec{a}$ and $\vec{b}$. 
 In formula~\eqref{eq:frequency_s_sum}, $X$ and $Y$ refer to the two languages that are
 compared, and $a_X$ and $b_X$ refer to the translations of the
 two attribute words $a$ and $b$ into language $X$ respectively. 
-$f(\vec{x})$ refers to the probability that the word $x$ occurs in a text written
+$f(\vec{x})$ refers to the probability that the word $\vec{x}$ occurs in a text written
 in language $X$.
 
-The effect size of the test is defined as an adjusted version of
+The effect size $d_2$ of the test is defined as an adjusted version of
 formula~\eqref{eq:weat_effect_size} that takes the frequency of the words into account:
 \begin{equation}\label{eq:frequency_effect_size}
-\frac{
-    \displaystyle\sum_{\vec{x} \in X} f(\vec{x}) * s(\vec{x}, A, B) - \sum_{\vec{y} \in Y} f(\vec{y}) * s(\vec{y}, A, B)
+d_2\! =\! \frac{
+    \displaystyle\sum_{\vec{x} \in X}\! f(\vec{x})\! *\! s(\vec{x}, A, B)\! -\! \sum_{\vec{y} \in Y}\! f(\vec{y}) * s(\vec{y}, A, B)
 }{
 \text{std-dev}_{\vec{w} \in X \cup Y} s(\vec{w},A,B)
 }
@@ -223,7 +228,7 @@ where the standard deviation takes the frequencies defined by $f$ into account.
 %where $\{(X_i, Y_i)\}_i$ denotes all partitions of $X \cup Y$ into two sets of equal 
 %size. 
 %
-%The effect size can be described as
+%The effect size $d$ can be described as
 %$$
 %\frac{
 %    \text{mean}_{x \in X} u(x, X, A, B) - \text{mean}_{y \in Y} u(y, Y, A, B)
@@ -231,7 +236,7 @@ where the standard deviation takes the frequencies defined by $f$ into account.
 %    \text{std-dev}_{w \in X \cup Y} u(w,W,A,B)
 %}
 %$$
-%where $W$ is the language that $w$ is a part of. The effect size can be interpreted as
+%where $W$ is the language that $w$ is a part of. The effect size $d$ can be interpreted as
 %the amount of bias~\parencite{lauscher-glavas-2019-consistently}.
 %
 %In order investigate whether the null hypothesis $H_0$ can be rejected, these tests have
@@ -241,48 +246,3 @@ where the standard deviation takes the frequencies defined by $f$ into account.
 %language that
 %contains no bias at all. Language $Y$ can be seen as a language where
 %$\forall y \in Y(u(y,Y,A,B) = 0)$.
-
-\iffalse
-\begin{table*}
-    \centering
-    \begin{threeparttable}
-        \caption{Chosen languages and their translations}
-        \label{table:languages}
-        \begin{tabular}{lllll}
-            \hline
-            Language & Language family & Branch & Translation \emph{male} & Translation \emph{female} \\ \hline
-            Arabic & Afroasiatic & Semitic & \arab{الذكر} & \arab{أنثى} \\
-            Basque & Isolate & Basque & gizonezkoa & emakumezkoak \\
-            Burmese & Sino-Tibetan & Lolo-Burmese & \myanmar{အထီး} & \myanmar{အမျိုးသမီး} \\
-            Chinese & Sino-Tibetan & Sinitic & \cjk{男} & \cjk{女}\\
-            Dutch & Indo-European & Germanic & mannelijk & vrouwlijk \\
-            English & Indo-European & Germanic & male & female \\
-            Finnish & Uralic & Finnic & uros & nainen \\
-            French & Indo-European & Romance & mâle & femelle \\
-            German & Indo-European & Germanic & männlich & weiblich \\
-            Greek & Indo-European & Hellenic & \noto{αρσενικός} & \noto{θηλυκός} \\
-            Hindi & Indo-European & Indo-Aryan & \hindi{पुरुष} & \hindi{महिला} \\
-            Hungarian & Uralic & Ugric & \noto{férfi} & \noto{nő} \\
-            Italian & Indo-European & Romance & maschio & femmina \\
-            Japanese & Japonic & Japanese & \cjk{男性} & \cjk{女性}\\
-            Javanese & Austronesian & Malayo-Polynesian & lanang & wadon \\
-            Khmer & Austroasiatic & Khmer & \khmer{បុរស} & \khmer{ស្រី} \\
-            Korean & Koreanic & Koreanic & \cjk{남성} & \cjk{여성} \\
-            Polish & Indo-European & Balto-Slavic & \noto{mężczyzna} & \noto{kobieta} \\
-            Portuguese & Indo-European & Romance & masculino & feminino \\
-            Russian & Indo-European & Balto-Slavic & \noto{мужчина} & \noto{женщина} \\
-            Spanish & Indo-European & Romance & hombre & mujer \\
-            Swedish & Indo-European & Germanic & manlig & kvinnlig \\
-            Telugu & Dravidian & South-Central & \telugu{పురుషుడు} & \telugu{స్త్రీ} \\
-            Thai & Kra-Dai & Tai & \thai{ชาย} & \thai{หญิง} \\
-            Turkish & Turkic & Oghuz & \noto{erkek} & \noto{kadın} \\
-            Yoruba & Niger-Congo & Volta-Niger & \noto{akọ} & \noto{abo} \\
-            \hline
-        \end{tabular}
-        \begin{tablenotes}[para,flushleft]
-            {\small \textit{Note:} An overview of all the languages that were used in this
-            research with their respective translations of \emph{male} and \emph{female}.}
-        \end{tablenotes}
-    \end{threeparttable}
-\end{table*}
-\fi
