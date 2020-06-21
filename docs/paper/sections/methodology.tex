@@ -138,13 +138,13 @@ each word, depending on its usage frequency. Effectively, this results in a meas
 over the most commonly used words, because those words have the highest weight.
 %The advantages and disadvantages of this method are discussion in section~\ref{section:discussion_frequency_method}.
 The frequency weighting method uses an adjusted version of the uniform weighting method.
-The adjustments (in red) aim to include information about the usage frequency.
+The adjustments aim to include information about the usage frequency.
 Formulas~\eqref{eq:uniform_s_sum} and~\eqref{eq:uniform_s_mean} are redefined
 as
 \begin{align} \label{eq:frequency_s_sum}
-    s(X,Y,a,b) =& \displaystyle\sum_{\vec{x} \in X}\! \textcolor{red}{f(\vec{x})}*s(\vec{x},\vec{a_X},\vec{b_X})
+    s(X,Y,a,b) =& \displaystyle\sum_{\vec{x} \in X}\! f(\vec{x})*s(\vec{x},\vec{a_X},\vec{b_X})
     \nonumber \\
-    -& \displaystyle\sum_{\vec{y} \in Y}\! \textcolor{red}{f(\vec{y})}\! *\! s(\vec{y},\vec{a_Y},\vec{b_Y})
+    -& \displaystyle\sum_{\vec{y} \in Y}\! f(\vec{y})\! *\! s(\vec{y},\vec{a_Y},\vec{b_Y})
     \quad\text{where} \\
 \label{eq:frequency_s_mean}
 s(\vec{w},\vec{a},\vec{b}) =&\ \text{cos}(\vec{w}, \vec{a}) - \text{cos}(\vec{w}, \vec{b})
